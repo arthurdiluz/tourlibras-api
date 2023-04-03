@@ -6,3 +6,149 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  username   String    @db.VarChar(7)
+  firstName  String    @db.VarChar(15)
+  lastName   String    @db.VarChar(15)
+  avatar     String    @db.VarChar(255) // TODO: set avatar length
+  experience Int       @default(0) @db.SmallInt
+  money      Int       @default(0) @db.SmallInt
+  theme      UserTheme @default(LIGHT)
+
+  MedalOnUser  MedalOnUser[]
+  ItemOnUser   ItemOnUser[]
+  UserOnLesson UserOnLesson[]
+  DoneExercise DoneExercise[]
+}
+
+model Medal {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  title         String  @db.VarChar(15)
+  description   String  @db.VarChar(31)
+  media         String  @db.VarChar(255) // TODO: set media length
+  isCumultative Boolean @default(true)
+
+  MedalOnUser MedalOnUser[]
+}
+
+model MedalOnUser {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  medalId String
+  medal   Medal  @relation(fields: [medalId], references: [id])
+  userId  String
+  user    User   @relation(fields: [userId], references: [id])
+
+  @@id([medalId, userId])
+}
+
+model Item {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  title       String @db.VarChar(15)
+  description String @db.VarChar(31)
+  price       Int    @db.SmallInt
+  media       String @db.VarChar(255) // TODO: set media length
+
+  ItemOnUser ItemOnUser[]
+}
+
+model ItemOnUser {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  itemId String
+  item   Item   @relation(fields: [itemId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([itemId, userId])
+}
+
+model Lesson {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name       String @db.VarChar(15)
+  level      Int    @default(1) @db.SmallInt
+  icon       String @db.VarChar(255)
+  providedXp Int    @db.SmallInt
+
+  UserOnLesson UserOnLesson[]
+  Exercise     Exercise[]
+}
+
+model UserOnLesson {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  isLessonCompleted Boolean @default(false)
+  isLessonUnlocked  Boolean @default(false)
+  currentLevel      Int     @default(1) @db.SmallInt
+
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+
+  @@id([userId, lessonId])
+}
+
+model Exercise {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  statement String @db.VarChar(255)
+  media     String @db.VarChar(255)
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id])
+
+  Alternative  Alternative[]
+  DoneExercise DoneExercise[]
+}
+
+model Alternative {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  text      String  @db.VarChar(63)
+  media     String  @db.VarChar(255) // TODO: set media length
+  isCorrect Boolean
+
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+}
+
+model DoneExercise {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  isCorrectAttempt Boolean
+
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+
+  @@id([userId, exerciseId])
+}
+
+enum UserTheme {
+  LIGHT
+  DARK
+}
