@@ -25,31 +25,31 @@ export class ConfigService {
     return env === 'production';
   }
 
-  get getAppPort() {
-    return this.get('APP_PORT');
-  }
-
   get getAppDomain() {
     return this.get('APP_DOMAIN') || 'localhost';
   }
 
+  get getAppPort() {
+    return this.get('APP_PORT');
+  }
+
   get getDatabaseVersion() {
-    return this.get('DATABASE_VERSION');
+    return this.get('POSTGRES_VERSION');
   }
 
   get getDatabaseName() {
-    return this.get('DATABASE_NAME');
+    return this.get('POSTGRES_DATABASE_NAME');
   }
 
   get getDatabaseUser() {
-    return this.get('DATABASE_USER');
+    return this.get('POSTGRES_USER');
   }
 
   get getDatabasePassword() {
-    return this.get('DATABASE_PASSWORD');
+    return this.get('POSTGRES_PASSWORD');
   }
 
   get getDatabaseUrl() {
-    return this.get('DATABASE_URL');
+    return this.get('POSTGRES_URL');
   }
 }
