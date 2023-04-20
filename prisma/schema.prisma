@@ -8,147 +8,173 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id           String   @id @default(uuid()) @db.Uuid
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  fullName     String   @db.VarChar(63)
+  username     String   @db.VarChar(7)
+  password     String   @db.VarChar(255)
+  profilePhoto String   @db.VarChar(255) // TODO: calculate length
 
-  username   String    @db.VarChar(7)
-  firstName  String    @db.VarChar(15)
-  lastName   String    @db.VarChar(15)
-  avatar     String    @db.VarChar(255) // TODO: set avatar length
-  experience Int       @default(0) @db.SmallInt
-  money      Int       @default(0) @db.SmallInt
-  theme      UserTheme @default(LIGHT)
-
-  MedalOnUser  MedalOnUser[]
-  ItemOnUser   ItemOnUser[]
-  UserOnLesson UserOnLesson[]
-  DoneExercise DoneExercise[]
+  Professor Professor[]
+  Student   Student[]
 }
 
-model Medal {
-  id        String   @id @default(uuid())
+model Professor {
+  id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  grammar   Grammar?
+  userId    String   @db.Uuid
 
-  title         String  @db.VarChar(15)
-  description   String  @db.VarChar(31)
-  media         String  @db.VarChar(255) // TODO: set media length
-  isCumultative Boolean @default(true)
-
-  MedalOnUser MedalOnUser[]
+  User    User      @relation(fields: [userId], references: [id])
+  Student Student[]
+  Item    Item[]
+  Medal   Medal[]
 }
 
-model MedalOnUser {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+model Student {
+  id          String   @id @default(uuid()) @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  experience  Int      @default(0) @db.SmallInt
+  money       Float    @default(0) @db.Real
+  theme       Theme    @default(LIGHT)
+  userId      String   @db.Uuid
+  professorId String   @db.Uuid
 
-  medalId String
-  medal   Medal  @relation(fields: [medalId], references: [id])
-  userId  String
-  user    User   @relation(fields: [userId], references: [id])
-
-  @@id([medalId, userId])
+  User            User              @relation(fields: [userId], references: [id])
+  Professor       Professor         @relation(fields: [professorId], references: [id])
+  StudentOnLesson StudentOnLesson[]
 }
 
 model Item {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id          String   @id @default(uuid()) @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  name        String   @db.VarChar(15)
+  description String   @db.VarChar(31)
+  price       Float    @default(0) @db.Real
+  media       String   @db.VarChar(255) // TODO: calculate length
+  professorId String   @db.Uuid
 
-  title       String @db.VarChar(15)
-  description String @db.VarChar(31)
-  price       Int    @db.SmallInt
-  media       String @db.VarChar(255) // TODO: set media length
-
-  ItemOnUser ItemOnUser[]
+  Professor Professor @relation(fields: [professorId], references: [id])
 }
 
-model ItemOnUser {
+model Medal {
+  id            String   @id @default(uuid()) @db.Uuid
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  name          String   @db.VarChar(15)
+  description   String   @db.VarChar(31)
+  media         String   @db.VarChar(255) // TODO: calculate length
+  isCumultative Boolean  @default(false) @db.Boolean
+  professorId   String   @db.Uuid
+
+  Professor Professor @relation(fields: [professorId], references: [id])
+  Lesson    Lesson[]
+}
+
+model ItemOnStudent {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-
-  itemId String
-  item   Item   @relation(fields: [itemId], references: [id])
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  itemId    String   @db.Uuid
+  userId    String   @db.Uuid
 
   @@id([itemId, userId])
 }
 
-model Lesson {
-  id        String   @id @default(uuid())
+model MedalOnStudent {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  medalId   String   @db.Uuid
+  userId    String   @db.Uuid
+  amount    Int      @db.SmallInt
 
-  name       String @db.VarChar(15)
-  level      Int    @default(1) @db.SmallInt
-  icon       String @db.VarChar(255) // TODO: set media length
-  providedXp Int    @db.SmallInt
-
-  UserOnLesson UserOnLesson[]
-  Exercise     Exercise[]
+  @@id([medalId, userId])
 }
 
-model UserOnLesson {
+model Lesson {
+  id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  icon      String   @db.VarChar(255) // TODO: calculate length
+  title     String   @db.VarChar(7)
+  medalId   String   @db.Uuid
 
-  isLessonCompleted Boolean @default(false)
-  isLessonUnlocked  Boolean @default(false)
-  currentLevel      Int     @default(1) @db.SmallInt
+  Medal           Medal             @relation(fields: [medalId], references: [id])
+  Level           Level[]
+  StudentOnLesson StudentOnLesson[]
+}
 
-  userId   String
-  user     User   @relation(fields: [userId], references: [id])
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id])
+model Level {
+  id          String   @id @default(uuid()) @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+  level       Int      @default(1) @db.SmallInt
+  earnedXp    Int      @db.SmallInt
+  earnedMoney Float    @db.Real
+  lessonId    String   @db.Uuid
 
-  @@id([userId, lessonId])
+  Lesson Lesson @relation(fields: [lessonId], references: [id])
 }
 
 model Exercise {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  media     String   @db.VarChar(255) // TODO: calculate length
+  statement String   @db.VarChar(15)
 
-  statement String @db.VarChar(255) // TODO: set media length
-  media     String @db.VarChar(255) // TODO: set media length
-
-  lessonId String
-  lesson   Lesson @relation(fields: [lessonId], references: [id])
-
-  Alternative  Alternative[]
-  DoneExercise DoneExercise[]
+  Alternative Alternative[]
 }
 
 model Alternative {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id         String   @id @default(uuid()) @db.Uuid
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+  text       String   @db.VarChar(15)
+  isCorrect  Boolean  @default(false) @db.Boolean
+  exerciseId String   @db.Uuid
 
-  text      String  @db.VarChar(63)
-  media     String  @db.VarChar(255) // TODO: set media length
-  isCorrect Boolean
-
-  exerciseId String
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
+  Exercise Exercise @relation(fields: [exerciseId], references: [id])
 }
 
 model DoneExercise {
+  id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  isCorrectAttempt Boolean
-
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
-  exerciseId String
-  exercise   Exercise @relation(fields: [exerciseId], references: [id])
-
-  @@id([userId, exerciseId])
+  userId           String  @db.Uuid
+  exerciseId       String  @db.Uuid
+  isCorrectAttempt Boolean @db.Boolean
 }
 
-enum UserTheme {
+model StudentOnLesson {
+  id           String   @id @default(uuid()) @db.Uuid
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now())
+  isCompleted  Boolean  @default(false) @db.Boolean
+  isUnlocked   Boolean  @default(false) @db.Boolean
+  currentLevel Int      @db.SmallInt
+
+  studentId String @db.Uuid
+  lessonId  String @db.Uuid
+
+  Student Student @relation(fields: [studentId], references: [id])
+  Lesson  Lesson  @relation(fields: [lessonId], references: [id])
+}
+
+enum Grammar {
+  SVO
+  SOV
+  VSO
+  VOS
+  OSV
+  OVS
+}
+
+enum Theme {
   LIGHT
   DARK
 }
