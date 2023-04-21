@@ -33,6 +33,14 @@ export class ConfigService {
     return this.get('APP_PORT');
   }
 
+  get ttl() {
+    return this.get('TIME_TO_LIVE');
+  }
+
+  get requestsLimit() {
+    return this.get('REQUESTS_LIMIT');
+  }
+
   get getDatabaseVersion() {
     return this.get('POSTGRES_VERSION');
   }
