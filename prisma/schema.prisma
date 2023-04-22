@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id               String   @id @default(uuid()) @db.Uuid
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @default(now())
-  
-  isEmailConfirmed Boolean  @default(false) @db.Boolean
-  fullName         String   @db.VarChar(63)
-  username         String   @db.VarChar(7)
-  password         String   @db.VarChar(255)
-  profilePhoto     String   @db.VarChar(255) // TODO: calculate length
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  isActive     Boolean @default(false) @db.Boolean
+  fullName     String  @db.VarChar(31)
+  username     String  @unique @db.VarChar(15)
+  password     String  @db.VarChar(255)
+  profilePhoto String  @db.VarChar(255) // TODO: calculate length
 
   Professor Professor[]
   Student   Student[]
@@ -26,9 +26,9 @@ model Professor {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  
-  grammar   Grammar?
-  userId    String   @db.Uuid
+
+  grammar Grammar?
+  userId  String   @db.Uuid
 
   User    User      @relation(fields: [userId], references: [id])
   Student Student[]
@@ -37,15 +37,15 @@ model Professor {
 }
 
 model Student {
-  id          String   @id @default(uuid()) @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  
-  experience  Int      @default(0) @db.SmallInt
-  money       Float    @default(0) @db.Real
-  theme       Theme    @default(LIGHT)
-  userId      String   @db.Uuid
-  professorId String   @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  experience  Int    @default(0) @db.SmallInt
+  money       Float  @default(0) @db.Real
+  theme       Theme  @default(LIGHT)
+  userId      String @db.Uuid
+  professorId String @db.Uuid
 
   User            User              @relation(fields: [userId], references: [id])
   Professor       Professor         @relation(fields: [professorId], references: [id])
@@ -53,29 +53,29 @@ model Student {
 }
 
 model Item {
-  id          String   @id @default(uuid()) @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  
-  name        String   @db.VarChar(15)
-  description String   @db.VarChar(31)
-  price       Float    @default(0) @db.Real
-  media       String   @db.VarChar(255) // TODO: calculate length
-  professorId String   @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name        String @db.VarChar(15)
+  description String @db.VarChar(31)
+  price       Float  @default(0) @db.Real
+  media       String @db.VarChar(255) // TODO: calculate length
+  professorId String @db.Uuid
 
   Professor Professor @relation(fields: [professorId], references: [id])
 }
 
 model Medal {
-  id            String   @id @default(uuid()) @db.Uuid
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
-  
-  name          String   @db.VarChar(15)
-  description   String   @db.VarChar(31)
-  media         String   @db.VarChar(255) // TODO: calculate length
-  isCumultative Boolean  @default(false) @db.Boolean
-  professorId   String   @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  name          String  @db.VarChar(15)
+  description   String  @db.VarChar(31)
+  media         String  @db.VarChar(255) // TODO: calculate length
+  isCumultative Boolean @default(false) @db.Boolean
+  professorId   String  @db.Uuid
 
   Professor Professor @relation(fields: [professorId], references: [id])
   Lesson    Lesson[]
@@ -84,9 +84,9 @@ model Medal {
 model ItemOnStudent {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  
-  itemId    String   @db.Uuid
-  userId    String   @db.Uuid
+
+  itemId String @db.Uuid
+  userId String @db.Uuid
 
   @@id([itemId, userId])
 }
@@ -94,10 +94,10 @@ model ItemOnStudent {
 model MedalOnStudent {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  
-  medalId   String   @db.Uuid
-  userId    String   @db.Uuid
-  amount    Int      @db.SmallInt
+
+  medalId String @db.Uuid
+  userId  String @db.Uuid
+  amount  Int    @db.SmallInt
 
   @@id([medalId, userId])
 }
@@ -106,10 +106,10 @@ model Lesson {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  
-  icon      String   @db.VarChar(255) // TODO: calculate length
-  title     String   @db.VarChar(7)
-  medalId   String   @db.Uuid
+
+  icon    String @db.VarChar(255) // TODO: calculate length
+  title   String @db.VarChar(7)
+  medalId String @db.Uuid
 
   Medal           Medal             @relation(fields: [medalId], references: [id])
   Level           Level[]
@@ -117,14 +117,14 @@ model Lesson {
 }
 
 model Level {
-  id          String   @id @default(uuid()) @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now())
-  
-  level       Int      @default(1) @db.SmallInt
-  earnedXp    Int      @db.SmallInt
-  earnedMoney Float    @db.Real
-  lessonId    String   @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  level       Int    @default(1) @db.SmallInt
+  earnedXp    Int    @db.SmallInt
+  earnedMoney Float  @db.Real
+  lessonId    String @db.Uuid
 
   Lesson Lesson @relation(fields: [lessonId], references: [id])
 }
@@ -133,21 +133,21 @@ model Exercise {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  
-  media     String   @db.VarChar(255) // TODO: calculate length
-  statement String   @db.VarChar(15)
+
+  media     String @db.VarChar(255) // TODO: calculate length
+  statement String @db.VarChar(15)
 
   Alternative Alternative[]
 }
 
 model Alternative {
-  id         String   @id @default(uuid()) @db.Uuid
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now())
-  
-  text       String   @db.VarChar(15)
-  isCorrect  Boolean  @default(false) @db.Boolean
-  exerciseId String   @db.Uuid
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  text       String  @db.VarChar(15)
+  isCorrect  Boolean @default(false) @db.Boolean
+  exerciseId String  @db.Uuid
 
   Exercise Exercise @relation(fields: [exerciseId], references: [id])
 }
@@ -156,7 +156,6 @@ model DoneExercise {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
-  
 
   userId           String  @db.Uuid
   exerciseId       String  @db.Uuid
@@ -164,13 +163,13 @@ model DoneExercise {
 }
 
 model StudentOnLesson {
-  id           String   @id @default(uuid()) @db.Uuid
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @default(now())
-  
-  isCompleted  Boolean  @default(false) @db.Boolean
-  isUnlocked   Boolean  @default(false) @db.Boolean
-  currentLevel Int      @db.SmallInt
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  isCompleted  Boolean @default(false) @db.Boolean
+  isUnlocked   Boolean @default(false) @db.Boolean
+  currentLevel Int     @db.SmallInt
 
   studentId String @db.Uuid
   lessonId  String @db.Uuid

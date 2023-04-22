@@ -9,9 +9,9 @@ CREATE TABLE "User" (
     "id" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "isEmailConfirmed" BOOLEAN NOT NULL DEFAULT false,
-    "fullName" VARCHAR(63) NOT NULL,
-    "username" VARCHAR(7) NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "fullName" VARCHAR(31) NOT NULL,
+    "username" VARCHAR(15) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "profilePhoto" VARCHAR(255) NOT NULL,
 
@@ -165,6 +165,9 @@ CREATE TABLE "StudentOnLesson" (
 
     CONSTRAINT "StudentOnLesson_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- AddForeignKey
 ALTER TABLE "Professor" ADD CONSTRAINT "Professor_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
