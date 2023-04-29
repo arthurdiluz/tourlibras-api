@@ -1,58 +1,48 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsOptional,
   IsString,
-  IsStrongPassword,
   Length,
   Matches,
   MaxLength,
 } from 'class-validator';
 
-export class UpdateUserDto {
+export class FindUserDto {
   @ApiPropertyOptional({
     type: Boolean,
-    required: true,
+    required: false,
     example: false,
   })
   @IsOptional()
   @IsBoolean()
-  isActive?: boolean = true;
+  @Transform(({ value }) => Boolean(eval(value)))
+  isActive?: boolean;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: 'Jamas Johnson',
+    required: false,
+    example: 'John Smith',
   })
   @IsOptional()
   @IsString()
-  @MaxLength(31)
   fullName?: string;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: 'james_johnson',
+    required: false,
+    example: 'john.smith',
   })
   @IsOptional()
-  @Matches(/^[a-z0-9_.]+$/)
+  @Matches(/^[a-z0-9_.-]+$/)
   @IsString()
-  @Length(3, 15)
+  @MaxLength(15)
   username?: string;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: 'J&8dqQ8^N!MtQ3igG6$m@6f4tK@H%*9$uSCbmDLg54Z4#TSgE%272tULqFJAx2$U',
-  })
-  @IsOptional()
-  @IsStrongPassword()
-  @Length(8, 64)
-  password?: string;
-
-  @ApiPropertyOptional({
-    type: String,
-    required: true,
+    required: false,
     example: 'blob:xvclSFAVcaZZVC',
   })
   @IsOptional()

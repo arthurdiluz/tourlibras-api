@@ -1,13 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsAlpha,
-  IsAlphanumeric,
   IsBoolean,
   IsNotEmpty,
   IsString,
   IsStrongPassword,
   Length,
-  Max,
+  Matches,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -18,14 +16,15 @@ export class CreateUserDto {
   })
   @IsBoolean()
   @IsNotEmpty()
-  isActive: boolean;
+  isActive?: boolean = false;
 
   @ApiProperty({
     type: String,
     required: true,
     example: 'John Smith',
   })
-  @IsAlpha('pt-BR')
+  @IsString()
+  @Length(3, 31)
   @IsNotEmpty()
   fullName: string;
 
@@ -34,7 +33,8 @@ export class CreateUserDto {
     required: true,
     example: 'john.smith',
   })
-  @IsAlphanumeric()
+  @Matches(/^[a-z0-9_.]+$/)
+  @IsString()
   @IsNotEmpty()
   @Length(3, 15)
   username: string;
@@ -42,11 +42,11 @@ export class CreateUserDto {
   @ApiProperty({
     type: String,
     required: true,
-    example: 'secure-password',
+    example: 'J&8dqQ8^N!MtQ3igG6$m@6f4tK@H%*9$uSCbmDLg54Z4#TSgE%272tULqFJAx2$U',
   })
   @IsStrongPassword()
   @IsNotEmpty()
-  @Max(64)
+  @Length(8, 64)
   password: string;
 
   @ApiProperty({
