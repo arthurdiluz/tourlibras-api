@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -24,15 +25,15 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  async create(@Body() { username, ...body }: CreateUserDto) {
+  async create(@Body() { email, ...body }: CreateUserDto) {
     try {
       body.isActive = false;
 
-      if ((await this.userService.findByUsername(username)) !== null) {
-        throw new ConflictException(`Username "${username}" already exists`);
+      if ((await this.userService.findByEmail(email)) !== null) {
+        throw new ConflictException(`Email "${email}" already exists`);
       }
 
-      return await this.userService.create({ username, ...body });
+      return await this.userService.create({ email, ...body });
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -69,7 +70,7 @@ export class UserController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() { username, ...body }: UpdateUserDto,
+    @Body() { email, ...body }: UpdateUserDto,
   ) {
     try {
       const user = await this.userService.findById(id);
@@ -78,20 +79,24 @@ export class UserController {
         throw new NotFoundException(`User with ID "${id}" not found`);
       }
 
-      if (username) {
+      if (email) {
+        if (email === user.email) {
+          throw new BadRequestException(`Your email is already "${email}"`);
+        }
+
         if (
-          (await this.userService.findByUsername(username)) &&
-          username !== user.username
+          (await this.userService.findByEmail(email)) &&
+          email !== user.email
         ) {
-          throw new ConflictException(`Username "${username}" already exists`);
+          throw new ConflictException(`Email "${email}" already exists`);
         }
       }
 
-      if (username && (await this.userService.findByUsername(username))) {
-        throw new ConflictException(`Username "${username}" already exists`);
+      if (email && (await this.userService.findByEmail(email))) {
+        throw new ConflictException(`Email "${email}" already exists`);
       }
 
-      return this.userService.update(id, { username, ...body });
+      return this.userService.update(id, { email, ...body });
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

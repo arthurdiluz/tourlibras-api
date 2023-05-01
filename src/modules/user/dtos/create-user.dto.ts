@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
+  IsEmail,
   IsNotEmpty,
   IsString,
   IsStrongPassword,
   Length,
-  Matches,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -31,13 +33,14 @@ export class CreateUserDto {
   @ApiProperty({
     type: String,
     required: true,
-    example: 'john.smith',
+    example: 'john.smith@example.com',
   })
-  @Matches(/^[a-z0-9_.]+$/)
+  @IsEmail()
   @IsString()
   @IsNotEmpty()
-  @Length(3, 15)
-  username: string;
+  @MaxLength(31)
+  @Transform(({ value }) => String(value).toLowerCase())
+  email: string;
 
   @ApiProperty({
     type: String,

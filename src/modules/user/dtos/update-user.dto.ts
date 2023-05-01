@@ -1,11 +1,12 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsBoolean,
+  IsEmail,
   IsOptional,
   IsString,
   IsStrongPassword,
   Length,
-  Matches,
   MaxLength,
 } from 'class-validator';
 
@@ -32,13 +33,14 @@ export class UpdateUserDto {
   @ApiPropertyOptional({
     type: String,
     required: true,
-    example: 'james_johnson',
+    example: 'james_johnson@example.com',
   })
   @IsOptional()
-  @Matches(/^[a-z0-9_.]+$/)
+  @IsEmail()
   @IsString()
-  @Length(3, 15)
-  username?: string;
+  @MaxLength(31)
+  @Transform(({ value }) => String(value).toLowerCase())
+  email?: string;
 
   @ApiPropertyOptional({
     type: String,

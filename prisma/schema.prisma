@@ -14,8 +14,8 @@ model User {
 
   isActive     Boolean @default(false) @db.Boolean
   fullName     String  @db.VarChar(31)
-  username     String  @unique @db.VarChar(15)
-  password     String  @db.VarChar(255)
+  email        String  @unique @db.VarChar(31)
+  password     String  @db.VarChar(255) // TODO: calculate length
   profilePhoto String  @db.VarChar(255) // TODO: calculate length
 
   Professor Professor[]

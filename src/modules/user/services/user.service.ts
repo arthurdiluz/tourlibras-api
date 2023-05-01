@@ -12,7 +12,7 @@ export class UserService {
     id: true,
     isActive: true,
     fullName: true,
-    username: true,
+    email: true,
     password: false,
     profilePhoto: true,
   };
@@ -29,11 +29,10 @@ export class UserService {
     });
   }
 
-  async find({ fullName, username, ...body }: FindUserDto) {
+  async find({ fullName, ...body }: FindUserDto) {
     return this.userRepository.findMany({
       where: {
         fullName: { contains: fullName, mode: 'insensitive' },
-        username: { contains: username, mode: 'insensitive' },
         ...body,
       },
       select: { ...this.selectValues },
@@ -47,9 +46,9 @@ export class UserService {
     });
   }
 
-  async findByUsername(username: string) {
+  async findByEmail(email: string) {
     return this.userRepository.findUnique({
-      where: { username },
+      where: { email },
       select: { ...this.selectValues },
     });
   }
