@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
+import { hash, verify, needsRehash } from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -18,9 +19,12 @@ export class UserService {
 
   constructor(private readonly userRepository: UserRepository) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create({ password, ...body }: CreateUserDto) {
     return this.userRepository.create({
-      data: { ...createUserDto },
+      data: {
+        password: await this.hashPassword(password),
+        ...body,
+      },
       select: { id: true },
     });
   }
@@ -50,11 +54,12 @@ export class UserService {
     });
   }
 
-  async update(id: string, body: UpdateUserDto) {
+  async update(id: string, { password, ...body }: UpdateUserDto) {
     return this.userRepository.update({
       where: { id },
       data: {
-        // updatedAt: new Date(),
+        updatedAt: new Date(),
+        password: await this.hashPassword(password),
         ...body,
       },
       select: { ...this.selectValues },
@@ -63,5 +68,18 @@ export class UserService {
 
   async delete(id: string) {
     return this.userRepository.delete({ where: { id } });
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    let passwordHash: string = undefined;
+
+    do {
+      passwordHash = await hash(password);
+    } while (
+      needsRehash(passwordHash) &&
+      (await verify(password, passwordHash))
+    );
+
+    return passwordHash;
   }
 }

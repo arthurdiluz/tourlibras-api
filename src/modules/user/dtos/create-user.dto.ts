@@ -42,11 +42,11 @@ export class CreateUserDto {
   @ApiProperty({
     type: String,
     required: true,
-    example: 'J&8dqQ8^N!MtQ3igG6$m@6f4tK@H%*9$uSCbmDLg54Z4#TSgE%272tULqFJAx2$U',
+    example: 'u*X^MWuR%&R3Sf%HsNv9#2N$23#%2X!msc2S&9KzK%#!H42C5n7qe&^88Rv6d7*',
   })
   @IsStrongPassword()
   @IsNotEmpty()
-  @Length(8, 64)
+  @Length(8, 63)
   password: string;
 
   @ApiProperty({

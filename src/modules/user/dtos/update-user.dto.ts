@@ -43,11 +43,11 @@ export class UpdateUserDto {
   @ApiPropertyOptional({
     type: String,
     required: true,
-    example: 'J&8dqQ8^N!MtQ3igG6$m@6f4tK@H%*9$uSCbmDLg54Z4#TSgE%272tULqFJAx2$U',
+    example: '6&4S#uJ@h93h#@wG3R9QFsWbzGS^^$b4!i3QV2HLhC^%^%#F8iy5BmNoifrU!#A',
   })
   @IsOptional()
   @IsStrongPassword()
-  @Length(8, 64)
+  @Length(8, 63)
   password?: string;
 
   @ApiPropertyOptional({
