@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { PrismaModule } from './database/prisma.module';
 import { ConfigService } from './config/config.service';
+import { PrismaModule } from './common/prisma/prisma.module';
+import { UserModule } from './modules/user/user.module';
 
 const configService = new ConfigService();
 
@@ -14,6 +15,7 @@ const configService = new ConfigService();
       limit: Number(configService.requestsLimit),
     }),
     PrismaModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

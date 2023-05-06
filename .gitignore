@@ -8,3 +8,4 @@ yarn-error.log
 dist/
 
 .DS_Store
+src/modules/user/controllers/user.controller.ts
