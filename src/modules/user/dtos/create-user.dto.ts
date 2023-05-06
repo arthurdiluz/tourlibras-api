@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
+  IsBase64,
   IsBoolean,
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsStrongPassword,
   Length,
@@ -13,12 +15,13 @@ import {
 export class CreateUserDto {
   @ApiProperty({
     type: Boolean,
-    required: true,
+    required: false,
     example: false,
   })
   @IsBoolean()
-  @IsNotEmpty()
-  isActive?: boolean = false;
+  @Transform(({ value }) => Boolean(eval(value)))
+  @IsOptional()
+  isActive?: boolean;
 
   @ApiProperty({
     type: String,
@@ -36,10 +39,9 @@ export class CreateUserDto {
     example: 'john.smith@example.com',
   })
   @IsEmail()
-  @IsString()
-  @IsNotEmpty()
   @MaxLength(31)
   @Transform(({ value }) => String(value).toLowerCase())
+  @IsNotEmpty()
   email: string;
 
   @ApiProperty({
@@ -48,17 +50,18 @@ export class CreateUserDto {
     example: 'u*X^MWuR%&R3Sf%HsNv9#2N$23#%2X!msc2S&9KzK%#!H42C5n7qe&^88Rv6d7*',
   })
   @IsStrongPassword()
-  @IsNotEmpty()
   @Length(8, 63)
+  @IsNotEmpty()
   password: string;
 
   @ApiProperty({
     type: String,
-    required: true,
-    example: 'blob:xvclSFAVcaZZVC',
+    required: false,
+    example: 'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
   })
   @IsString()
-  @IsNotEmpty()
-  @Length(0, 255)
-  profilePhoto: string;
+  @IsBase64()
+  @MaxLength(255)
+  @IsOptional()
+  profilePhoto?: string;
 }

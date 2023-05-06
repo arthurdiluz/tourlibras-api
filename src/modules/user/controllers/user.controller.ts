@@ -27,8 +27,6 @@ export class UserController {
   @Post()
   async create(@Body() { email, ...body }: CreateUserDto) {
     try {
-      body.isActive = false;
-
       if ((await this.userService.findByEmail(email)) !== null) {
         throw new ConflictException(`Email "${email}" already exists`);
       }
@@ -50,7 +48,6 @@ export class UserController {
     }
   }
 
-  @HttpCode(HttpStatus.FOUND)
   @Get(':id')
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
@@ -96,7 +93,7 @@ export class UserController {
         throw new ConflictException(`Email "${email}" already exists`);
       }
 
-      return this.userService.update(id, { email, ...body });
+      return await this.userService.update(id, { email, ...body });
     } catch (error) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

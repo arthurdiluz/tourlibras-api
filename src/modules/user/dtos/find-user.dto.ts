@@ -1,11 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
+  IsBase64,
   IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
-  Length,
   MaxLength,
 } from 'class-validator';
 
@@ -15,9 +15,9 @@ export class FindUserDto {
     required: false,
     example: false,
   })
-  @IsOptional()
   @IsBoolean()
   @Transform(({ value }) => Boolean(eval(value)))
+  @IsOptional()
   isActive?: boolean;
 
   @ApiPropertyOptional({
@@ -25,8 +25,9 @@ export class FindUserDto {
     required: false,
     example: 'John Smith',
   })
-  @IsOptional()
   @IsString()
+  @MaxLength(31)
+  @IsOptional()
   fullName?: string;
 
   @ApiPropertyOptional({
@@ -34,20 +35,20 @@ export class FindUserDto {
     required: false,
     example: 'john.smith@example.com',
   })
-  @IsOptional()
-  @IsString()
   @IsEmail()
   @MaxLength(31)
   @Transform(({ value }) => String(value).toLowerCase())
+  @IsOptional()
   email?: string;
 
   @ApiPropertyOptional({
     type: String,
     required: false,
-    example: 'blob:xvclSFAVcaZZVC',
+    example: 'data:image/png;base64,iVBORw0KGg...',
   })
-  @IsOptional()
   @IsString()
-  @Length(0, 255)
+  @IsBase64()
+  @MaxLength(255)
+  @IsOptional()
   profilePhoto?: string;
 }

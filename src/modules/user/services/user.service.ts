@@ -5,71 +5,73 @@ import { hash, verify, needsRehash } from 'argon2';
 
 @Injectable()
 export class UserService {
-  private readonly selectValues = {
-    _count: true,
-    createdAt: true,
-    updatedAt: true,
-    id: true,
-    isActive: true,
-    fullName: true,
-    email: true,
-    password: false,
-    profilePhoto: true,
-  };
-
   constructor(private readonly userRepository: UserRepository) {}
 
-  async create({ password, ...body }: CreateUserDto) {
-    return this.userRepository.create({
+  async create({ password, profilePhoto, ...body }: CreateUserDto) {
+    const user = await this.userRepository.create({
       data: {
+        profilePhoto:
+          profilePhoto ||
+          'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
         password: await this.hashPassword(password),
         ...body,
       },
-      select: { id: true },
     });
+
+    return this.excludeKeysFromUser(user, ['password']);
   }
 
   async find({ fullName, ...body }: FindUserDto) {
-    return this.userRepository.findMany({
+    const users = await this.userRepository.findMany({
       where: {
         fullName: { contains: fullName, mode: 'insensitive' },
         ...body,
       },
-      select: { ...this.selectValues },
     });
+
+    return users.map((user) => this.excludeKeysFromUser(user, ['password']));
   }
 
   async findById(id: string) {
-    return this.userRepository.findUnique({
-      where: { id },
-      select: { ...this.selectValues },
-    });
+    const user = await this.userRepository.findUnique({ where: { id } });
+
+    if (!user) return null;
+
+    return this.excludeKeysFromUser(user, ['password']);
   }
 
   async findByEmail(email: string) {
-    return this.userRepository.findUnique({
-      where: { email },
-      select: { ...this.selectValues },
-    });
+    const user = await this.userRepository.findUnique({ where: { email } });
+
+    if (!user) return null;
+
+    return this.excludeKeysFromUser(user, ['password']);
   }
 
-  async update(id: string, { password, ...body }: UpdateUserDto) {
-    return this.userRepository.update({
+  async update(id: string, { password, profilePhoto, ...body }: UpdateUserDto) {
+    const user = await this.userRepository.update({
       where: { id },
       data: {
         updatedAt: new Date(),
+        profilePhoto:
+          profilePhoto ||
+          'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
         password: await this.hashPassword(password),
         ...body,
       },
-      select: { ...this.selectValues },
     });
+
+    return this.excludeKeysFromUser(user, ['password']);
   }
 
   async delete(id: string) {
-    return this.userRepository.delete({ where: { id } });
+    const user = await this.userRepository.delete({ where: { id } });
+    console.log(user);
+
+    return this.excludeKeysFromUser(user, ['password']);
   }
 
-  async hashPassword(password: string): Promise<string> {
+  private async hashPassword(password: string): Promise<string> {
     let passwordHash: string = undefined;
 
     do {
@@ -80,5 +82,15 @@ export class UserService {
     );
 
     return passwordHash;
+  }
+
+  private excludeKeysFromUser<User, Key extends keyof User>(
+    user: User,
+    keys: Key[],
+  ): Omit<User, Key> {
+    for (const key of keys) {
+      delete user[key];
+    }
+    return user;
   }
 }

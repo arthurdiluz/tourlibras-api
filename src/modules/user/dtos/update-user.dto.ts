@@ -1,8 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
+  IsBase64,
   IsBoolean,
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsStrongPassword,
@@ -13,52 +15,53 @@ import {
 export class UpdateUserDto {
   @ApiPropertyOptional({
     type: Boolean,
-    required: true,
-    example: false,
+    required: false,
+    example: true,
   })
-  @IsOptional()
   @IsBoolean()
-  isActive?: boolean = true;
+  @Transform(({ value }) => Boolean(eval(value)))
+  @IsOptional()
+  isActive?: boolean;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: 'Jamas Johnson',
+    required: false,
+    example: 'James Johnson',
   })
-  @IsOptional()
   @IsString()
   @MaxLength(31)
+  @IsOptional()
   fullName?: string;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: 'james_johnson@example.com',
+    required: false,
+    example: 'james.johnson@example.com',
   })
-  @IsOptional()
   @IsEmail()
-  @IsString()
   @MaxLength(31)
   @Transform(({ value }) => String(value).toLowerCase())
+  @IsOptional()
   email?: string;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: '6&4S#uJ@h93h#@wG3R9QFsWbzGS^^$b4!i3QV2HLhC^%^%#F8iy5BmNoifrU!#A',
+    required: false,
+    example: 'This_Is_a_new.password123',
   })
-  @IsOptional()
   @IsStrongPassword()
   @Length(8, 63)
+  @IsNotEmpty()
   password?: string;
 
   @ApiPropertyOptional({
     type: String,
-    required: true,
-    example: 'blob:xvclSFAVcaZZVC',
+    required: false,
+    example: 'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
   })
-  @IsOptional()
   @IsString()
-  @Length(0, 255)
+  @IsBase64()
+  @MaxLength(255)
+  @IsOptional()
   profilePhoto?: string;
 }
