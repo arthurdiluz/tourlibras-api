@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
-import { hash, verify, needsRehash } from 'argon2';
+import { excludeKeysFromUser, hashPassword } from 'src/common/helpers';
 
 @Injectable()
 export class UserService {
@@ -13,12 +13,12 @@ export class UserService {
         profilePhoto:
           profilePhoto ||
           'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
-        password: await this.hashPassword(password),
+        password: await hashPassword(password),
         ...body,
       },
     });
 
-    return this.excludeKeysFromUser(user, ['password']);
+    return excludeKeysFromUser(user, ['password']);
   }
 
   async find({ fullName, ...body }: FindUserDto) {
@@ -29,7 +29,7 @@ export class UserService {
       },
     });
 
-    return users.map((user) => this.excludeKeysFromUser(user, ['password']));
+    return users.map((user) => excludeKeysFromUser(user, ['password']));
   }
 
   async findById(id: string) {
@@ -37,7 +37,7 @@ export class UserService {
 
     if (!user) return null;
 
-    return this.excludeKeysFromUser(user, ['password']);
+    return excludeKeysFromUser(user, ['password']);
   }
 
   async findByEmail(email: string) {
@@ -45,7 +45,7 @@ export class UserService {
 
     if (!user) return null;
 
-    return this.excludeKeysFromUser(user, ['password']);
+    return excludeKeysFromUser(user, ['password']);
   }
 
   async update(id: string, { password, profilePhoto, ...body }: UpdateUserDto) {
@@ -56,41 +56,16 @@ export class UserService {
         profilePhoto:
           profilePhoto ||
           'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
-        password: await this.hashPassword(password),
+        password: await hashPassword(password),
         ...body,
       },
     });
 
-    return this.excludeKeysFromUser(user, ['password']);
+    return excludeKeysFromUser(user, ['password']);
   }
 
   async delete(id: string) {
     const user = await this.userRepository.delete({ where: { id } });
-    console.log(user);
-
-    return this.excludeKeysFromUser(user, ['password']);
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    let passwordHash: string = undefined;
-
-    do {
-      passwordHash = await hash(password);
-    } while (
-      needsRehash(passwordHash) &&
-      (await verify(password, passwordHash))
-    );
-
-    return passwordHash;
-  }
-
-  private excludeKeysFromUser<User, Key extends keyof User>(
-    user: User,
-    keys: Key[],
-  ): Omit<User, Key> {
-    for (const key of keys) {
-      delete user[key];
-    }
-    return user;
+    return excludeKeysFromUser(user, ['password']);
   }
 }
