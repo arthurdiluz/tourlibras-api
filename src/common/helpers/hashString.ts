@@ -6,7 +6,9 @@ import { hash, verify, needsRehash, argon2i } from 'argon2';
  * @returns Promise of the hashed string
  */
 
-export async function hashString(text: string): Promise<string> {
+export async function hashString(text: string): Promise<string | undefined> {
+  if (!text) return undefined;
+
   let textHash: string = undefined;
 
   do {
