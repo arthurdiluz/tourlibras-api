@@ -17,8 +17,11 @@ import { JwtSignInDto, JwtSignUpDto } from '../dtos/local';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Professor, Student } from '@prisma/client';
 import { IPayload, IToken } from 'src/common/interfaces';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import {
+  JwtAccessTokenGuard,
+  JwtRefreshTokenGuard,
+} from 'src/common/decorators/guards';
 
 @ApiTags('Local Authentication')
 @Controller('api/v1/auth/local')
@@ -60,7 +63,7 @@ export class LocalAuthController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAccessTokenGuard)
   @Post('signout')
   @HttpCode(HttpStatus.OK)
   async signOut(@Req() req: Request) {
@@ -78,7 +81,7 @@ export class LocalAuthController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @UseGuards(JwtRefreshTokenGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request) {
