@@ -21,7 +21,8 @@ import { Request } from 'express';
 import {
   JwtAccessTokenGuard,
   JwtRefreshTokenGuard,
-} from 'src/common/decorators/guards';
+} from 'src/common/decorators/guards/local';
+import { Public } from 'src/common/decorators';
 
 @ApiTags('Local Authentication')
 @Controller('api/v1/auth/local')
@@ -31,6 +32,7 @@ export class LocalAuthController {
     private readonly userService: UserService,
   ) {}
 
+  @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signUp(
@@ -48,6 +50,7 @@ export class LocalAuthController {
     }
   }
 
+  @Public()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signIn(@Body() { email, password }: JwtSignInDto): Promise<IToken> {
@@ -81,6 +84,7 @@ export class LocalAuthController {
     }
   }
 
+  @Public() // set public so guard can verify
   @UseGuards(JwtRefreshTokenGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)

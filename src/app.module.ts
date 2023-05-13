@@ -5,6 +5,8 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { ConfigService } from './config/config.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAccessTokenGuard } from './common/decorators/guards/local';
 
 const configService = new ConfigService();
 
@@ -18,6 +20,12 @@ const configService = new ConfigService();
     PrismaModule,
     AuthModule,
     UserModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAccessTokenGuard,
+    },
   ],
 })
 export class AppModule {}
