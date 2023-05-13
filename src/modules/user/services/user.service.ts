@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
-import { excludeKeysFromUser, hashPassword } from 'src/common/helpers';
+import { removeKeys, hashString } from 'src/common/helpers';
+import { verify } from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -13,12 +14,12 @@ export class UserService {
         profilePhoto:
           profilePhoto ||
           'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
-        password: await hashPassword(password),
+        password: await hashString(password),
         ...body,
       },
     });
 
-    return excludeKeysFromUser(user, ['password']);
+    return removeKeys(user, ['password', 'refreshToken']);
   }
 
   async find({ fullName, ...body }: FindUserDto) {
@@ -29,7 +30,7 @@ export class UserService {
       },
     });
 
-    return users.map((user) => excludeKeysFromUser(user, ['password']));
+    return users.map((user) => removeKeys(user, ['password', 'refreshToken']));
   }
 
   async findById(id: string) {
@@ -37,7 +38,7 @@ export class UserService {
 
     if (!user) return null;
 
-    return excludeKeysFromUser(user, ['password']);
+    return removeKeys(user, ['password', 'refreshToken']);
   }
 
   async findByEmail(email: string) {
@@ -45,10 +46,13 @@ export class UserService {
 
     if (!user) return null;
 
-    return excludeKeysFromUser(user, ['password']);
+    return removeKeys(user, ['password', 'refreshToken']);
   }
 
-  async update(id: string, { password, profilePhoto, ...body }: UpdateUserDto) {
+  async update(
+    id: string,
+    { password, profilePhoto, refreshToken, ...body }: UpdateUserDto,
+  ) {
     const user = await this.userRepository.update({
       where: { id },
       data: {
@@ -56,16 +60,25 @@ export class UserService {
         profilePhoto:
           profilePhoto ||
           'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
-        password: await hashPassword(password),
+        password: await hashString(password),
+        refreshToken: await hashString(refreshToken),
         ...body,
       },
     });
 
-    return excludeKeysFromUser(user, ['password']);
+    return removeKeys(user, ['password', 'refreshToken']);
   }
 
   async delete(id: string) {
     const user = await this.userRepository.delete({ where: { id } });
-    return excludeKeysFromUser(user, ['password']);
+    return removeKeys(user, ['password', 'refreshToken']);
+  }
+
+  async isValidCredentials(email: string, password: string) {
+    const user = await this.userRepository.findUnique({
+      where: { email },
+    });
+
+    return user && (await verify(user.password, password));
   }
 }

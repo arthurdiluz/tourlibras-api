@@ -1,10 +1,9 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
   IsBase64,
   IsBoolean,
   IsEmail,
-  IsJWT,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -13,49 +12,59 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class UpdateUserDto {
-  @ApiPropertyOptional({
+export class JwtSignUpDto {
+  @ApiProperty({
+    type: Boolean,
+    required: true,
+    example: false,
+  })
+  @IsBoolean()
+  @Transform(({ value }) => Boolean(eval(value)))
+  @IsNotEmpty()
+  isProfessor: boolean;
+
+  @ApiProperty({
     type: Boolean,
     required: false,
-    example: true,
+    example: false,
   })
   @IsBoolean()
   @Transform(({ value }) => Boolean(eval(value)))
   @IsOptional()
   isActive?: boolean;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: String,
-    required: false,
-    example: 'James Johnson',
+    required: true,
+    example: 'John Smith',
   })
   @IsString()
-  @MaxLength(31)
-  @IsOptional()
-  fullName?: string;
+  @Length(3, 31)
+  @IsNotEmpty()
+  fullName: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: String,
-    required: false,
-    example: 'james.johnson@example.com',
+    required: true,
+    example: 'john.smith@example.com',
   })
   @IsEmail()
   @MaxLength(31)
   @Transform(({ value }) => String(value).toLowerCase())
-  @IsOptional()
-  email?: string;
+  @IsNotEmpty()
+  email: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: String,
-    required: false,
-    example: 'This_Is_a_new.password123',
+    required: true,
+    example: 'u*X^MWuR%&R3Sf%HsNv9#2N$23#%2X!msc2S&9KzK%#!H42C5n7qe&^88Rv6d7*',
   })
   @IsStrongPassword()
   @Length(8, 63)
   @IsNotEmpty()
-  password?: string;
+  password: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: String,
     required: false,
     example: 'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
@@ -65,14 +74,4 @@ export class UpdateUserDto {
   @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;
-
-  @ApiPropertyOptional({
-    type: String,
-    required: true,
-  })
-  @IsString()
-  @IsJWT()
-  @IsOptional()
-  @MaxLength(4096)
-  refreshToken?: string;
 }

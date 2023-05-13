@@ -1,2 +1,2 @@
-export { hashPassword } from './hashPassword';
-export { excludeKeysFromUser } from './excludeKeysFromUser';
+export { hashString } from './hashString';
+export { removeKeys } from './removeKeys';
