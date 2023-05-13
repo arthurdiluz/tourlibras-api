@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { ConfigService } from './config/config.service';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { ConfigService } from './config/config.service';
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 
 const configService = new ConfigService();
@@ -11,13 +12,12 @@ const configService = new ConfigService();
   imports: [
     ConfigModule.forRoot(),
     ThrottlerModule.forRoot({
-      ttl: Number(configService.ttl),
-      limit: Number(configService.requestsLimit),
+      ttl: Number(configService.getTtl),
+      limit: Number(configService.getRequestsLimit),
     }),
     PrismaModule,
+    AuthModule,
     UserModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
