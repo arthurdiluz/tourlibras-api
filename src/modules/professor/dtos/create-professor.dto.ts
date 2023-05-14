@@ -20,5 +20,5 @@ export class CreateProfessorDto {
   })
   @IsEnum(Grammar)
   @IsOptional()
-  grammar?: string;
+  grammar?: Grammar;
 }
