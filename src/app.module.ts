@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAccessTokenGuard } from './common/decorators/guards/local';
+import { ProfessorModule } from './modules/professor/professor.module';
 
 const configService = new ConfigService();
 
@@ -20,6 +21,7 @@ const configService = new ConfigService();
     PrismaModule,
     AuthModule,
     UserModule,
+    ProfessorModule,
   ],
   providers: [
     {
