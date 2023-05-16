@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessorRepository } from '../repositories/professor.repository';
 import { CreateProfessorDto, FindProfessorDto } from '../dtos';
-import { hashString } from 'src/common/helpers';
 
 @Injectable()
 export class ProfessorService {
@@ -30,5 +29,9 @@ export class ProfessorService {
 
   async findById(professorId: string) {
     return this.professorRepository.findById({ where: { id: professorId } });
+  }
+
+  async findByUserId(userId: string) {
+    return this.professorRepository.findByUserId(userId);
   }
 }

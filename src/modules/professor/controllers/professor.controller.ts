@@ -8,13 +8,18 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ProfessorService } from '../services/professor.service';
-import { CreateProfessorDto, FindProfessorDto } from '../dtos';
+import {
+  CreateProfessorDto,
+  FindProfessorDto,
+  UpdateProfessorDto,
+} from '../dtos';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/local';
@@ -57,10 +62,30 @@ export class ProfessorController {
   @Get(':id')
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      return await this.professorService.findById(id);
+      const professor = await this.professorService.findById(id);
+
+      if (!professor) {
+        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      }
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
     }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get('user/:id')
+  async findByUserId(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
+  ) {
+    const professor = await this.professorService.findByUserId(userId);
+
+    if (!professor) {
+      throw new NotFoundException(
+        `Professor with User ID "${userId}" not found`,
+      );
+    }
+
+    return professor;
   }
 }
