@@ -24,7 +24,7 @@ import {
 } from 'src/common/decorators/guards/local';
 import { Public } from 'src/common/decorators';
 
-@ApiTags('Local Authentication')
+@ApiTags('Authentication - Local')
 @Controller('api/v1/auth/local')
 export class LocalAuthController {
   constructor(

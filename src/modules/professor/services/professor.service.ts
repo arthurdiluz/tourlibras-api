@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessorRepository } from '../repositories/professor.repository';
 import { CreateProfessorDto } from '../dtos';
+import { hashString } from 'src/common/helpers';
 
 @Injectable()
 export class ProfessorService {

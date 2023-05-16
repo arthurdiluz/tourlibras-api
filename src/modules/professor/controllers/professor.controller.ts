@@ -1,5 +1,7 @@
 import {
+  BadRequestException,
   Body,
+  ConflictException,
   Controller,
   InternalServerErrorException,
   NotFoundException,
@@ -9,6 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ProfessorService } from '../services/professor.service';
 import { CreateProfessorDto } from '../dtos';
 import { UserService } from 'src/modules/user/services/user.service';
+import { Public } from 'src/common/decorators';
 
 @ApiTags('Professor')
 @Controller('api/v1/professor')
@@ -18,12 +21,11 @@ export class ProfessorController {
     private readonly userService: UserService,
   ) {}
 
+  @Public()
   @Post()
   async create(@Body() { userId, ...body }: CreateProfessorDto) {
     try {
-      const user = await this.userService.findById(userId);
-
-      if (!user) {
+      if (!(await this.userService.findById(userId))) {
         throw new NotFoundException(`User with ID "${userId}" not found`);
       }
 
