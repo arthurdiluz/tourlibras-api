@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessorRepository } from '../repositories/professor.repository';
-import { CreateProfessorDto } from '../dtos';
+import { CreateProfessorDto, FindProfessorDto } from '../dtos';
 import { hashString } from 'src/common/helpers';
 
 @Injectable()
@@ -12,6 +12,18 @@ export class ProfessorService {
       data: {
         User: { connect: { id: userId } },
         ...body,
+      },
+    });
+  }
+
+  async find({ grammar, fullName, ...query }: FindProfessorDto) {
+    return this.professorRepository.find({
+      where: {
+        grammar,
+        User: {
+          fullName: { contains: fullName, mode: 'insensitive' },
+          ...query,
+        },
       },
     });
   }

@@ -1,21 +1,15 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Grammar } from '@prisma/client';
-import { IsEnum, IsOptional, IsUUID } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
+import { FindUserDto } from 'src/modules/user/dtos';
 
-export class FindProfessorDto {
+export class FindProfessorDto extends FindUserDto {
   @ApiPropertyOptional({
     type: String,
     required: false,
-  })
-  @IsUUID()
-  @IsOptional()
-  userId?: string;
-
-  @ApiPropertyOptional({
-    type: String,
-    required: false,
+    example: Grammar.OSV,
   })
   @IsEnum(Grammar)
   @IsOptional()
-  grammar?: string;
+  grammar?: Grammar;
 }
