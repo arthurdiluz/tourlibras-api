@@ -27,4 +27,8 @@ export class ProfessorService {
       },
     });
   }
+
+  async findById(professorId: string) {
+    return this.professorRepository.findById({ where: { id: professorId } });
+  }
 }
