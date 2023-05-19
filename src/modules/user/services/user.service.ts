@@ -19,7 +19,7 @@ export class UserService {
       },
     });
 
-    return removeKeys(user, ['password', 'refreshToken']);
+    return removeKeys(user, ['password']);
   }
 
   async find({ fullName, ...body }: FindUserDto) {
@@ -30,7 +30,7 @@ export class UserService {
       },
     });
 
-    return users.map((user) => removeKeys(user, ['password', 'refreshToken']));
+    return users.map((user) => removeKeys(user, ['password']));
   }
 
   async findById(id: string) {
@@ -38,7 +38,7 @@ export class UserService {
 
     if (!user) return null;
 
-    return removeKeys(user, ['password', 'refreshToken']);
+    return removeKeys(user, ['password']);
   }
 
   async findByEmail(email: string) {
@@ -46,13 +46,10 @@ export class UserService {
 
     if (!user) return null;
 
-    return removeKeys(user, ['password', 'refreshToken']);
+    return removeKeys(user, ['password']);
   }
 
-  async update(
-    id: string,
-    { password, profilePhoto, refreshToken, ...body }: UpdateUserDto,
-  ) {
+  async update(id: string, { password, profilePhoto, ...body }: UpdateUserDto) {
     const user = await this.userRepository.update({
       where: { id },
       data: {
@@ -61,17 +58,16 @@ export class UserService {
           profilePhoto ||
           'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
         password: await hashString(password),
-        refreshToken: await hashString(refreshToken),
         ...body,
       },
     });
 
-    return removeKeys(user, ['password', 'refreshToken']);
+    return removeKeys(user, ['password']);
   }
 
   async delete(id: string) {
     const user = await this.userRepository.delete({ where: { id } });
-    return removeKeys(user, ['password', 'refreshToken']);
+    return removeKeys(user, ['password']);
   }
 
   async isValidCredentials(email: string, password: string) {

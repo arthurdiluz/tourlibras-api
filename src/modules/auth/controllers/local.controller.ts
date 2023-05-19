@@ -5,23 +5,14 @@ import {
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
-  NotFoundException,
   Post,
-  Req,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { LocalAuthService } from '../services/local-auth.service';
-import { JwtSignInDto, JwtSignUpDto } from '../dtos/local';
+import { LocalAuthService } from '../services/local.service';
+import { JwtSignInDto, JwtSignUpDto } from '../dtos/jwt';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Professor, Student } from '@prisma/client';
-import { IPayload, IToken } from 'src/common/interfaces';
-import { Request } from 'express';
-import {
-  JwtAccessTokenGuard,
-  JwtRefreshTokenGuard,
-} from 'src/common/decorators/guards/local';
 import { Public } from 'src/common/decorators';
 
 @ApiTags('Authentication - Local')
@@ -53,56 +44,13 @@ export class LocalAuthController {
   @Public()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  async signIn(@Body() { email, password }: JwtSignInDto): Promise<IToken> {
+  async signIn(@Body() { email, password }: JwtSignInDto): Promise<string> {
     try {
       if (!(await this.userService.isValidCredentials(email, password))) {
         throw new UnauthorizedException('Invalid credentials');
       }
 
       return await this.authService.signIn(email);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
-  }
-
-  @UseGuards(JwtAccessTokenGuard)
-  @Post('signout')
-  @HttpCode(HttpStatus.OK)
-  async signOut(@Req() req: Request) {
-    try {
-      const userId: string = req?.user['sub'];
-
-      if (!(await this.userService.findById(userId))) {
-        throw new NotFoundException(`User with ID "${userId}" not found`);
-      }
-
-      return await this.authService.signOut(userId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
-  }
-
-  @Public() // set public so guard can verify
-  @UseGuards(JwtRefreshTokenGuard)
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  async refresh(@Req() req: Request) {
-    try {
-      const { sub: userId, refreshToken } = req?.user as IPayload;
-
-      if (!userId) {
-        throw new NotFoundException('ID not found in request');
-      }
-
-      const user = await this.userService.findById(userId);
-
-      if (!user) {
-        throw new NotFoundException(`User with ID "${userId}" not found`);
-      }
-
-      return await this.authService.updateRefreshToken(userId, refreshToken);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

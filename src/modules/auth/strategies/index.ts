@@ -1,1 +1,1 @@
-export { AccessTokenStrategy, RefreshTokenStrategy } from './jwt';
+export { JwtStrategy as AccessTokenStrategy } from './jwt.strategy';

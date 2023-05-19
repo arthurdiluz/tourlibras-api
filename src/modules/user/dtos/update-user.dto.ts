@@ -4,7 +4,6 @@ import {
   IsBase64,
   IsBoolean,
   IsEmail,
-  IsJWT,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -65,14 +64,4 @@ export class UpdateUserDto {
   @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;
-
-  @ApiPropertyOptional({
-    type: String,
-    required: true,
-  })
-  @IsString()
-  @IsJWT()
-  @IsOptional()
-  @MaxLength(4096)
-  refreshToken?: string;
 }

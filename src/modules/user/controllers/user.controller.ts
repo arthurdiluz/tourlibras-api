@@ -18,9 +18,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
-import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
 import { Public } from 'src/common/decorators';
-import { JwtAccessTokenGuard } from 'src/common/decorators/guards/local';
+import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('User')
 @Controller('api/v1/user')

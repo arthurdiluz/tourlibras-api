@@ -1,2 +1,1 @@
-export { IToken } from './token.interface';
-export { IPayload } from './payload.interface';
+export { IJwtPayload } from './payload.interface';
