@@ -5,7 +5,7 @@ import { UserService } from 'src/modules/user/services/user.service';
 import { LocalAuthRepository } from '../repositories/local.repository';
 import { CreateJwtTokenDto, JwtSignUpDto } from '../dtos/jwt';
 import { Professor, Student } from '@prisma/client';
-import { IJwtPayload } from 'src/common/interfaces';
+import { IJwtPayload, IJwtToken } from 'src/common/interfaces';
 
 @Injectable()
 export class LocalAuthService {
@@ -29,10 +29,11 @@ export class LocalAuthService {
     }
   }
 
-  async signIn(email: string): Promise<string> {
+  async signIn(email: string): Promise<IJwtToken> {
     const { id: userId } = await this.userService.findByEmail(email);
+    const accessToken = await this.createJwtToken({ userId, email });
 
-    return this.createJwtToken({ userId, email });
+    return { accessToken };
   }
 
   private async createJwtToken({

@@ -14,6 +14,7 @@ import { JwtSignInDto, JwtSignUpDto } from '../dtos/jwt';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Professor, Student } from '@prisma/client';
 import { Public } from 'src/common/decorators';
+import { IJwtToken } from 'src/common/interfaces';
 
 @ApiTags('Authentication - Local')
 @Controller('api/v1/auth/local')
@@ -44,7 +45,7 @@ export class LocalAuthController {
   @Public()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  async signIn(@Body() { email, password }: JwtSignInDto): Promise<string> {
+  async signIn(@Body() { email, password }: JwtSignInDto): Promise<IJwtToken> {
     try {
       if (!(await this.userService.isValidCredentials(email, password))) {
         throw new UnauthorizedException('Invalid credentials');
