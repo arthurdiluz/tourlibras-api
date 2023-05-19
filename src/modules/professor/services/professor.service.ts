@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessorRepository } from '../repositories/professor.repository';
-import { CreateProfessorDto, FindProfessorDto } from '../dtos';
+import {
+  CreateProfessorDto,
+  FindProfessorDto,
+  UpdateProfessorDto,
+} from '../dtos';
+import { hashString } from 'src/common/helpers';
 
 @Injectable()
 export class ProfessorService {
@@ -33,5 +38,27 @@ export class ProfessorService {
 
   async findByUserId(userId: string) {
     return this.professorRepository.findByUserId(userId);
+  }
+
+  async update(
+    userId: string,
+    { password, profilePhoto, grammar, ...userBody }: UpdateProfessorDto,
+  ) {
+    return this.professorRepository.update({
+      where: { userId },
+      data: {
+        grammar,
+        User: {
+          update: {
+            updatedAt: new Date(),
+            profilePhoto:
+              profilePhoto ||
+              'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
+            password: await hashString(password),
+            ...userBody,
+          },
+        },
+      },
+    });
   }
 }

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ConflictException,
   Controller,
@@ -22,7 +21,7 @@ import {
 } from '../dtos';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
-import { JwtAccessTokenGuard } from 'src/common/decorators/guards/local';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('Professor')
 @Controller('api/v1/professor')
@@ -78,14 +77,37 @@ export class ProfessorController {
   async findByUserId(
     @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
   ) {
-    const professor = await this.professorService.findByUserId(userId);
+    try {
+      const professor = await this.professorService.findByUserId(userId);
 
-    if (!professor) {
-      throw new NotFoundException(
-        `Professor with User ID "${userId}" not found`,
-      );
+      if (!professor) {
+        throw new NotFoundException(
+          `Professor with User ID "${userId}" not found`,
+        );
+      }
+
+      return professor;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
     }
+  }
 
-    return professor;
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() { email, ...body }: UpdateProfessorDto,
+  ) {
+    try {
+      if (await this.userService.findByEmail(email)) {
+        throw new ConflictException(`Email "${email}" already exists`);
+      }
+
+      return await this.professorService.update(id, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
   }
 }

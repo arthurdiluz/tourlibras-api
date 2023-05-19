@@ -1,9 +1,9 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { Grammar } from '@prisma/client';
 import { IsEnum, IsOptional } from 'class-validator';
 import { UpdateUserDto } from 'src/modules/user/dtos';
 
-export class UpdateProfessorDto extends UpdateUserDto {
+export class UpdateProfessorDto extends PartialType(UpdateUserDto) {
   @ApiPropertyOptional({
     type: String,
     required: false,
@@ -11,5 +11,5 @@ export class UpdateProfessorDto extends UpdateUserDto {
   })
   @IsEnum(Grammar)
   @IsOptional()
-  grammar?: string;
+  grammar?: Grammar;
 }
