@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -112,6 +115,18 @@ export class StudentController {
       }
 
       return await this.studentService.update(id, { professorId, ...body });
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
+  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      return await this.studentService.delete(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
