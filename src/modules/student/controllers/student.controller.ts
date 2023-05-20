@@ -4,14 +4,18 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
+  Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StudentService } from '../services/student.service';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
-import { CreateStudentDto, FindStudentDto } from '../dtos';
+import { CreateStudentDto, FindStudentDto, UpdateStudentDto } from '../dtos';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
@@ -49,9 +53,29 @@ export class StudentController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get()
-  async find(query: FindStudentDto) {
+  async find(@Query() query: FindStudentDto) {
     try {
       return await this.studentService.find(query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() { professorId, ...body }: UpdateStudentDto,
+  ) {
+    try {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
+      }
+
+      return await this.studentService.update(id, { professorId, ...body });
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

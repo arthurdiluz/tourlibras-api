@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StudentRepository } from '../repositories/student.repository';
-import { CreateStudentDto, FindStudentDto } from '../dtos';
+import { CreateStudentDto, FindStudentDto, UpdateStudentDto } from '../dtos';
 
 @Injectable()
 export class StudentService {
@@ -42,5 +42,18 @@ export class StudentService {
         theme,
       },
     });
+  }
+
+  async update(id: string, { professorId, ...body }: UpdateStudentDto) {
+    const data = {
+      updatedAt: new Date(),
+      ...body,
+    };
+
+    if (professorId) {
+      data['Professor'] = { connect: { id: professorId } };
+    }
+
+    return this.studentRepository.update({ where: { id }, data });
   }
 }
