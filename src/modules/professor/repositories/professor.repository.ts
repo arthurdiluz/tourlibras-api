@@ -18,10 +18,6 @@ export class ProfessorRepository {
     return this.prismaService.professor.findUnique(args);
   }
 
-  public findByUserId(userId: string) {
-    return this.prismaService.professor.findUnique({ where: { userId } });
-  }
-
   public update(args: Prisma.ProfessorUpdateArgs) {
     return this.prismaService.professor.update(args);
   }

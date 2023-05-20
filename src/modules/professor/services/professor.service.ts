@@ -36,7 +36,7 @@ export class ProfessorService {
   }
 
   async findByUserId(userId: string) {
-    return this.professorRepository.findByUserId(userId);
+    return this.professorRepository.findById({ where: { userId } });
   }
 
   async update(id: string, body: UpdateProfessorDto) {
