@@ -1,7 +1,6 @@
-export interface IPayload {
-  sub: string;
+export interface IJwtPayload {
+  sub: string; // userID
   email: string;
-  refreshToken?: string;
-  iat: number;
-  exp: number;
+  iat?: number; // CreatedAt
+  exp?: number; // ExpiresIn
 }

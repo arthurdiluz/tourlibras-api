@@ -14,7 +14,6 @@ CREATE TABLE "User" (
     "email" VARCHAR(31) NOT NULL,
     "password" VARCHAR(255) NOT NULL,
     "profilePhoto" VARCHAR(255) NOT NULL,
-    "refreshToken" VARCHAR(4096),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

@@ -17,7 +17,6 @@ model User {
   email        String  @unique @db.VarChar(31)
   password     String  @db.VarChar(255) // TODO: calculate length
   profilePhoto String  @db.VarChar(255) // TODO: calculate length
-  refreshToken String? @db.VarChar(4096) // TODO: calculate length
 
   Professor Professor?
   Student   Student?

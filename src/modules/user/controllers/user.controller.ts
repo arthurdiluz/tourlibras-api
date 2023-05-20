@@ -14,16 +14,20 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
+import { Public } from 'src/common/decorators';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('User')
 @Controller('api/v1/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Public()
   @Post()
   async create(@Body() { email, ...body }: CreateUserDto) {
     try {
@@ -38,6 +42,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAccessTokenGuard)
   @Get()
   async find(@Query() query: FindUserDto) {
     try {
@@ -48,6 +53,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
@@ -64,6 +70,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
@@ -100,6 +107,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {

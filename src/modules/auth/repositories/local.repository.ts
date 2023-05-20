@@ -16,22 +16,4 @@ export class LocalAuthRepository {
       data: { User: { connect: { id } } },
     });
   }
-
-  public signOut(userId: string) {
-    return this.prismaService.user.updateMany({
-      where: {
-        id: userId,
-        refreshToken: {
-          not: null,
-        },
-      },
-      data: {
-        refreshToken: null,
-      },
-    });
-  }
-
-  public getRefreshToken(userId: string) {
-    return this.prismaService.user.findUnique({ where: { id: userId } });
-  }
 }

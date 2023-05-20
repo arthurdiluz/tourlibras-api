@@ -3,7 +3,7 @@ import { Transform } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsUUID, MaxLength } from 'class-validator';
 import { randomUUID } from 'crypto';
 
-export class CreateTokensDto {
+export class CreateJwtTokenDto {
   @ApiProperty({
     type: String,
     required: true,
