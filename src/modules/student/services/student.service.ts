@@ -48,6 +48,10 @@ export class StudentService {
     return this.studentRepository.findById({ where: { id } });
   }
 
+  async findByUserId(userId: string) {
+    return this.studentRepository.findById({ where: { userId } });
+  }
+
   async update(id: string, { professorId, ...body }: UpdateStudentDto) {
     const data = {
       updatedAt: new Date(),
