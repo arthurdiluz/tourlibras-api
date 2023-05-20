@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StudentRepository } from '../repositories/student.repository';
-import { CreateStudentDto } from '../dtos';
+import { CreateStudentDto, FindStudentDto } from '../dtos';
 
 @Injectable()
 export class StudentService {
@@ -18,5 +18,29 @@ export class StudentService {
 
     console.log('StudentCreateData:', data);
     return this.studentRepository.create({ data });
+  }
+
+  async find({
+    email,
+    fullName,
+    isActive,
+    profilePhoto,
+    experience,
+    money,
+    theme,
+  }: FindStudentDto) {
+    return this.studentRepository.find({
+      where: {
+        User: {
+          fullName: { contains: fullName, mode: 'insensitive' },
+          email,
+          isActive,
+          profilePhoto,
+        },
+        experience,
+        money,
+        theme,
+      },
+    });
   }
 }

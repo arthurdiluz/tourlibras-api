@@ -1,16 +1,19 @@
 import {
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   NotFoundException,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { StudentService } from '../services/student.service';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
-import { CreateStudentDto } from '../dtos';
+import { CreateStudentDto, FindStudentDto } from '../dtos';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('Student')
 @Controller('api/v1/student')
@@ -38,6 +41,17 @@ export class StudentController {
       }
 
       return await this.studentService.create(body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get()
+  async find(query: FindStudentDto) {
+    try {
+      return await this.studentService.find(query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
