@@ -5,7 +5,6 @@ import {
   FindProfessorDto,
   UpdateProfessorDto,
 } from '../dtos';
-import { hashString } from 'src/common/helpers';
 
 @Injectable()
 export class ProfessorService {
@@ -40,24 +39,12 @@ export class ProfessorService {
     return this.professorRepository.findByUserId(userId);
   }
 
-  async update(
-    userId: string,
-    { password, profilePhoto, grammar, ...userBody }: UpdateProfessorDto,
-  ) {
+  async update(id: string, body: UpdateProfessorDto) {
     return this.professorRepository.update({
-      where: { userId },
+      where: { id },
       data: {
-        grammar,
-        User: {
-          update: {
-            updatedAt: new Date(),
-            profilePhoto:
-              profilePhoto ||
-              'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
-            password: await hashString(password),
-            ...userBody,
-          },
-        },
+        updatedAt: new Date(),
+        ...body,
       },
     });
   }

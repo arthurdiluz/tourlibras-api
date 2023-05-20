@@ -1,6 +1,5 @@
 import {
   Body,
-  ConflictException,
   Controller,
   Delete,
   Get,
@@ -100,13 +99,9 @@ export class ProfessorController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() { email, ...body }: UpdateProfessorDto,
+    @Body() body: UpdateProfessorDto,
   ) {
     try {
-      if (await this.userService.findByEmail(email)) {
-        throw new ConflictException(`Email "${email}" already exists`);
-      }
-
       return await this.professorService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
