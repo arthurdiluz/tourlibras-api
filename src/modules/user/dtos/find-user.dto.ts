@@ -13,17 +13,6 @@ import {
 
 export class FindUserDto {
   @ApiPropertyOptional({
-    type: String,
-    enum: Role,
-    required: false,
-    example: Role.STUDENT,
-  })
-  @IsString()
-  @IsEnum(Role)
-  @IsOptional()
-  role: Role;
-
-  @ApiPropertyOptional({
     type: Boolean,
     required: false,
     example: false,
@@ -64,4 +53,15 @@ export class FindUserDto {
   @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;
+
+  @ApiPropertyOptional({
+    type: String,
+    enum: Role,
+    required: false,
+    example: Role.STUDENT,
+  })
+  @IsString()
+  @IsEnum(Role)
+  @IsOptional()
+  role?: Role;
 }

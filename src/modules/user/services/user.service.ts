@@ -1,27 +1,29 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
 import { removeKeys, hashString } from 'src/common/helpers';
 import { verify } from 'argon2';
-import { LocalAuthRepository } from 'src/modules/auth/repositories/local.repository';
+import { Professor, Role, Student } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly localAuthRepository: LocalAuthRepository,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
-  async create({ password, profilePhoto, ...body }: CreateUserDto) {
+  async create({ password, profilePhoto, role, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({
       data: {
         profilePhoto:
           profilePhoto ||
           'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
         password: await hashString(password),
+        role,
         ...body,
       },
     });
+
+    if (role) {
+      await this.linkUserToRole(user.id, user.role);
+    }
 
     return removeKeys(user, ['password']);
   }
@@ -80,5 +82,14 @@ export class UserService {
     });
 
     return user && (await verify(user.password, password));
+  }
+
+  async linkUserToRole(
+    userId: string,
+    role: Role,
+  ): Promise<Student | Professor> {
+    return role === 'STUDENT'
+      ? this.userRepository.linkUserToStudent(userId)
+      : this.userRepository.linkUserToProfessor(userId);
   }
 }

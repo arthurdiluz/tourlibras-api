@@ -25,4 +25,16 @@ export class UserRepository {
   async delete(args: Prisma.UserDeleteArgs) {
     return this.prismaService.user.delete(args);
   }
+
+  public linkUserToProfessor(id: string) {
+    return this.prismaService.professor.create({
+      data: { User: { connect: { id } } },
+    });
+  }
+
+  public linkUserToStudent(id: string) {
+    return this.prismaService.student.create({
+      data: { User: { connect: { id } } },
+    });
+  }
 }

@@ -16,17 +16,6 @@ import {
 
 export class CreateUserDto {
   @ApiProperty({
-    type: String,
-    enum: Role,
-    required: true,
-    example: Role.STUDENT,
-  })
-  @IsString()
-  @IsEnum(Role)
-  @IsNotEmpty()
-  role: Role;
-
-  @ApiProperty({
     type: Boolean,
     required: false,
     example: false,
@@ -77,4 +66,15 @@ export class CreateUserDto {
   @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;
+
+  @ApiProperty({
+    type: String,
+    enum: Role,
+    required: false,
+    example: Role.STUDENT,
+  })
+  @IsString()
+  @IsEnum(Role)
+  @IsOptional()
+  role?: Role;
 }
