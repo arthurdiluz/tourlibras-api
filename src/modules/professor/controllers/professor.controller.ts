@@ -68,25 +68,6 @@ export class ProfessorController {
       if (!professor) {
         throw new NotFoundException(`Professor with ID "${id}" not found`);
       }
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
-  }
-
-  @UseGuards(JwtAccessTokenGuard)
-  @Get('user/:id')
-  async findByUserId(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
-  ) {
-    try {
-      const professor = await this.professorService.findByUserId(userId);
-
-      if (!professor) {
-        throw new NotFoundException(
-          `Professor with User ID "${userId}" not found`,
-        );
-      }
 
       return professor;
     } catch (error: unknown) {

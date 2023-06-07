@@ -43,10 +43,6 @@ export class ProfessorService {
     return this.professorRepository.findById({ where: { id: professorId } });
   }
 
-  async findByUserId(userId: string) {
-    return this.professorRepository.findById({ where: { userId } });
-  }
-
   async update(id: string, body: UpdateProfessorDto) {
     return this.professorRepository.update({
       where: { id },
