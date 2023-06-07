@@ -19,24 +19,28 @@ export class ProfessorService {
     });
   }
 
-  async find({ grammar, fullName, ...query }: FindProfessorDto) {
+  async find({
+    email,
+    fullName,
+    isActive,
+    profilePhoto,
+    grammar,
+  }: FindProfessorDto) {
     return this.professorRepository.find({
       where: {
-        grammar,
         User: {
           fullName: { contains: fullName, mode: 'insensitive' },
-          ...query,
+          email,
+          isActive,
+          profilePhoto,
         },
+        grammar,
       },
     });
   }
 
   async findById(professorId: string) {
     return this.professorRepository.findById({ where: { id: professorId } });
-  }
-
-  async findByUserId(userId: string) {
-    return this.professorRepository.findByUserId(userId);
   }
 
   async update(id: string, body: UpdateProfessorDto) {

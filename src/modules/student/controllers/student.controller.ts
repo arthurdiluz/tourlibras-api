@@ -15,33 +15,41 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ProfessorService } from '../services/professor.service';
-import {
-  CreateProfessorDto,
-  FindProfessorDto,
-  UpdateProfessorDto,
-} from '../dtos';
+import { StudentService } from '../services/student.service';
 import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
+import { CreateStudentDto, FindStudentDto, UpdateStudentDto } from '../dtos';
+import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
-@ApiTags('Professor')
-@Controller('api/v1/professor')
-export class ProfessorController {
+@ApiTags('Student')
+@Controller('api/v1/student')
+export class StudentController {
   constructor(
-    private readonly professorService: ProfessorService,
+    private readonly studentService: StudentService,
     private readonly userService: UserService,
+    private readonly professorService: ProfessorService,
   ) {}
 
   @Public()
   @Post()
-  async create(@Body() { userId, ...body }: CreateProfessorDto) {
+  async create(@Body() body: CreateStudentDto) {
     try {
+      const { userId, professorId } = body;
+
       if (!(await this.userService.findById(userId))) {
         throw new NotFoundException(`User with ID "${userId}" not found`);
       }
 
-      return await this.professorService.create({ userId, ...body });
+      if (professorId) {
+        if (!(await this.professorService.findById(professorId))) {
+          throw new NotFoundException(
+            `Professor with ID "${professorId}" not found`,
+          );
+        }
+      }
+
+      return await this.studentService.create(body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -50,9 +58,9 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get()
-  async find(@Query() query: FindProfessorDto) {
+  async find(@Query() query: FindStudentDto) {
     try {
-      return await this.professorService.find(query);
+      return await this.studentService.find(query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -63,13 +71,13 @@ export class ProfessorController {
   @Get(':id')
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      const professor = await this.professorService.findById(id);
+      const student = await this.studentService.findById(id);
 
-      if (!professor) {
-        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      if (!student) {
+        throw new NotFoundException(`Student with ID "${id}" not found`);
       }
 
-      return professor;
+      return student;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -80,10 +88,18 @@ export class ProfessorController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() body: UpdateProfessorDto,
+    @Body() { professorId, ...body }: UpdateStudentDto,
   ) {
     try {
-      return await this.professorService.update(id, body);
+      if (professorId) {
+        if (!(await this.professorService.findById(professorId))) {
+          throw new NotFoundException(
+            `Professor with ID "${professorId}" not found`,
+          );
+        }
+      }
+
+      return await this.studentService.update(id, { professorId, ...body });
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -95,7 +111,7 @@ export class ProfessorController {
   @Delete(':id')
   async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      return await this.professorService.delete(id);
+      return await this.studentService.delete(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

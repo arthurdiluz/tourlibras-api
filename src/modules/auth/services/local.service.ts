@@ -47,6 +47,7 @@ export class LocalAuthService {
 
     return this.jwtService.signAsync(payload, {
       secret: this.configService.getJwtAccessSecret,
+      expiresIn: this.configService.getAccessTokenExpiresIn,
     });
   }
 }
