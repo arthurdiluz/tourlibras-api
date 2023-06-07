@@ -5,6 +5,7 @@ import { IsEnum, IsOptional } from 'class-validator';
 export class UpdateProfessorDto {
   @ApiPropertyOptional({
     type: String,
+    enum: Grammar,
     required: false,
     example: Grammar.VSO,
   })

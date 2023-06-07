@@ -42,6 +42,7 @@ export class UpdateStudentDto {
 
   @ApiPropertyOptional({
     type: String,
+    enum: Theme,
     required: false,
     example: Theme.LIGHT,
   })

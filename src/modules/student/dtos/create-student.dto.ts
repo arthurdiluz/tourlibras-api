@@ -52,6 +52,7 @@ export class CreateStudentDto {
 
   @ApiProperty({
     type: String,
+    enum: Theme,
     required: false,
     example: Theme.LIGHT,
   })

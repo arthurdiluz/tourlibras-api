@@ -1,15 +1,28 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsBase64,
   IsBoolean,
   IsEmail,
+  IsEnum,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
 
 export class FindUserDto {
+  @ApiPropertyOptional({
+    type: String,
+    enum: Role,
+    required: false,
+    example: Role.STUDENT,
+  })
+  @IsString()
+  @IsEnum(Role)
+  @IsOptional()
+  role: Role;
+
   @ApiPropertyOptional({
     type: Boolean,
     required: false,

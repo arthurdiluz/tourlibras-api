@@ -16,17 +16,12 @@ export class LocalAuthService {
     private readonly localAuthRepository: LocalAuthRepository,
   ) {}
 
-  async signUp({
-    isProfessor,
-    ...body
-  }: JwtSignUpDto): Promise<Professor | Student> {
-    const { id } = await this.userService.create({ ...body });
+  async signUp({ role, ...body }: JwtSignUpDto): Promise<Professor | Student> {
+    const { id } = await this.userService.create({ role, ...body });
 
-    if (isProfessor) {
-      return this.localAuthRepository.linkUserToProfessor(id);
-    } else {
-      return this.localAuthRepository.linkUserToStudent(id);
-    }
+    return role === 'PROFESSOR'
+      ? this.localAuthRepository.linkUserToProfessor(id)
+      : this.localAuthRepository.linkUserToStudent(id);
   }
 
   async signIn(email: string): Promise<IJwtToken> {

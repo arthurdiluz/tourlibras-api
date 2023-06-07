@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
 import { removeKeys, hashString } from 'src/common/helpers';
 import { verify } from 'argon2';
+import { LocalAuthRepository } from 'src/modules/auth/repositories/local.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly localAuthRepository: LocalAuthRepository,
+  ) {}
 
   async create({ password, profilePhoto, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({

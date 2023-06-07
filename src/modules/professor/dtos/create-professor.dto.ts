@@ -15,6 +15,7 @@ export class CreateProfessorDto {
 
   @ApiProperty({
     type: String,
+    enum: Grammar,
     required: false,
     example: Grammar.OSV,
   })

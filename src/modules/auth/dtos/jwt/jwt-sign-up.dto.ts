@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsBase64,
   IsBoolean,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -14,14 +16,15 @@ import {
 
 export class JwtSignUpDto {
   @ApiProperty({
-    type: Boolean,
+    type: String,
+    enum: Role,
     required: true,
-    example: false,
+    example: Role.STUDENT,
   })
-  @IsBoolean()
-  @Transform(({ value }) => Boolean(eval(value)))
+  @IsString()
+  @IsEnum(Role)
   @IsNotEmpty()
-  isProfessor: boolean;
+  role: Role;
 
   @ApiProperty({
     type: Boolean,

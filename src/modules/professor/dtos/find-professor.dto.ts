@@ -6,6 +6,7 @@ import { FindUserDto } from 'src/modules/user/dtos';
 export class FindProfessorDto extends PartialType(FindUserDto) {
   @ApiPropertyOptional({
     type: String,
+    enum: Grammar,
     required: false,
     example: Grammar.OSV,
   })
