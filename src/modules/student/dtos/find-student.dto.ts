@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Theme } from '@prisma/client';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 import { FindUserDto } from 'src/modules/user/dtos';
 
 export class FindStudentDto extends FindUserDto {
@@ -30,7 +30,6 @@ export class FindStudentDto extends FindUserDto {
     required: false,
     example: Theme.LIGHT,
   })
-  @IsString()
   @IsEnum(Theme)
   @IsOptional()
   theme?: Theme;

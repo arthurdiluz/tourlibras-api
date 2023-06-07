@@ -3,7 +3,6 @@ import { Theme } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsEnum,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
@@ -14,12 +13,12 @@ import { randomUUID } from 'crypto';
 export class UpdateStudentDto {
   @ApiPropertyOptional({
     type: String,
-    required: true,
+    required: false,
     example: randomUUID(),
   })
+  @IsOptional()
   @IsUUID()
-  @IsNotEmpty()
-  professorId: string;
+  professorId?: string;
 
   @ApiPropertyOptional({
     type: Number,

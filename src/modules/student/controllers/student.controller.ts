@@ -41,10 +41,12 @@ export class StudentController {
         throw new NotFoundException(`User with ID "${userId}" not found`);
       }
 
-      if (!(await this.professorService.findById(professorId))) {
-        throw new NotFoundException(
-          `Professor with ID "${professorId}" not found`,
-        );
+      if (professorId) {
+        if (!(await this.professorService.findById(professorId))) {
+          throw new NotFoundException(
+            `Professor with ID "${professorId}" not found`,
+          );
+        }
       }
 
       return await this.studentService.create(body);
@@ -83,35 +85,18 @@ export class StudentController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @Get('user/:id')
-  async findByUserId(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-  ) {
-    try {
-      const student = await this.studentService.findByUserId(id);
-
-      if (!student) {
-        throw new NotFoundException(`Professor with User ID "${id}" not found`);
-      }
-
-      return student;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
-  }
-
-  @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() { professorId, ...body }: UpdateStudentDto,
   ) {
     try {
-      if (!(await this.professorService.findById(professorId))) {
-        throw new NotFoundException(
-          `Professor with ID "${professorId}" not found`,
-        );
+      if (professorId) {
+        if (!(await this.professorService.findById(professorId))) {
+          throw new NotFoundException(
+            `Professor with ID "${professorId}" not found`,
+          );
+        }
       }
 
       return await this.studentService.update(id, { professorId, ...body });
