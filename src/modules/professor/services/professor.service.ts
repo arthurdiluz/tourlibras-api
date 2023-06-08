@@ -5,17 +5,21 @@ import {
   FindProfessorDto,
   UpdateProfessorDto,
 } from '../dtos';
+import { UserService } from 'src/modules/user/services/user.service';
 
 @Injectable()
 export class ProfessorService {
-  constructor(private readonly professorRepository: ProfessorRepository) {}
+  constructor(
+    private readonly professorRepository: ProfessorRepository,
+    private readonly userService: UserService,
+  ) {}
 
   async create({ userId, ...body }: CreateProfessorDto) {
-    return this.professorRepository.create({
-      data: {
-        User: { connect: { id: userId } },
-        ...body,
-      },
+    await this.userService.linkUserToRole(userId, 'PROFESSOR');
+
+    return this.professorRepository.update({
+      where: { userId },
+      data: { ...body },
     });
   }
 

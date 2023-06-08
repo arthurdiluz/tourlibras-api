@@ -88,8 +88,10 @@ export class UserService {
     userId: string,
     role: Role,
   ): Promise<Student | Professor> {
+    await this.userRepository.update({ where: { id: userId }, data: { role } });
+
     return role === 'STUDENT'
-      ? this.userRepository.linkUserToStudent(userId)
-      : this.userRepository.linkUserToProfessor(userId);
+      ? this.userRepository.addStudentRole(userId)
+      : this.userRepository.addProfessorRole(userId);
   }
 }

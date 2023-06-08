@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from 'src/config/config.service';
 import { UserService } from 'src/modules/user/services/user.service';
 import { CreateJwtTokenDto, JwtSignUpDto } from '../dtos/jwt';
-import { Professor, Student } from '@prisma/client';
+import { User } from '@prisma/client';
 import { IJwtPayload, IJwtToken } from 'src/common/interfaces';
 
 @Injectable()
@@ -14,10 +14,11 @@ export class LocalAuthService {
     private readonly userService: UserService,
   ) {}
 
-  async signUp({ role, ...body }: JwtSignUpDto): Promise<Professor | Student> {
-    const { id } = await this.userService.create({ role, ...body });
-
-    return this.userService.linkUserToRole(id, role);
+  async signUp({
+    role,
+    ...body
+  }: JwtSignUpDto): Promise<Omit<User, 'password'>> {
+    return this.userService.create({ role, ...body });
   }
 
   async signIn(email: string): Promise<IJwtToken> {

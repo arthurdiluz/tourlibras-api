@@ -23,20 +23,6 @@ model User {
   Student   Student?
 }
 
-model Professor {
-  id        String   @id @default(uuid()) @db.Uuid
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  grammar Grammar?
-  userId  String   @unique @db.Uuid
-
-  User    User      @relation(fields: [userId], references: [id])
-  Student Student[]
-  Item    Item[]
-  Medal   Medal[]
-}
-
 model Student {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
@@ -51,6 +37,20 @@ model Student {
   User            User              @relation(fields: [userId], references: [id])
   Professor       Professor?        @relation(fields: [professorId], references: [id])
   StudentOnLesson StudentOnLesson[]
+}
+
+model Professor {
+  id        String   @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  grammar Grammar?
+  userId  String   @unique @db.Uuid
+
+  User    User      @relation(fields: [userId], references: [id])
+  Student Student[]
+  Item    Item[]
+  Medal   Medal[]
 }
 
 model Item {

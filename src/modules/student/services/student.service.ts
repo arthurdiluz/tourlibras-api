@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { StudentRepository } from '../repositories/student.repository';
 import { CreateStudentDto, FindStudentDto, UpdateStudentDto } from '../dtos';
+import { UserService } from 'src/modules/user/services/user.service';
 
 @Injectable()
 export class StudentService {
-  constructor(private readonly studentRepository: StudentRepository) {}
+  constructor(
+    private readonly studentRepository: StudentRepository,
+    private readonly userService: UserService,
+  ) {}
 
   async create({ userId, professorId, ...body }: CreateStudentDto) {
     const data = {
@@ -16,8 +20,9 @@ export class StudentService {
       data['Professor'] = { connect: { id: professorId } };
     }
 
-    console.log('StudentCreateData:', data);
-    return this.studentRepository.create({ data });
+    await this.userService.linkUserToRole(userId, 'STUDENT');
+
+    return this.studentRepository.update({ where: { userId }, data });
   }
 
   async find({

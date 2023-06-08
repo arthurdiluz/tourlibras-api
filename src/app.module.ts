@@ -22,8 +22,8 @@ const configService = new ConfigService();
     PrismaModule,
     AuthModule,
     UserModule,
-    ProfessorModule,
     StudentModule,
+    ProfessorModule,
   ],
   providers: [
     {

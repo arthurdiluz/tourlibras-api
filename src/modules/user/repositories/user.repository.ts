@@ -26,15 +26,15 @@ export class UserRepository {
     return this.prismaService.user.delete(args);
   }
 
-  public linkUserToProfessor(id: string) {
-    return this.prismaService.professor.create({
-      data: { User: { connect: { id } } },
+  public addStudentRole(userId: string) {
+    return this.prismaService.student.create({
+      data: { User: { connect: { id: userId } } },
     });
   }
 
-  public linkUserToStudent(id: string) {
-    return this.prismaService.student.create({
-      data: { User: { connect: { id } } },
+  public addProfessorRole(userId: string) {
+    return this.prismaService.professor.create({
+      data: { User: { connect: { id: userId } } },
     });
   }
 }
