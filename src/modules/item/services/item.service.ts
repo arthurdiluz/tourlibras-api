@@ -37,4 +37,8 @@ export class ItemService {
       data: { ...body },
     });
   }
+
+  async delete(id: string) {
+    return this.itemRepository.delete({ where: { id } });
+  }
 }
