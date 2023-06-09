@@ -4,6 +4,8 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -46,6 +48,23 @@ export class ItemController {
   async find(@Query() query: FindItemDto) {
     try {
       return await this.itemService.find(query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      const item = await this.itemService.findById(id);
+
+      if (!item) {
+        throw new NotFoundException(`Item with ID "${id}" not found`);
+      }
+
+      return item;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

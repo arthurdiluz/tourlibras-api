@@ -25,4 +25,8 @@ export class ItemService {
       },
     });
   }
+
+  async findById(itemId: string) {
+    return this.itemRepository.findById({ where: { id: itemId } });
+  }
 }
