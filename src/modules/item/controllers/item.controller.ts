@@ -17,9 +17,10 @@ import { Public } from 'src/common/decorators';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { FindItemDto } from '../dtos/find-item.dto';
+import { UpdateItemDto } from '../dtos/update-item.dto';
 
 @ApiTags('Item')
-@Controller('api/v1/professor')
+@Controller('api/v1/item')
 export class ItemController {
   constructor(
     private readonly itemService: ItemService,
@@ -65,6 +66,20 @@ export class ItemController {
       }
 
       return item;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Post(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() body: UpdateItemDto,
+  ) {
+    try {
+      return await this.itemService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

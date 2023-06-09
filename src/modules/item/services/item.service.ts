@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ItemRepository } from '../repositories/item.repository';
 import { CreateItemDto } from '../dtos/create-item.dto';
 import { FindItemDto } from '../dtos/find-item.dto';
+import { UpdateItemDto } from '../dtos/update-item.dto';
 
 @Injectable()
 export class ItemService {
@@ -28,5 +29,12 @@ export class ItemService {
 
   async findById(itemId: string) {
     return this.itemRepository.findById({ where: { id: itemId } });
+  }
+
+  async update(id: string, body: UpdateItemDto) {
+    return this.itemRepository.update({
+      where: { id },
+      data: { ...body },
+    });
   }
 }
