@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
-
   IsBoolean,
   IsEmail,
   IsEnum,

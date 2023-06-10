@@ -1,7 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
-
   IsBoolean,
   IsEmail,
   IsNotEmpty,
