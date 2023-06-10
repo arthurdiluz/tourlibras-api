@@ -21,4 +21,8 @@ export class MedalRepository {
   public update(args: Prisma.MedalUpdateArgs) {
     return this.prismaService.medal.update(args);
   }
+
+  public delete(args: Prisma.MedalDeleteArgs) {
+    return this.prismaService.medal.delete(args);
+  }
 }

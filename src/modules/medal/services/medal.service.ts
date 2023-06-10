@@ -42,4 +42,8 @@ export class MedalService {
       },
     });
   }
+
+  async delete(medalId: string) {
+    return this.medalRepository.delete({ where: { id: medalId } });
+  }
 }
