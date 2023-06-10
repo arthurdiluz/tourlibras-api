@@ -13,6 +13,7 @@ import { ItemModule } from './modules/item/item.module';
 import { MedalModule } from './modules/medal/medal.module';
 import { LessonModule } from './modules/lesson/lesson.module';
 import { LevelModule } from './modules/level/level.module';
+import { ExerciseModule } from './modules/exercise/exercise.module';
 
 const configService = new ConfigService();
 
@@ -32,6 +33,7 @@ const configService = new ConfigService();
     MedalModule,
     LessonModule,
     LevelModule,
+    ExerciseModule,
   ],
   providers: [
     {
