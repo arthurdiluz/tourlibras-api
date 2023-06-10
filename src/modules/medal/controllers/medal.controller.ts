@@ -21,6 +21,7 @@ import { ProfessorService } from 'src/modules/professor/services/professor.servi
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { FindMedalDto } from '../dtos/find-medal.dto';
 import { UpdateMedalDto } from '../dtos/update-medal.dto';
+import { LessonService } from 'src/modules/lesson/services/lesson.service';
 
 @ApiTags('Medal')
 @Controller('api/v1/medal')
@@ -28,6 +29,7 @@ export class MedalController {
   constructor(
     private readonly medalService: MedalService,
     private readonly professorService: ProfessorService,
+    private readonly lessonService: LessonService,
   ) {}
 
   @UseGuards(JwtAccessTokenGuard)
@@ -40,7 +42,11 @@ export class MedalController {
         );
       }
 
-      // TODO: add lesson validation
+      if (!(await this.lessonService.findById(lessonId))) {
+        throw new NotFoundException(
+          `Professor with ID "${lessonId}" not found`,
+        );
+      }
 
       return await this.medalService.create({ professorId, lessonId, ...body });
     } catch (error: unknown) {
