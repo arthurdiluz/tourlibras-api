@@ -17,7 +17,6 @@ import {
 import { ItemService } from '../services/item.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateItemDto } from '../dtos/create-item.dto';
-import { Public } from 'src/common/decorators';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { FindItemDto } from '../dtos/find-item.dto';
@@ -31,7 +30,7 @@ export class ItemController {
     private readonly professorService: ProfessorService,
   ) {}
 
-  @Public()
+  @UseGuards(JwtAccessTokenGuard)
   @Post()
   async create(@Body() { professorId, ...body }: CreateItemDto) {
     try {

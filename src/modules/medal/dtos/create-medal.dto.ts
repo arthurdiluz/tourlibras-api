@@ -13,7 +13,7 @@ import { randomUUID } from 'crypto';
 export class CreateMedalDto {
   @ApiProperty({
     type: String,
-    required: false,
+    required: true,
     example: randomUUID(),
   })
   @IsUUID()
@@ -22,7 +22,7 @@ export class CreateMedalDto {
 
   @ApiProperty({
     type: String,
-    required: false,
+    required: true,
     example: randomUUID(),
   })
   @IsUUID()
@@ -51,7 +51,7 @@ export class CreateMedalDto {
 
   @ApiProperty({
     type: String,
-    required: false,
+    required: true,
     example: 'data:image/png;base64,R0lGODlhDAAMAKIFAF5LA\
     P/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAA\
     MlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7'.replace(/\s/g, ''),

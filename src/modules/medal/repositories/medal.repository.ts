@@ -9,4 +9,8 @@ export class MedalRepository {
   public create(args: Prisma.MedalCreateArgs) {
     return this.prismaService.medal.create(args);
   }
+
+  public find(args: Prisma.MedalFindManyArgs) {
+    return this.prismaService.medal.findMany(args);
+  }
 }
