@@ -31,4 +31,8 @@ export class LessonService {
       },
     });
   }
+
+  async findById(lessonId: string) {
+    return this.lessonRepository.findUnique({ where: { id: lessonId } });
+  }
 }
