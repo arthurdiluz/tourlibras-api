@@ -82,6 +82,10 @@ export class ItemController {
     @Body() body: UpdateItemDto,
   ) {
     try {
+      if (!(await this.itemService.findById(id))) {
+        throw new NotFoundException(`Item with ID "${id}" not found`);
+      }
+
       return await this.itemService.update(id, body);
     } catch (error: unknown) {
       console.error(error);

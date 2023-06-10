@@ -91,6 +91,10 @@ export class StudentController {
     @Body() { professorId, ...body }: UpdateStudentDto,
   ) {
     try {
+      if (!(await this.studentService.findById(id))) {
+        throw new NotFoundException(`Student with ID "${id}" not found`);
+      }
+
       if (professorId) {
         if (!(await this.professorService.findById(professorId))) {
           throw new NotFoundException(

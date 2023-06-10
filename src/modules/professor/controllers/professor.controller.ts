@@ -83,6 +83,10 @@ export class ProfessorController {
     @Body() body: UpdateProfessorDto,
   ) {
     try {
+      if (!(await this.professorService.findById(id))) {
+        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      }
+
       return await this.professorService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
