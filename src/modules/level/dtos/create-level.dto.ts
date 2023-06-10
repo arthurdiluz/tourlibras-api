@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsNumber, IsOptional, IsUUID, Max } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsUUID,
+  Max,
+  Min,
+} from 'class-validator';
 import { randomUUID } from 'crypto';
 
 export class CreateLevelDto {
@@ -20,6 +27,7 @@ export class CreateLevelDto {
   })
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
+  @Min(1)
   @Max(9)
   @IsOptional()
   level?: number;

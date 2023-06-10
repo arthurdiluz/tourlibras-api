@@ -9,4 +9,8 @@ export class LevelRepository {
   public create(args: Prisma.LevelCreateArgs) {
     return this.prismaService.level.create(args);
   }
+
+  public findMany(args: Prisma.LevelFindManyArgs) {
+    return this.prismaService.level.findMany(args);
+  }
 }
