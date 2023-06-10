@@ -2,7 +2,6 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
-  IsBase64,
   IsBoolean,
   IsEmail,
   IsEnum,
@@ -46,10 +45,11 @@ export class FindUserDto {
   @ApiPropertyOptional({
     type: String,
     required: false,
-    example: 'data:image/png;base64,iVBORw0KGg...',
+    example: 'data:image/png;base64,R0lGODlhDAAMAKIFAF5LA\
+    P/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAA\
+    MlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7'.replace(/\s/g, ''),
   })
   @IsString()
-  @IsBase64()
   @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;

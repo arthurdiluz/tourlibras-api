@@ -1,57 +1,53 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
-  IsBoolean,
-  IsEmail,
-  IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
-  IsStrongPassword,
-  Length,
+  IsUUID,
   MaxLength,
 } from 'class-validator';
+import { randomUUID } from 'crypto';
 
-export class UpdateUserDto {
+export class FindItemDto {
   @ApiPropertyOptional({
-    type: Boolean,
+    type: String,
     required: false,
-    example: true,
+    example: randomUUID(),
   })
-  @IsBoolean()
-  @Transform(({ value }) => Boolean(eval(value)))
+  @IsUUID()
   @IsOptional()
-  isActive?: boolean;
+  professorId?: string;
 
   @ApiPropertyOptional({
     type: String,
     required: false,
-    example: 'James Johnson',
+    example: 'Óculos de sol',
   })
   @IsString()
-  @MaxLength(31)
   @IsOptional()
-  fullName?: string;
+  @MaxLength(15)
+  name?: string;
 
   @ApiPropertyOptional({
     type: String,
     required: false,
-    example: 'james.johnson@example.com',
+    example: 'Permite que você mude para o tema escuro.',
   })
-  @IsEmail()
-  @MaxLength(31)
-  @Transform(({ value }) => String(value).toLowerCase())
+  @IsString()
   @IsOptional()
-  email?: string;
+  @MaxLength(63)
+  description?: string;
 
   @ApiPropertyOptional({
-    type: String,
+    type: Number,
     required: false,
-    example: 'This_Is_a_new.password123',
+    example: 500,
   })
-  @IsStrongPassword()
-  @Length(8, 63)
-  @IsNotEmpty()
-  password?: string;
+  @Transform(({ value }) => Number.parseFloat(value))
+  @IsNumber()
+  @IsOptional()
+  price?: number;
 
   @ApiPropertyOptional({
     type: String,
@@ -63,5 +59,5 @@ export class UpdateUserDto {
   @IsString()
   @MaxLength(255)
   @IsOptional()
-  profilePhoto?: string;
+  media?: string;
 }

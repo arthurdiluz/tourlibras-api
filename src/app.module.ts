@@ -9,6 +9,7 @@ import { ProfessorModule } from './modules/professor/professor.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAccessTokenGuard } from './common/decorators/guards/jwt';
 import { StudentModule } from './modules/student/student.module';
+import { ItemModule } from './modules/item/item.module';
 
 const configService = new ConfigService();
 
@@ -24,6 +25,7 @@ const configService = new ConfigService();
     UserModule,
     StudentModule,
     ProfessorModule,
+    ItemModule,
   ],
   providers: [
     {
