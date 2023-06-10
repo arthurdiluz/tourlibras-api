@@ -23,7 +23,7 @@ import { FindMedalDto } from '../dtos/find-medal.dto';
 import { UpdateMedalDto } from '../dtos/update-medal.dto';
 
 @ApiTags('Medal')
-@Controller('medal')
+@Controller('api/v1/medal')
 export class MedalController {
   constructor(
     private readonly medalService: MedalService,
