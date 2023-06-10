@@ -36,6 +36,7 @@ export class MedalService {
     return this.medalRepository.update({
       where: { id: medalId },
       data: {
+        updatedAt: new Date(),
         Lesson: { connect: { id: lessonId } },
         ...body,
       },

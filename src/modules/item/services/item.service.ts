@@ -34,7 +34,10 @@ export class ItemService {
   async update(id: string, body: UpdateItemDto) {
     return this.itemRepository.update({
       where: { id },
-      data: { ...body },
+      data: {
+        updatedAt: new Date(),
+        ...body,
+      },
     });
   }
 

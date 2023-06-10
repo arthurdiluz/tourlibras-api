@@ -81,6 +81,10 @@ export class MedalController {
     @Body() { lessonId, ...body }: UpdateMedalDto,
   ) {
     try {
+      if (!(await this.medalService.findById(id))) {
+        throw new NotFoundException(`Medal with ID "${id}" not found`);
+      }
+
       return await this.medalService.update(id, { lessonId, ...body });
     } catch (error: unknown) {
       console.error(error);
