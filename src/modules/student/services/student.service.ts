@@ -49,8 +49,8 @@ export class StudentService {
     });
   }
 
-  async findById(id: string) {
-    return this.studentRepository.findUnique({ where: { id } });
+  async findById(studentId: string) {
+    return this.studentRepository.findUnique({ where: { id: studentId } });
   }
 
   async update(id: string, { professorId, ...body }: UpdateStudentDto) {

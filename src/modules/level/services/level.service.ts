@@ -21,4 +21,8 @@ export class LevelService {
       where: { ...query },
     });
   }
+
+  async findById(levelId: string) {
+    return this.levelRepository.findUnique({ where: { id: levelId } });
+  }
 }

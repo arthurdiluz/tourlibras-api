@@ -39,8 +39,10 @@ export class UserService {
     return users.map((user) => removeKeys(user, ['password']));
   }
 
-  async findById(id: string) {
-    const user = await this.userRepository.findUnique({ where: { id } });
+  async findById(userId: string) {
+    const user = await this.userRepository.findUnique({
+      where: { id: userId },
+    });
 
     if (!user) return null;
 

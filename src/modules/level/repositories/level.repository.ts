@@ -13,4 +13,8 @@ export class LevelRepository {
   public findMany(args: Prisma.LevelFindManyArgs) {
     return this.prismaService.level.findMany(args);
   }
+
+  public findUnique(args: Prisma.LevelFindUniqueArgs) {
+    return this.prismaService.level.findUnique(args);
+  }
 }
