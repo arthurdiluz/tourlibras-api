@@ -34,7 +34,7 @@ export class StudentService {
     money,
     theme,
   }: FindStudentDto) {
-    return this.studentRepository.find({
+    return this.studentRepository.findMany({
       where: {
         User: {
           fullName: { contains: fullName, mode: 'insensitive' },
@@ -50,7 +50,7 @@ export class StudentService {
   }
 
   async findById(id: string) {
-    return this.studentRepository.findById({ where: { id } });
+    return this.studentRepository.findUnique({ where: { id } });
   }
 
   async update(id: string, { professorId, ...body }: UpdateStudentDto) {

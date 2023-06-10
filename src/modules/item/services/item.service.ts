@@ -18,7 +18,7 @@ export class ItemService {
   }
 
   async find({ name, description, ...query }: FindItemDto) {
-    return this.itemRepository.find({
+    return this.itemRepository.findMany({
       where: {
         name: { contains: name, mode: 'insensitive' },
         description: { contains: description, mode: 'insensitive' },
@@ -28,7 +28,7 @@ export class ItemService {
   }
 
   async findById(itemId: string) {
-    return this.itemRepository.findById({ where: { id: itemId } });
+    return this.itemRepository.findUnique({ where: { id: itemId } });
   }
 
   async update(id: string, body: UpdateItemDto) {
