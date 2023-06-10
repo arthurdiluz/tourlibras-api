@@ -9,4 +9,8 @@ export class LessonRepository {
   public create(args: Prisma.LessonCreateArgs) {
     return this.prismaService.lesson.create(args);
   }
+
+  public findMany(args: Prisma.LessonFindManyArgs) {
+    return this.prismaService.lesson.findMany(args);
+  }
 }
