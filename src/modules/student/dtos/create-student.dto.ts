@@ -8,6 +8,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Max,
 } from 'class-validator';
 import { randomUUID } from 'crypto';
 
@@ -37,6 +38,7 @@ export class CreateStudentDto {
   })
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
+  @Max(32767)
   @IsOptional()
   experience?: number;
 
@@ -47,6 +49,7 @@ export class CreateStudentDto {
   })
   @Transform(({ value }) => Number.parseFloat(value))
   @IsNumber()
+  @Max(32767)
   @IsOptional()
   money?: number;
 

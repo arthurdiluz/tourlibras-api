@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import { IsNumber, IsOptional, IsString, Length, Max } from 'class-validator';
 
 export class UpdateItemDto {
   @ApiPropertyOptional({
@@ -29,6 +29,7 @@ export class UpdateItemDto {
     example: 500,
   })
   @Transform(({ value }) => Number.parseFloat(value))
+  @Max(32767)
   @IsNumber()
   @IsOptional()
   price?: number;

@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
+  Max,
   MaxLength,
 } from 'class-validator';
 import { randomUUID } from 'crypto';
@@ -46,6 +47,7 @@ export class FindItemDto {
   })
   @Transform(({ value }) => Number.parseFloat(value))
   @IsNumber()
+  @Max(32767)
   @IsOptional()
   price?: number;
 
