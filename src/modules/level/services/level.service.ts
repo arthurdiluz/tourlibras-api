@@ -33,4 +33,8 @@ export class LevelService {
       data: { ...body },
     });
   }
+
+  async delete(levelId: string) {
+    return this.levelRepository.delete({ where: { id: levelId } });
+  }
 }

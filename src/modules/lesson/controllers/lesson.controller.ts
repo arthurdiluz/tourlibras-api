@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -102,6 +104,7 @@ export class LessonController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
