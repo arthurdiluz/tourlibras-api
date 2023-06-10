@@ -18,7 +18,7 @@ export class ItemService {
   }
 
   async find({ name, description, ...query }: FindItemDto) {
-    return this.itemRepository.find({
+    return this.itemRepository.findMany({
       where: {
         name: { contains: name, mode: 'insensitive' },
         description: { contains: description, mode: 'insensitive' },
@@ -28,17 +28,20 @@ export class ItemService {
   }
 
   async findById(itemId: string) {
-    return this.itemRepository.findById({ where: { id: itemId } });
+    return this.itemRepository.findUnique({ where: { id: itemId } });
   }
 
   async update(id: string, body: UpdateItemDto) {
     return this.itemRepository.update({
       where: { id },
-      data: { ...body },
+      data: {
+        updatedAt: new Date(),
+        ...body,
+      },
     });
   }
 
-  async delete(id: string) {
-    return this.itemRepository.delete({ where: { id } });
+  async delete(itemId: string) {
+    return this.itemRepository.delete({ where: { id: itemId } });
   }
 }

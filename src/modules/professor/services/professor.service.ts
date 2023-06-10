@@ -30,7 +30,7 @@ export class ProfessorService {
     profilePhoto,
     grammar,
   }: FindProfessorDto) {
-    return this.professorRepository.find({
+    return this.professorRepository.findMany({
       where: {
         User: {
           fullName: { contains: fullName, mode: 'insensitive' },
@@ -44,7 +44,7 @@ export class ProfessorService {
   }
 
   async findById(professorId: string) {
-    return this.professorRepository.findById({ where: { id: professorId } });
+    return this.professorRepository.findUnique({ where: { id: professorId } });
   }
 
   async update(id: string, body: UpdateProfessorDto) {
@@ -57,7 +57,7 @@ export class ProfessorService {
     });
   }
 
-  async delete(id: string) {
-    return this.professorRepository.delete({ where: { id } });
+  async delete(professorId: string) {
+    return this.professorRepository.delete({ where: { id: professorId } });
   }
 }

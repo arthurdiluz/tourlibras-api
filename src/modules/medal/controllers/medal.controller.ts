@@ -15,33 +15,34 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ProfessorService } from '../services/professor.service';
-import {
-  CreateProfessorDto,
-  FindProfessorDto,
-  UpdateProfessorDto,
-} from '../dtos';
-import { UserService } from 'src/modules/user/services/user.service';
-import { Public } from 'src/common/decorators';
+import { MedalService } from '../services/medal.service';
+import { CreateMedalDto } from '../dtos/create-medal.dto';
+import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
+import { FindMedalDto } from '../dtos/find-medal.dto';
+import { UpdateMedalDto } from '../dtos/update-medal.dto';
 
-@ApiTags('Professor')
-@Controller('api/v1/professor')
-export class ProfessorController {
+@ApiTags('Medal')
+@Controller('medal')
+export class MedalController {
   constructor(
+    private readonly medalService: MedalService,
     private readonly professorService: ProfessorService,
-    private readonly userService: UserService,
   ) {}
 
-  @Public()
+  @UseGuards(JwtAccessTokenGuard)
   @Post()
-  async create(@Body() { userId, ...body }: CreateProfessorDto) {
+  async create(@Body() { professorId, lessonId, ...body }: CreateMedalDto) {
     try {
-      if (!(await this.userService.findById(userId))) {
-        throw new NotFoundException(`User with ID "${userId}" not found`);
+      if (!(await this.professorService.findById(professorId))) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
       }
 
-      return await this.professorService.create({ userId, ...body });
+      // TODO: add lesson validation
+
+      return await this.medalService.create({ professorId, lessonId, ...body });
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -50,9 +51,9 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get()
-  async find(@Query() query: FindProfessorDto) {
+  async find(@Query() query: FindMedalDto) {
     try {
-      return await this.professorService.find(query);
+      return await this.medalService.find(query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -63,13 +64,13 @@ export class ProfessorController {
   @Get(':id')
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      const professor = await this.professorService.findById(id);
+      const medal = await this.medalService.findById(id);
 
-      if (!professor) {
-        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      if (!medal) {
+        throw new NotFoundException(`Medal with ID "${id}" not found`);
       }
 
-      return professor;
+      return medal;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -80,14 +81,14 @@ export class ProfessorController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() body: UpdateProfessorDto,
+    @Body() { lessonId, ...body }: UpdateMedalDto,
   ) {
     try {
-      if (!(await this.professorService.findById(id))) {
-        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      if (!(await this.medalService.findById(id))) {
+        throw new NotFoundException(`Medal with ID "${id}" not found`);
       }
 
-      return await this.professorService.update(id, body);
+      return await this.medalService.update(id, { lessonId, ...body });
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -99,7 +100,7 @@ export class ProfessorController {
   @Delete(':id')
   async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      return await this.professorService.delete(id);
+      return await this.medalService.delete(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

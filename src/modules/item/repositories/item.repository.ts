@@ -10,11 +10,11 @@ export class ItemRepository {
     return this.prismaService.item.create(args);
   }
 
-  public find(args: Prisma.ItemFindManyArgs) {
+  public findMany(args: Prisma.ItemFindManyArgs) {
     return this.prismaService.item.findMany(args);
   }
 
-  public findById(args: Prisma.ItemFindUniqueArgs) {
+  public findUnique(args: Prisma.ItemFindUniqueArgs) {
     return this.prismaService.item.findUnique(args);
   }
 

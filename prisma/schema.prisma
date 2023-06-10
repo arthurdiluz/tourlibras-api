@@ -82,27 +82,6 @@ model Medal {
   Lesson    Lesson[]
 }
 
-model ItemOnStudent {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  itemId String @db.Uuid
-  userId String @db.Uuid
-
-  @@id([itemId, userId])
-}
-
-model MedalOnStudent {
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  medalId String @db.Uuid
-  userId  String @db.Uuid
-  amount  Int    @db.SmallInt
-
-  @@id([medalId, userId])
-}
-
 model Lesson {
   id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(now())
@@ -161,6 +140,27 @@ model DoneExercise {
   userId           String  @db.Uuid
   exerciseId       String  @db.Uuid
   isCorrectAttempt Boolean @db.Boolean
+}
+
+model ItemOnStudent {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  itemId String @db.Uuid
+  userId String @db.Uuid
+
+  @@id([itemId, userId])
+}
+
+model MedalOnStudent {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  medalId String @db.Uuid
+  userId  String @db.Uuid
+  amount  Int    @db.SmallInt
+
+  @@id([medalId, userId])
 }
 
 model StudentOnLesson {

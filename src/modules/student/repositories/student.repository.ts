@@ -10,11 +10,11 @@ export class StudentRepository {
     return this.prismaService.student.create(args);
   }
 
-  public find(args: Prisma.StudentFindManyArgs) {
+  public findMany(args: Prisma.StudentFindManyArgs) {
     return this.prismaService.student.findMany(args);
   }
 
-  public findById(args: Prisma.StudentFindUniqueArgs) {
+  public findUnique(args: Prisma.StudentFindUniqueArgs) {
     return this.prismaService.student.findUnique(args);
   }
 
