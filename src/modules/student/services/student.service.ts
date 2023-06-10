@@ -66,7 +66,7 @@ export class StudentService {
     return this.studentRepository.update({ where: { id }, data });
   }
 
-  async delete(id: string) {
-    return this.studentRepository.delete({ where: { id } });
+  async delete(studentId: string) {
+    return this.studentRepository.delete({ where: { id: studentId } });
   }
 }

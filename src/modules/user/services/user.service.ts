@@ -71,8 +71,8 @@ export class UserService {
     return removeKeys(user, ['password']);
   }
 
-  async delete(id: string) {
-    const user = await this.userRepository.delete({ where: { id } });
+  async delete(userId: string) {
+    const user = await this.userRepository.delete({ where: { id: userId } });
     return removeKeys(user, ['password']);
   }
 

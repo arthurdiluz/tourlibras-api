@@ -57,7 +57,7 @@ export class ProfessorService {
     });
   }
 
-  async delete(id: string) {
-    return this.professorRepository.delete({ where: { id } });
+  async delete(professorId: string) {
+    return this.professorRepository.delete({ where: { id: professorId } });
   }
 }

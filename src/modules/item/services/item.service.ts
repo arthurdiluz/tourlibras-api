@@ -41,7 +41,7 @@ export class ItemService {
     });
   }
 
-  async delete(id: string) {
-    return this.itemRepository.delete({ where: { id } });
+  async delete(itemId: string) {
+    return this.itemRepository.delete({ where: { id: itemId } });
   }
 }
