@@ -59,7 +59,7 @@ model Item {
   updatedAt DateTime @default(now())
 
   name        String @db.VarChar(15)
-  description String @db.VarChar(31)
+  description String @db.VarChar(63)
   price       Float  @default(0) @db.Real
   media       String @db.VarChar(255) // TODO: calculate length
   professorId String @db.Uuid
@@ -73,7 +73,7 @@ model Medal {
   updatedAt DateTime @default(now())
 
   name          String  @db.VarChar(15)
-  description   String  @db.VarChar(31)
+  description   String  @db.VarChar(63)
   media         String  @db.VarChar(255) // TODO: calculate length
   isCumultative Boolean @default(false) @db.Boolean
   professorId   String  @db.Uuid

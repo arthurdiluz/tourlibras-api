@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
-  IsBase64,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -38,7 +38,7 @@ export class CreateItemDto {
   })
   @IsString()
   @IsNotEmpty()
-  @Length(3, 31)
+  @Length(3, 63)
   description: string;
 
   @ApiProperty({
@@ -46,6 +46,7 @@ export class CreateItemDto {
     required: true,
     example: 500,
   })
+  @Transform(({ value }) => Number.parseFloat(value))
   @IsNumber()
   @IsNotEmpty()
   price: number;
@@ -53,10 +54,11 @@ export class CreateItemDto {
   @ApiProperty({
     type: String,
     required: false,
-    example: 'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
+    example: 'data:image/png;base64,R0lGODlhDAAMAKIFAF5LA\
+    P/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAA\
+    MlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7'.replace(/\s/g, ''),
   })
   @IsString()
-  @IsBase64()
   @MaxLength(255)
   @IsOptional()
   media: string;

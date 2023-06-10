@@ -1,11 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsBase64,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Length,
-} from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsNumber, IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateItemDto {
   @ApiPropertyOptional({
@@ -25,7 +20,7 @@ export class UpdateItemDto {
   })
   @IsString()
   @IsOptional()
-  @Length(3, 31)
+  @Length(3, 63)
   description?: string;
 
   @ApiPropertyOptional({
@@ -33,6 +28,7 @@ export class UpdateItemDto {
     required: false,
     example: 500,
   })
+  @Transform(({ value }) => Number.parseFloat(value))
   @IsNumber()
   @IsOptional()
   price?: number;
@@ -40,10 +36,11 @@ export class UpdateItemDto {
   @ApiPropertyOptional({
     type: String,
     required: false,
-    example: 'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
+    example: 'data:image/png;base64,R0lGODlhDAAMAKIFAF5LA\
+    P/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAA\
+    MlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7'.replace(/\s/g, ''),
   })
   @IsString()
-  @IsBase64()
   @Length(3, 255)
   @IsOptional()
   media?: string;

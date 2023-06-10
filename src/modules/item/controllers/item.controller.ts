@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -76,7 +77,7 @@ export class ItemController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @Post(':id')
+  @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() body: UpdateItemDto,
