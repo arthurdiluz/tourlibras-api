@@ -11,6 +11,7 @@ import { JwtAccessTokenGuard } from './common/decorators/guards/jwt';
 import { StudentModule } from './modules/student/student.module';
 import { ItemModule } from './modules/item/item.module';
 import { MedalModule } from './modules/medal/medal.module';
+import { LessonModule } from './modules/lesson/lesson.module';
 
 const configService = new ConfigService();
 
@@ -28,6 +29,7 @@ const configService = new ConfigService();
     ProfessorModule,
     ItemModule,
     MedalModule,
+    LessonModule,
   ],
   providers: [
     {

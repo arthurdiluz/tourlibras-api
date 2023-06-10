@@ -3,7 +3,6 @@ import { Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   IsUUID,
   Length,
@@ -60,6 +59,6 @@ export class CreateItemDto {
   })
   @IsString()
   @MaxLength(255)
-  @IsOptional()
+  @IsNotEmpty()
   media: string;
 }

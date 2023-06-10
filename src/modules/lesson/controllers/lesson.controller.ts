@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
-  HttpStatus,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -15,34 +13,36 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { MedalService } from '../services/medal.service';
-import { CreateMedalDto } from '../dtos/create-medal.dto';
-import { ProfessorService } from 'src/modules/professor/services/professor.service';
+import { LessonService } from '../services/lesson.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
-import { FindMedalDto } from '../dtos/find-medal.dto';
-import { UpdateMedalDto } from '../dtos/update-medal.dto';
+import { CreateLessonDto } from '../dtos/create-lesson.dto';
+import { MedalService } from 'src/modules/medal/services/medal.service';
+import { FindLessonDto } from '../dtos/find-lesson.dto';
+import { UpdateLessonDto } from '../dtos/update-lesson.dto';
 
-@ApiTags('Medal')
-@Controller('api/v1/medal')
-export class MedalController {
+@ApiTags('Lesson')
+@Controller('api/v1/lesson')
+export class LessonController {
   constructor(
+    private readonly lessonService: LessonService,
     private readonly medalService: MedalService,
-    private readonly professorService: ProfessorService,
   ) {}
 
   @UseGuards(JwtAccessTokenGuard)
   @Post()
-  async create(@Body() { professorId, lessonId, ...body }: CreateMedalDto) {
+  async create(@Body() body: CreateLessonDto) {
     try {
-      if (!(await this.professorService.findById(professorId))) {
-        throw new NotFoundException(
-          `Professor with ID "${professorId}" not found`,
-        );
+      const { levelId, medalId, studentOnLessonId } = body;
+
+      // TODO: add Level validation
+
+      if (!(await this.medalService.findById(medalId))) {
+        throw new NotFoundException(`Medal with ID "${medalId}" not found`);
       }
 
-      // TODO: add lesson validation
+      // TODO: add StudentOnLesson validation
 
-      return await this.medalService.create({ professorId, lessonId, ...body });
+      return await this.lessonService.create(body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -51,9 +51,9 @@ export class MedalController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get()
-  async find(@Query() query: FindMedalDto) {
+  async find(@Query() query: FindLessonDto) {
     try {
-      return await this.medalService.find(query);
+      return await this.lessonService.find(query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -64,13 +64,7 @@ export class MedalController {
   @Get(':id')
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      const medal = await this.medalService.findById(id);
-
-      if (!medal) {
-        throw new NotFoundException(`Medal with ID "${id}" not found`);
-      }
-
-      return medal;
+      return await this.lessonService.findById(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -81,14 +75,26 @@ export class MedalController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() { lessonId, ...body }: UpdateMedalDto,
+    @Body() body: UpdateLessonDto,
   ) {
     try {
-      if (!(await this.medalService.findById(id))) {
-        throw new NotFoundException(`Medal with ID "${id}" not found`);
+      const { levelId, medalId, studentOnLessonId } = body;
+
+      if (levelId) {
+        // TODO: add Level validation
       }
 
-      return await this.medalService.update(id, { lessonId, ...body });
+      if (medalId) {
+        if (!(await this.medalService.findById(medalId))) {
+          throw new NotFoundException(`Medal with ID "${medalId}" not found`);
+        }
+      }
+
+      if (studentOnLessonId) {
+        // TODO: add StudentOnLesson validation
+      }
+
+      return await this.lessonService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
@@ -96,11 +102,10 @@ export class MedalController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
-      return await this.medalService.delete(id);
+      return await this.lessonService.delete(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
