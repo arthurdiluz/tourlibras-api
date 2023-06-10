@@ -1,10 +1,12 @@
 import {
+  Body,
   Controller,
   Get,
   InternalServerErrorException,
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -15,6 +17,7 @@ import { CreateMedalDto } from '../dtos/create-medal.dto';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { FindMedalDto } from '../dtos/find-medal.dto';
+import { UpdateMedalDto } from '../dtos/update-medal.dto';
 
 @ApiTags('Medal')
 @Controller('medal')
@@ -26,7 +29,7 @@ export class MedalController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Post()
-  async create({ professorId, lessonId, ...body }: CreateMedalDto) {
+  async create(@Body() { professorId, lessonId, ...body }: CreateMedalDto) {
     try {
       if (!(await this.professorService.findById(professorId))) {
         throw new NotFoundException(
@@ -65,6 +68,20 @@ export class MedalController {
       }
 
       return medal;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() { lessonId, ...body }: UpdateMedalDto,
+  ) {
+    try {
+      return await this.medalService.update(id, { lessonId, ...body });
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

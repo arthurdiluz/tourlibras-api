@@ -17,4 +17,8 @@ export class MedalRepository {
   public findUnique(args: Prisma.MedalFindUniqueArgs) {
     return this.prismaService.medal.findUnique(args);
   }
+
+  public update(args: Prisma.MedalUpdateArgs) {
+    return this.prismaService.medal.update(args);
+  }
 }

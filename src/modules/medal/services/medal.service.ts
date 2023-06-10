@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MedalRepository } from '../repositories/medal.repository';
 import { CreateMedalDto } from '../dtos/create-medal.dto';
 import { FindMedalDto } from '../dtos/find-medal.dto';
+import { UpdateMedalDto } from '../dtos/update-medal.dto';
 
 @Injectable()
 export class MedalService {
@@ -29,5 +30,15 @@ export class MedalService {
 
   async findById(medalId: string) {
     return this.medalRepository.findUnique({ where: { id: medalId } });
+  }
+
+  async update(medalId: string, { lessonId, ...body }: UpdateMedalDto) {
+    return this.medalRepository.update({
+      where: { id: medalId },
+      data: {
+        Lesson: { connect: { id: lessonId } },
+        ...body,
+      },
+    });
   }
 }
