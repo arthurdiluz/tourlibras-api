@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -16,6 +17,7 @@ import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { CreateLevelDto } from '../dtos/create-level.dto';
 import { LessonService } from 'src/modules/lesson/services/lesson.service';
 import { FindLevelDto } from '../dtos/find-level.dto';
+import { UpdateLevelDto } from '../dtos/update-level.dto';
 
 @ApiTags('Level')
 @Controller('level')
@@ -66,6 +68,20 @@ export class LevelController {
       }
 
       return level;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() body: UpdateLevelDto,
+  ) {
+    try {
+      return await this.levelService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

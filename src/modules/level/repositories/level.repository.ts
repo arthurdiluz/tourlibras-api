@@ -17,4 +17,8 @@ export class LevelRepository {
   public findUnique(args: Prisma.LevelFindUniqueArgs) {
     return this.prismaService.level.findUnique(args);
   }
+
+  public update(args: Prisma.LevelUpdateArgs) {
+    return this.prismaService.level.update(args);
+  }
 }
