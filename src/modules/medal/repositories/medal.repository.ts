@@ -10,7 +10,11 @@ export class MedalRepository {
     return this.prismaService.medal.create(args);
   }
 
-  public find(args: Prisma.MedalFindManyArgs) {
+  public findMany(args: Prisma.MedalFindManyArgs) {
     return this.prismaService.medal.findMany(args);
+  }
+
+  public findUnique(args: Prisma.MedalFindUniqueArgs) {
+    return this.prismaService.medal.findUnique(args);
   }
 }

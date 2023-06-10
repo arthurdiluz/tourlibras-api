@@ -18,12 +18,16 @@ export class MedalService {
   }
 
   async find({ name, description, ...query }: FindMedalDto) {
-    return this.medalRepository.find({
+    return this.medalRepository.findMany({
       where: {
         name: { contains: name, mode: 'insensitive' },
         description: { contains: description, mode: 'insensitive' },
         ...query,
       },
     });
+  }
+
+  async findById(medalId: string) {
+    return this.medalRepository.findUnique({ where: { id: medalId } });
   }
 }

@@ -3,6 +3,8 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -46,6 +48,23 @@ export class MedalController {
   async find(@Query() query: FindMedalDto) {
     try {
       return await this.medalService.find(query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      const medal = await this.medalService.findById(id);
+
+      if (!medal) {
+        throw new NotFoundException(`Medal with ID "${id}" not found`);
+      }
+
+      return medal;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
