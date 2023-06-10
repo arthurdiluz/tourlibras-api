@@ -51,4 +51,8 @@ export class LessonService {
       },
     });
   }
+
+  async delete(lessonId: string) {
+    return this.lessonRepository.delete({ where: { id: lessonId } });
+  }
 }

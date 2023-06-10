@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -94,6 +95,17 @@ export class LessonController {
       }
 
       return await this.lessonService.update(id, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id')
+  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      return await this.lessonService.delete(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
