@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -16,6 +17,7 @@ import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { CreateLessonDto } from '../dtos/create-lesson.dto';
 import { MedalService } from 'src/modules/medal/services/medal.service';
 import { FindLessonDto } from '../dtos/find-lesson.dto';
+import { UpdateLessonDto } from '../dtos/update-lesson.dto';
 
 @ApiTags('Lesson')
 @Controller('api/v1/lesson')
@@ -62,6 +64,36 @@ export class LessonController {
   async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     try {
       return await this.lessonService.findById(id);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() body: UpdateLessonDto,
+  ) {
+    try {
+      const { levelId, medalId, studentOnLessonId } = body;
+
+      if (levelId) {
+        // TODO: add Level validation
+      }
+
+      if (medalId) {
+        if (!(await this.medalService.findById(medalId))) {
+          throw new NotFoundException(`Medal with ID "${medalId}" not found`);
+        }
+      }
+
+      if (studentOnLessonId) {
+        // TODO: add StudentOnLesson validation
+      }
+
+      return await this.lessonService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

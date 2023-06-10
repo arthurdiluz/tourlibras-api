@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { LessonRepository } from '../repositories/lesson.repository';
 import { CreateLessonDto } from '../dtos/create-lesson.dto';
 import { FindLessonDto } from '../dtos/find-lesson.dto';
+import { UpdateLessonDto } from '../dtos/update-lesson.dto';
 
 @Injectable()
 export class LessonService {
@@ -34,5 +35,20 @@ export class LessonService {
 
   async findById(lessonId: string) {
     return this.lessonRepository.findUnique({ where: { id: lessonId } });
+  }
+
+  async update(
+    lessonId: string,
+    { levelId, medalId, studentOnLessonId, ...body }: UpdateLessonDto,
+  ) {
+    return this.lessonRepository.update({
+      where: { id: lessonId },
+      data: {
+        Level: { connect: { id: levelId } },
+        Medal: { connect: { id: medalId } },
+        StudentOnLesson: { connect: { id: studentOnLessonId } },
+        ...body,
+      },
+    });
   }
 }
