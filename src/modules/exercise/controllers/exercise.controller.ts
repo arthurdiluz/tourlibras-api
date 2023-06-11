@@ -6,6 +6,7 @@ import {
   NotFoundException,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -15,6 +16,7 @@ import { ExerciseService } from '../services/exercise.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { CreateExerciseDto } from '../dtos/create-exercise.dto';
 import { FindExerciseDto } from '../dtos/find-exercise.dto';
+import { UpdateExerciseDto } from '../dtos/update-exercise.dto';
 
 @ApiTags('Exercise')
 @Controller('exercise')
@@ -54,6 +56,20 @@ export class ExerciseController {
       }
 
       return exercise;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Body() body: UpdateExerciseDto,
+  ) {
+    try {
+      return await this.exerciseService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
