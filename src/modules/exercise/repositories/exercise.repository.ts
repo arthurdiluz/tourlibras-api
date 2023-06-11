@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma/prisma.service';
 
 @Injectable()
 export class ExerciseRepository {
   constructor(private readonly prismaService: PrismaService) {}
+
+  public create(args: Prisma.ExerciseCreateArgs) {
+    return this.prismaService.exercise.create(args);
+  }
 }

@@ -115,7 +115,7 @@ model Exercise {
   updatedAt DateTime @default(now())
 
   media     String @db.VarChar(255) // TODO: calculate length
-  statement String @db.VarChar(15)
+  statement String @db.VarChar(31)
 
   Alternative Alternative[]
 }
