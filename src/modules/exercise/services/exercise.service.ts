@@ -19,4 +19,8 @@ export class ExerciseService {
       },
     });
   }
+
+  async findById(exerciseId: string) {
+    return this.exerciseRepository.findUnique({ where: { id: exerciseId } });
+  }
 }
