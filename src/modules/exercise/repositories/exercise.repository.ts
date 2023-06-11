@@ -9,4 +9,8 @@ export class ExerciseRepository {
   public create(args: Prisma.ExerciseCreateArgs) {
     return this.prismaService.exercise.create(args);
   }
+
+  public findMany(args: Prisma.ExerciseFindManyArgs) {
+    return this.prismaService.exercise.findMany(args);
+  }
 }
