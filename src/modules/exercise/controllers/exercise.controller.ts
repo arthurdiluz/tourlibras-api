@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -74,5 +75,11 @@ export class ExerciseController {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
     }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id')
+  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return await this.exerciseService.delete(id);
   }
 }

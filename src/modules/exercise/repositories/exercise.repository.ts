@@ -21,4 +21,8 @@ export class ExerciseRepository {
   public update(args: Prisma.ExerciseUpdateArgs) {
     return this.prismaService.exercise.update(args);
   }
+
+  public delete(args: Prisma.ExerciseDeleteArgs) {
+    return this.prismaService.exercise.delete(args);
+  }
 }

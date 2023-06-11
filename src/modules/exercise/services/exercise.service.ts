@@ -31,4 +31,8 @@ export class ExerciseService {
       data: { ...body },
     });
   }
+
+  async delete(exerciseId: string) {
+    return this.exerciseRepository.delete({ where: { id: exerciseId } });
+  }
 }
