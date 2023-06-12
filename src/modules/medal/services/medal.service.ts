@@ -37,7 +37,7 @@ export class MedalService {
       where: { id: medalId },
       data: {
         updatedAt: new Date(),
-        Lesson: { connect: { id: lessonId } },
+        Lesson: lessonId ? { connect: { id: lessonId } } : undefined,
         ...body,
       },
     });

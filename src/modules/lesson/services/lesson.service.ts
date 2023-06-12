@@ -44,9 +44,11 @@ export class LessonService {
     return this.lessonRepository.update({
       where: { id: lessonId },
       data: {
-        Level: { connect: { id: levelId } },
-        Medal: { connect: { id: medalId } },
-        StudentOnLesson: { connect: { id: studentOnLessonId } },
+        Level: levelId ? { connect: { id: levelId } } : undefined,
+        Medal: medalId ? { connect: { id: medalId } } : undefined,
+        StudentOnLesson: studentOnLessonId
+          ? { connect: { id: studentOnLessonId } }
+          : undefined,
         ...body,
       },
     });
