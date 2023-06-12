@@ -34,4 +34,10 @@ export class DoneExerciseService {
       data: { ...body },
     });
   }
+
+  async delete(doneExerciseId: string) {
+    return this.doneExerciseRepository.delete({
+      where: { id: doneExerciseId },
+    });
+  }
 }
