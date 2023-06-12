@@ -44,4 +44,8 @@ export class AlternativeService {
       },
     });
   }
+
+  async delete(alternativeId: string) {
+    return this.alternativeRepository.delete({ where: { id: alternativeId } });
+  }
 }

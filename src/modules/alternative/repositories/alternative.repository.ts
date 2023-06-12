@@ -21,4 +21,8 @@ export class AlternativeRepository {
   public update(args: Prisma.AlternativeUpdateArgs) {
     return this.prismaService.alternative.update(args);
   }
+
+  public delete(args: Prisma.AlternativeDeleteArgs) {
+    return this.prismaService.alternative.delete(args);
+  }
 }
