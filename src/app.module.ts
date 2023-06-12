@@ -15,6 +15,7 @@ import { LessonModule } from './modules/lesson/lesson.module';
 import { LevelModule } from './modules/level/level.module';
 import { ExerciseModule } from './modules/exercise/exercise.module';
 import { AlternativeModule } from './modules/alternative/alternative.module';
+import { DoneExerciseModule } from './modules/done-exercise/done-exercise.module';
 
 const configService = new ConfigService();
 
@@ -36,6 +37,7 @@ const configService = new ConfigService();
     LevelModule,
     ExerciseModule,
     AlternativeModule,
+    DoneExerciseModule,
   ],
   providers: [
     {
