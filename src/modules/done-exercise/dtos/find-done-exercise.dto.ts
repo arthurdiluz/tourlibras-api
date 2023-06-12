@@ -11,7 +11,7 @@ export class FindDoneExerciseDto {
   })
   @IsOptional()
   @IsUUID()
-  userId: string;
+  userId?: string;
 
   @ApiPropertyOptional({
     type: String,
@@ -20,7 +20,7 @@ export class FindDoneExerciseDto {
   })
   @IsOptional()
   @IsUUID()
-  exerciseId: string;
+  exerciseId?: string;
 
   @ApiPropertyOptional({
     type: Boolean,
@@ -30,5 +30,5 @@ export class FindDoneExerciseDto {
   @IsBoolean()
   @Transform(({ value }) => Boolean(eval(value)))
   @IsOptional()
-  isCorrectAttempt: boolean;
+  isCorrectAttempt?: boolean;
 }

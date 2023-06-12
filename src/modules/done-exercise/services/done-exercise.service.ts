@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DoneExerciseRepository } from '../repositories/done-exercise.repository';
 import { CreateDoneExerciseDto } from '../dtos/create-done-exercise.dto';
 import { FindDoneExerciseDto } from '../dtos/find-done-exercise.dto';
+import { UpdateDoneExerciseDto } from '../dtos/update-done-exercise.dto';
 
 @Injectable()
 export class DoneExerciseService {
@@ -24,6 +25,13 @@ export class DoneExerciseService {
   async findById(doneExerciseId: string) {
     return this.doneExerciseRepository.findUnique({
       where: { id: doneExerciseId },
+    });
+  }
+
+  async update(doneExerciseId: string, body: UpdateDoneExerciseDto) {
+    return this.doneExerciseRepository.update({
+      where: { id: doneExerciseId },
+      data: { ...body },
     });
   }
 }

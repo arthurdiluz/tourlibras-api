@@ -17,4 +17,8 @@ export class DoneExerciseRepository {
   public findUnique(args: Prisma.DoneExerciseFindUniqueArgs) {
     return this.prismaService.doneExercise.findUnique(args);
   }
+
+  public update(args: Prisma.DoneExerciseUpdateArgs) {
+    return this.prismaService.doneExercise.update(args);
+  }
 }
