@@ -24,4 +24,10 @@ export class AlternativeService {
       },
     });
   }
+
+  async findById(alternativeId: string) {
+    return this.alternativeRepository.findUnique({
+      where: { id: alternativeId },
+    });
+  }
 }

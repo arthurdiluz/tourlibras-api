@@ -3,6 +3,8 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -50,6 +52,23 @@ export class AlternativeController {
       }
 
       return await this.alternativeService.find(query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      const alternative = await this.alternativeService.findById(id);
+
+      if (!alternative) {
+        throw new NotFoundException(`Alternative with ID "${id}" not found`);
+      }
+
+      return alternative;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
