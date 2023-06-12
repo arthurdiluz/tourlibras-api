@@ -17,4 +17,8 @@ export class AlternativeRepository {
   public findUnique(args: Prisma.AlternativeFindUniqueArgs) {
     return this.prismaService.alternative.findUnique(args);
   }
+
+  public update(args: Prisma.AlternativeUpdateArgs) {
+    return this.prismaService.alternative.update(args);
+  }
 }

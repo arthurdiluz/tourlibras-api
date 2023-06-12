@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AlternativeRepository } from '../repositories/alternative.repository';
 import { CreateAlternativeDto } from '../dtos/create-alternative.dto';
 import { FindAlternativeDto } from '../dtos/find-alternative.dto';
+import { UpdateAlternativeDto } from '../dtos/update-alternative.dto';
 
 @Injectable()
 export class AlternativeService {
@@ -28,6 +29,19 @@ export class AlternativeService {
   async findById(alternativeId: string) {
     return this.alternativeRepository.findUnique({
       where: { id: alternativeId },
+    });
+  }
+
+  async update(
+    alternativeId: string,
+    { exerciseId, ...body }: UpdateAlternativeDto,
+  ) {
+    return this.alternativeRepository.update({
+      where: { id: alternativeId },
+      data: {
+        Exercise: exerciseId ? { connect: { id: exerciseId } } : undefined,
+        ...body,
+      },
     });
   }
 }
