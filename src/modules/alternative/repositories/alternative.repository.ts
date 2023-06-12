@@ -9,4 +9,8 @@ export class AlternativeRepository {
   public create(args: Prisma.AlternativeCreateArgs) {
     return this.prismaService.alternative.create(args);
   }
+
+  public findMany(args: Prisma.AlternativeFindManyArgs) {
+    return this.prismaService.alternative.findMany(args);
+  }
 }
