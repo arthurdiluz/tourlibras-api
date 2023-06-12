@@ -4,6 +4,8 @@ import {
   Get,
   InternalServerErrorException,
   NotFoundException,
+  Param,
+  ParseUUIDPipe,
   Post,
   Query,
   UseGuards,
@@ -53,6 +55,23 @@ export class DoneExerciseController {
   async find(@Query() query: FindDoneExerciseDto) {
     try {
       return await this.doneExerciseService.find(query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    try {
+      const doneExercise = await this.doneExerciseService.findById(id);
+
+      if (!doneExercise) {
+        throw new NotFoundException(`DoneExercise with ID "${id}" not found`);
+      }
+
+      return doneExercise;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

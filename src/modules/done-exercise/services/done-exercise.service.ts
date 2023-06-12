@@ -20,4 +20,10 @@ export class DoneExerciseService {
       where: { ...query },
     });
   }
+
+  async findById(doneExerciseId: string) {
+    return this.doneExerciseRepository.findUnique({
+      where: { id: doneExerciseId },
+    });
+  }
 }

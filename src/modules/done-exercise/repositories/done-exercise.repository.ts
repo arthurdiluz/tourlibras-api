@@ -13,4 +13,8 @@ export class DoneExerciseRepository {
   public findMany(args: Prisma.DoneExerciseFindManyArgs) {
     return this.prismaService.doneExercise.findMany(args);
   }
+
+  public findUnique(args: Prisma.DoneExerciseFindUniqueArgs) {
+    return this.prismaService.doneExercise.findUnique(args);
+  }
 }
