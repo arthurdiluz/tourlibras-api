@@ -16,13 +16,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { Public } from 'src/common/decorators';
-import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
+import { CreateUserDto } from '../dtos/create-user.dto';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
+import { FindUserDto } from '../dtos/find-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
-@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

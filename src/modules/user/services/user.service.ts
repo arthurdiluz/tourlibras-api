@@ -1,20 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
-import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
-import { removeKeys, hashString } from 'src/common/helpers';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { hashString, removeKeys } from 'src/common/helpers';
+import { FindUserDto } from '../dtos/find-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 import { verify } from 'argon2';
-import { Professor, Role, Student } from '@prisma/client';
+import { Professor, ROLE, Student } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async create({ password, profilePhoto, role, ...body }: CreateUserDto) {
+  async create({ password, role, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({
       data: {
-        profilePhoto:
-          profilePhoto ||
-          'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
         password: await hashString(password),
         role,
         ...body,
@@ -57,14 +56,11 @@ export class UserService {
     return removeKeys(user, ['password']);
   }
 
-  async update(id: string, { password, profilePhoto, ...body }: UpdateUserDto) {
+  async update(id: string, { password, ...body }: UpdateUserDto) {
     const user = await this.userRepository.update({
       where: { id },
       data: {
         updatedAt: new Date(),
-        profilePhoto:
-          profilePhoto ||
-          'blob:http://localhost:3000/01234567-89ab-cdef-0123-456789abcdef',
         password: await hashString(password),
         ...body,
       },
@@ -88,7 +84,7 @@ export class UserService {
 
   async linkUserToRole(
     userId: string,
-    role: Role,
+    role: ROLE,
   ): Promise<Student | Professor> {
     await this.userRepository.update({ where: { id: userId }, data: { role } });
 

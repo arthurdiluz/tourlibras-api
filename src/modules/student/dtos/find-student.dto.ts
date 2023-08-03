@@ -1,39 +1,23 @@
-import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
-import { Theme } from '@prisma/client';
+import { PartialType } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, Max } from 'class-validator';
-import { FindUserDto } from 'src/modules/user/dtos';
+import { IsNumber, Max, IsOptional, IsEnum } from 'class-validator';
+import { FindUserDto } from 'src/modules/user/dtos/find-user.dto';
+import { THEME } from '@prisma/client';
 
 export class FindStudentDto extends PartialType(FindUserDto) {
-  @ApiPropertyOptional({
-    type: Number,
-    required: false,
-    example: 0,
-  })
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
   @Max(32767)
   @IsOptional()
   experience?: number;
 
-  @ApiPropertyOptional({
-    type: Number,
-    required: false,
-    example: 0.0,
-  })
   @Transform(({ value }) => Number.parseFloat(value))
   @IsNumber()
   @Max(32767)
   @IsOptional()
   money?: number;
 
-  @ApiPropertyOptional({
-    type: String,
-    enum: Theme,
-    required: false,
-    example: Theme.LIGHT,
-  })
-  @IsEnum(Theme)
+  @IsEnum(THEME)
   @IsOptional()
-  theme?: Theme;
+  theme?: THEME;
 }

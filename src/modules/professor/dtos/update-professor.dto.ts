@@ -1,15 +1,8 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Grammar } from '@prisma/client';
 import { IsEnum, IsOptional } from 'class-validator';
+import { GRAMMAR } from '@prisma/client';
 
 export class UpdateProfessorDto {
-  @ApiPropertyOptional({
-    type: String,
-    enum: Grammar,
-    required: false,
-    example: Grammar.VSO,
-  })
-  @IsEnum(Grammar)
+  @IsEnum(GRAMMAR)
   @IsOptional()
-  grammar?: Grammar;
+  grammar?: GRAMMAR;
 }

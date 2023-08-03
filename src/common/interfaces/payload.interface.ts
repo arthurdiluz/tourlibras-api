@@ -1,5 +1,5 @@
 export interface IJwtPayload {
-  sub: string; // userID
+  sub: number; // userID
   email: string;
   iat?: number; // CreatedAt
   exp?: number; // ExpiresIn

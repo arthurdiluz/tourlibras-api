@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { StudentRepository } from '../repositories/student.repository';
-import { CreateStudentDto, FindStudentDto, UpdateStudentDto } from '../dtos';
 import { UserService } from 'src/modules/user/services/user.service';
+import { CreateStudentDto } from '../dtos/create-student.dto';
+import { FindStudentDto } from '../dtos/find-student.dto';
+import { UpdateStudentDto } from '../dtos/update-student.dto';
+import { StudentRepository } from '../repositories/student.repository';
 
 @Injectable()
 export class StudentService {

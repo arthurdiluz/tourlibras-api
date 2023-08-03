@@ -14,15 +14,15 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { StudentService } from '../services/student.service';
-import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
-import { CreateStudentDto, FindStudentDto, UpdateStudentDto } from '../dtos';
-import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
+import { UserService } from 'src/modules/user/services/user.service';
+import { ProfessorService } from 'src/modules/professor/services/professor.service';
+import { StudentService } from '../services/student.service';
+import { CreateStudentDto } from '../dtos/create-student.dto';
+import { FindStudentDto } from '../dtos/find-student.dto';
+import { UpdateStudentDto } from '../dtos/update-student.dto';
 
-@ApiTags('Student')
 @Controller('student')
 export class StudentController {
   constructor(

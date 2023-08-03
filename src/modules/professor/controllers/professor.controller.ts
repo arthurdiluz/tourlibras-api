@@ -1,31 +1,27 @@
 import {
-  Body,
   Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  InternalServerErrorException,
+  Post,
+  Body,
   NotFoundException,
+  InternalServerErrorException,
+  UseGuards,
+  Get,
+  Query,
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
-  Query,
-  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { ProfessorService } from '../services/professor.service';
-import {
-  CreateProfessorDto,
-  FindProfessorDto,
-  UpdateProfessorDto,
-} from '../dtos';
-import { UserService } from 'src/modules/user/services/user.service';
 import { Public } from 'src/common/decorators';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
+import { UserService } from 'src/modules/user/services/user.service';
+import { CreateProfessorDto } from '../dtos/create-professor.dto';
+import { FindProfessorDto } from '../dtos/find-professor.dto';
+import { UpdateProfessorDto } from '../dtos/update-professor.dto';
+import { ProfessorService } from '../services/professor.service';
 
-@ApiTags('Professor')
 @Controller('professor')
 export class ProfessorController {
   constructor(

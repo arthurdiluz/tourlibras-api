@@ -1,10 +1,10 @@
 import { Transform } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsUUID, MaxLength } from 'class-validator';
+import { IsUUID, IsNotEmpty, IsEmail, MaxLength } from 'class-validator';
 
 export class CreateJwtTokenDto {
   @IsUUID()
   @IsNotEmpty()
-  userId: string;
+  userId: number;
 
   @IsEmail()
   @MaxLength(31)

@@ -9,10 +9,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { LocalAuthService } from '../services/local.service';
-import { JwtSignInDto, JwtSignUpDto } from '../dtos/jwt';
 import { UserService } from 'src/modules/user/services/user.service';
-import { User } from '@prisma/client';
 import { Public } from 'src/common/decorators';
+import { JwtSignUpDto } from '../dtos/jwt/jwt-sign-up.dto';
+import { User } from '@prisma/client';
+import { JwtSignInDto } from '../dtos/jwt/jwt-sign-in.dto';
 import { IJwtToken } from 'src/common/interfaces';
 
 @Controller('auth/local')

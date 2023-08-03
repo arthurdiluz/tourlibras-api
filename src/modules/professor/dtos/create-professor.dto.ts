@@ -1,25 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Grammar } from '@prisma/client';
-import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
-import { randomUUID } from 'crypto';
+import { IsUUID, IsNotEmpty, IsEnum, IsOptional } from 'class-validator';
+import { GRAMMAR } from '@prisma/client';
 
 export class CreateProfessorDto {
-  @ApiProperty({
-    type: String,
-    required: true,
-    example: randomUUID(),
-  })
   @IsUUID()
   @IsNotEmpty()
   userId: string;
 
-  @ApiProperty({
-    type: String,
-    enum: Grammar,
-    required: false,
-    example: Grammar.OSV,
-  })
-  @IsEnum(Grammar)
+  @IsEnum(GRAMMAR)
   @IsOptional()
-  grammar?: Grammar;
+  grammar?: GRAMMAR;
 }
