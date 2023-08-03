@@ -8,7 +8,6 @@ import {
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { LocalAuthService } from '../services/local.service';
 import { JwtSignInDto, JwtSignUpDto } from '../dtos/jwt';
 import { UserService } from 'src/modules/user/services/user.service';
@@ -16,8 +15,7 @@ import { User } from '@prisma/client';
 import { Public } from 'src/common/decorators';
 import { IJwtToken } from 'src/common/interfaces';
 
-@ApiTags('Authentication - Local')
-@Controller('api/v1/auth/local')
+@Controller('auth/local')
 export class LocalAuthController {
   constructor(
     private readonly authService: LocalAuthService,

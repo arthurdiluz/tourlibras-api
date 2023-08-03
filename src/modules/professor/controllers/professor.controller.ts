@@ -26,7 +26,7 @@ import { Public } from 'src/common/decorators';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('Professor')
-@Controller('api/v1/professor')
+@Controller('professor')
 export class ProfessorController {
   constructor(
     private readonly professorService: ProfessorService,

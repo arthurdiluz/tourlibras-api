@@ -23,7 +23,7 @@ import { CreateUserDto, FindUserDto, UpdateUserDto } from '../dtos';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('User')
-@Controller('api/v1/user')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

@@ -23,7 +23,7 @@ import { ProfessorService } from 'src/modules/professor/services/professor.servi
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 
 @ApiTags('Student')
-@Controller('api/v1/student')
+@Controller('student')
 export class StudentController {
   constructor(
     private readonly studentService: StudentService,
