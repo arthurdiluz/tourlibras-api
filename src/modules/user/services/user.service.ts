@@ -8,6 +8,7 @@ import { hashString } from 'src/common/helpers/hashString';
 import { removeKeys } from 'src/common/helpers/removeKeys';
 import { verify } from 'argon2';
 import { ROLE, Professor, Student } from '@prisma/client';
+import { CreateStudentDto } from '../dtos/student/create-student.dto';
 
 @Injectable()
 export class UserService {
@@ -22,9 +23,7 @@ export class UserService {
       },
     });
 
-    if (role) {
-      await this.linkUserToRole(user.id, user.role);
-    }
+    if (role) await this.linkUserToRole(user.id, user.role);
 
     return removeKeys(user, ['password']);
   }
@@ -41,6 +40,27 @@ export class UserService {
     });
 
     return removeKeys(professor, ['password']);
+  }
+
+  async createStudent({ User, professorId, ...body }: CreateStudentDto) {
+    const { password, role, ...userBody } = User;
+    const student = await this.userRepository.create({
+      data: {
+        Student: {
+          create: {
+            Professor: professorId
+              ? { connect: { id: professorId } }
+              : undefined,
+            ...body,
+          },
+        },
+        password: await hashString(password),
+        role,
+        ...userBody,
+      },
+    });
+
+    return removeKeys(student, ['password']);
   }
 
   async find({ fullName, ...body }: FindUserDto) {

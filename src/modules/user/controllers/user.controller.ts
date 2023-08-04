@@ -16,16 +16,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
+import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateProfessorDto } from '../dtos/professor/create-professor.dto';
+import { CreateStudentDto } from '../dtos/student/create-student.dto';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly professorService: ProfessorService,
+  ) {}
 
   @Public()
   @Post()
@@ -49,6 +54,27 @@ export class UserController {
   async createProfessor(@Body() body: CreateProfessorDto) {
     try {
       return await this.userService.createProfessor(body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @Public()
+  @Post('student')
+  async creatStudent(@Body() body: CreateStudentDto) {
+    try {
+      const { professorId } = body;
+
+      if (professorId) {
+        if (!(await this.professorService.findById(professorId))) {
+          throw new NotFoundException(
+            `Professor with ID "${professorId}" not found`,
+          );
+        }
+      }
+
+      return await this.userService.createStudent(body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

@@ -1,12 +1,19 @@
-import { IsNotEmpty, IsOptional, IsNumber, IsEnum } from 'class-validator';
-import { Transform } from 'class-transformer';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsNumber,
+  IsEnum,
+  IsObject,
+} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { CreateUserDto } from '../create-user.dto';
 import { THEME } from '@prisma/client';
 
 export class CreateStudentDto {
-  @Transform(({ value }) => Number.parseInt(value))
-  @IsNumber()
+  @IsObject()
+  @Type(() => CreateUserDto)
   @IsNotEmpty()
-  userId: number;
+  User: CreateUserDto;
 
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
