@@ -8,7 +8,6 @@ import {
   Get,
   Query,
   Param,
-  ParseUUIDPipe,
   Patch,
   HttpCode,
   HttpStatus,
@@ -57,7 +56,7 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
-  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findById(@Param() id: number) {
     try {
       const professor = await this.professorService.findById(id);
 
@@ -74,10 +73,7 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
-  async update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() body: UpdateProfessorDto,
-  ) {
+  async update(@Param() id: number, @Body() body: UpdateProfessorDto) {
     try {
       if (!(await this.professorService.findById(id))) {
         throw new NotFoundException(`Professor with ID "${id}" not found`);
@@ -93,7 +89,7 @@ export class ProfessorController {
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async delete(@Param() id: number) {
     try {
       return await this.professorService.delete(id);
     } catch (error: unknown) {

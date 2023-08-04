@@ -1,4 +1,3 @@
-import { ROLE } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
@@ -7,39 +6,41 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsStrongPassword,
   Length,
-  MaxLength,
+  IsStrongPassword,
 } from 'class-validator';
+import { ROLE } from '@prisma/client';
 
 export class CreateUserDto {
-  @IsBoolean()
   @Transform(({ value }) => Boolean(eval(value)))
+  @IsBoolean()
   @IsOptional()
   isActive?: boolean;
 
+  @Transform(({ value }) => String(value).trim())
   @IsString()
   @Length(3, 31)
   @IsNotEmpty()
   fullName: string;
 
+  @Transform(({ value }) => String(value).trim())
   @IsEmail()
-  @MaxLength(31)
-  @Transform(({ value }) => String(value).toLowerCase())
+  @Length(3, 31)
   @IsNotEmpty()
   email: string;
 
-  @IsStrongPassword()
+  @Transform(({ value }) => String(value).trim())
+  // @IsStrongPassword()
   @Length(8, 63)
   @IsNotEmpty()
   password: string;
 
+  @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;
 
-  @IsString()
+  @Transform(({ value }) => String(value).toUpperCase())
   @IsEnum(ROLE)
   @IsOptional()
   role?: ROLE;

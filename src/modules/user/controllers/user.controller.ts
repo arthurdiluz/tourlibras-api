@@ -10,7 +10,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
-  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -55,7 +54,7 @@ export class UserController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
-  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findById(@Param() id: number) {
     try {
       const user = await this.userService.findById(id);
 
@@ -72,10 +71,7 @@ export class UserController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
-  async update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
-    @Body() { email, ...body }: UpdateUserDto,
-  ) {
+  async update(@Param() id: number, @Body() { email, ...body }: UpdateUserDto) {
     try {
       const user = await this.userService.findById(id);
 
@@ -110,7 +106,7 @@ export class UserController {
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async delete(@Param() id: number) {
     try {
       const user = await this.userService.delete(id);
 

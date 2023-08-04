@@ -8,7 +8,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
-  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -69,7 +68,7 @@ export class StudentController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
-  async findById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async findById(@Param() id: number) {
     try {
       const student = await this.studentService.findById(id);
 
@@ -87,7 +86,7 @@ export class StudentController {
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
   async update(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+    @Param() id: number,
     @Body() { professorId, ...body }: UpdateStudentDto,
   ) {
     try {
@@ -113,7 +112,7 @@ export class StudentController {
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+  async delete(@Param() id: number) {
     try {
       return await this.studentService.delete(id);
     } catch (error: unknown) {

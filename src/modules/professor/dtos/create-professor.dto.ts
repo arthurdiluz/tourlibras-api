@@ -1,11 +1,14 @@
-import { IsUUID, IsNotEmpty, IsEnum, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsEnum, IsOptional, IsNumber } from 'class-validator';
 import { GRAMMAR } from '@prisma/client';
+import { Transform } from 'class-transformer';
 
 export class CreateProfessorDto {
-  @IsUUID()
+  @Transform(({ value }) => Number.parseInt(value))
+  @IsNumber()
   @IsNotEmpty()
-  userId: string;
+  userId: number;
 
+  @Transform(({ value }) => String(value).toUpperCase())
   @IsEnum(GRAMMAR)
   @IsOptional()
   grammar?: GRAMMAR;

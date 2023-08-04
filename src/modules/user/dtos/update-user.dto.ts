@@ -5,35 +5,37 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsStrongPassword,
   Length,
   MaxLength,
+  IsStrongPassword,
 } from 'class-validator';
 
 export class UpdateUserDto {
-  @IsBoolean()
   @Transform(({ value }) => Boolean(eval(value)))
+  @IsBoolean()
   @IsOptional()
   isActive?: boolean;
 
+  @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(31)
   @IsOptional()
   fullName?: string;
 
+  @Transform(({ value }) => String(value).trim())
   @IsEmail()
   @MaxLength(31)
-  @Transform(({ value }) => String(value).toLowerCase())
   @IsOptional()
   email?: string;
 
-  @IsStrongPassword()
+  @Transform(({ value }) => String(value).trim())
+  // @IsStrongPassword()
   @Length(8, 63)
   @IsNotEmpty()
   password?: string;
 
+  @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(255)
   @IsOptional()
   profilePhoto?: string;
 }

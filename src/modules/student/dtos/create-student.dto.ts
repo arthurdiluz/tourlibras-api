@@ -1,37 +1,29 @@
-import {
-  IsUUID,
-  IsNotEmpty,
-  IsOptional,
-  IsNumber,
-  Max,
-  IsString,
-  IsEnum,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsNumber, IsEnum } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { THEME } from '@prisma/client';
 
 export class CreateStudentDto {
-  @IsUUID()
+  @Transform(({ value }) => Number.parseInt(value))
+  @IsNumber()
   @IsNotEmpty()
-  userId: string;
-
-  @IsUUID()
-  @IsOptional()
-  professorId?: string;
+  userId: number;
 
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
-  @Max(32767)
+  @IsOptional()
+  professorId?: number;
+
+  @Transform(({ value }) => Number.parseInt(value))
+  @IsNumber()
   @IsOptional()
   experience?: number;
 
   @Transform(({ value }) => Number.parseFloat(value))
   @IsNumber()
-  @Max(32767)
   @IsOptional()
   money?: number;
 
-  @IsString()
+  @Transform(({ value }) => String(value).toUpperCase())
   @IsEnum(THEME)
   @IsOptional()
   theme?: THEME;

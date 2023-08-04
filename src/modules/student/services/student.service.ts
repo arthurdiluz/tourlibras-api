@@ -51,11 +51,11 @@ export class StudentService {
     });
   }
 
-  async findById(studentId: string) {
+  async findById(studentId: number) {
     return this.studentRepository.findUnique({ where: { id: studentId } });
   }
 
-  async update(id: string, { professorId, ...body }: UpdateStudentDto) {
+  async update(id: number, { professorId, ...body }: UpdateStudentDto) {
     const data = {
       updatedAt: new Date(),
       ...body,
@@ -68,7 +68,7 @@ export class StudentService {
     return this.studentRepository.update({ where: { id }, data });
   }
 
-  async delete(studentId: string) {
+  async delete(studentId: number) {
     return this.studentRepository.delete({ where: { id: studentId } });
   }
 }

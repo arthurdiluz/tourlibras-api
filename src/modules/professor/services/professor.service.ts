@@ -41,11 +41,11 @@ export class ProfessorService {
     });
   }
 
-  async findById(professorId: string) {
+  async findById(professorId: number) {
     return this.professorRepository.findUnique({ where: { id: professorId } });
   }
 
-  async update(id: string, body: UpdateProfessorDto) {
+  async update(id: number, body: UpdateProfessorDto) {
     return this.professorRepository.update({
       where: { id },
       data: {
@@ -55,7 +55,7 @@ export class ProfessorService {
     });
   }
 
-  async delete(professorId: string) {
+  async delete(professorId: number) {
     return this.professorRepository.delete({ where: { id: professorId } });
   }
 }

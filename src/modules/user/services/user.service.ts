@@ -38,7 +38,7 @@ export class UserService {
     return users.map((user) => removeKeys(user, ['password']));
   }
 
-  async findById(userId: string) {
+  async findById(userId: number) {
     const user = await this.userRepository.findUnique({
       where: { id: userId },
     });
@@ -56,7 +56,7 @@ export class UserService {
     return removeKeys(user, ['password']);
   }
 
-  async update(id: string, { password, ...body }: UpdateUserDto) {
+  async update(id: number, { password, ...body }: UpdateUserDto) {
     const user = await this.userRepository.update({
       where: { id },
       data: {
@@ -69,7 +69,7 @@ export class UserService {
     return removeKeys(user, ['password']);
   }
 
-  async delete(userId: string) {
+  async delete(userId: number) {
     const user = await this.userRepository.delete({ where: { id: userId } });
     return removeKeys(user, ['password']);
   }
@@ -83,7 +83,7 @@ export class UserService {
   }
 
   async linkUserToRole(
-    userId: string,
+    userId: number,
     role: ROLE,
   ): Promise<Student | Professor> {
     await this.userRepository.update({ where: { id: userId }, data: { role } });
