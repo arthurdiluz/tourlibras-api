@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import {
-  IsBoolean,
   IsEmail,
   IsEnum,
   IsNotEmpty,
@@ -12,11 +11,6 @@ import {
 import { ROLE } from '@prisma/client';
 
 export class CreateUserDto {
-  @Transform(({ value }) => Boolean(eval(value)))
-  @IsBoolean()
-  @IsOptional()
-  isActive?: boolean;
-
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @Length(3, 31)

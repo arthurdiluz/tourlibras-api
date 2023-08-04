@@ -2,13 +2,13 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { CreateProfessorDto } from '../dtos/professor/create-professor.dto';
+import { CreateStudentDto } from '../dtos/student/create-student.dto';
 import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { hashString } from 'src/common/helpers/hashString';
 import { removeKeys } from 'src/common/helpers/removeKeys';
 import { verify } from 'argon2';
 import { ROLE, Professor, Student } from '@prisma/client';
-import { CreateStudentDto } from '../dtos/student/create-student.dto';
 
 @Injectable()
 export class UserService {

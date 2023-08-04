@@ -12,7 +12,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  isActive     Boolean @default(false) @db.Boolean
+  isActive     Boolean @default(true) @db.Boolean // TODO: update default value
   email        String  @unique @db.VarChar(255)
   password     String  @db.VarChar(255)
   fullName     String  @db.VarChar(31)
