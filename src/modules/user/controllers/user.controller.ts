@@ -16,11 +16,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
-import { Public } from 'src/common/decorators';
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { Public } from 'src/common/decorators/public.decorator';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 
 @Controller('user')
 export class UserController {

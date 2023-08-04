@@ -13,13 +13,13 @@ import {
   HttpStatus,
   Delete,
 } from '@nestjs/common';
-import { Public } from 'src/common/decorators';
-import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { UserService } from 'src/modules/user/services/user.service';
 import { CreateProfessorDto } from '../dtos/create-professor.dto';
 import { FindProfessorDto } from '../dtos/find-professor.dto';
 import { UpdateProfessorDto } from '../dtos/update-professor.dto';
 import { ProfessorService } from '../services/professor.service';
+import { Public } from 'src/common/decorators/public.decorator';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 
 @Controller('professor')
 export class ProfessorController {

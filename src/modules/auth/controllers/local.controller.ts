@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { LocalAuthService } from '../services/local.service';
 import { UserService } from 'src/modules/user/services/user.service';
-import { Public } from 'src/common/decorators';
+import { Public } from 'src/common/decorators/public.decorator';
+import { IJwtToken } from 'src/common/interfaces/jwt-token.interface';
 import { JwtSignUpDto } from '../dtos/jwt/jwt-sign-up.dto';
-import { User } from '@prisma/client';
 import { JwtSignInDto } from '../dtos/jwt/jwt-sign-in.dto';
-import { IJwtToken } from 'src/common/interfaces';
+import { User } from '@prisma/client';
 
 @Controller('auth/local')
 export class LocalAuthController {

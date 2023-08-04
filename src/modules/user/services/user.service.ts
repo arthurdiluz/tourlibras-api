@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto } from '../dtos/create-user.dto';
-import { hashString, removeKeys } from 'src/common/helpers';
 import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
-import { verify } from 'argon2';
+import { hashString } from 'src/common/helpers/hashString';
 import { Professor, ROLE, Student } from '@prisma/client';
+import { verify } from 'argon2';
+import { removeKeys } from 'src/common/helpers/removeKeys';
 
 @Injectable()
 export class UserService {

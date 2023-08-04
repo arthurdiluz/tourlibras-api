@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { JwtAccessTokenGuard } from './common/decorators/guards/jwt/jwt-access-token.guard';
 import { ConfigService } from './config/config.service';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -8,7 +9,6 @@ import { UserModule } from './modules/user/user.module';
 import { StudentModule } from './modules/student/student.module';
 import { ProfessorModule } from './modules/professor/professor.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAccessTokenGuard } from './common/decorators/guards/jwt';
 
 const configService = new ConfigService();
 

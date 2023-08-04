@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { IJwtToken, IJwtPayload } from 'src/common/interfaces';
 import { CreateJwtTokenDto } from '../dtos/jwt/create-jwt-token.dto';
 import { JwtSignUpDto } from '../dtos/jwt/jwt-sign-up.dto';
 import { ConfigService } from 'src/config/config.service';
 import { UserService } from 'src/modules/user/services/user.service';
+import { IJwtToken } from 'src/common/interfaces/jwt-token.interface';
+import { IJwtPayload } from 'src/common/interfaces/payload.interface';
 import { User } from '@prisma/client';
 
 @Injectable()

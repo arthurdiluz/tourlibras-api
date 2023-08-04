@@ -13,14 +13,14 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { Public } from 'src/common/decorators';
-import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt';
 import { UserService } from 'src/modules/user/services/user.service';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { StudentService } from '../services/student.service';
 import { CreateStudentDto } from '../dtos/create-student.dto';
 import { FindStudentDto } from '../dtos/find-student.dto';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
+import { Public } from 'src/common/decorators/public.decorator';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 
 @Controller('student')
 export class StudentController {
