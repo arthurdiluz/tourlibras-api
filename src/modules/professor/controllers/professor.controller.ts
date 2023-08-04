@@ -1,6 +1,5 @@
 import {
   Controller,
-  Post,
   Body,
   NotFoundException,
   InternalServerErrorException,
@@ -13,35 +12,14 @@ import {
   HttpStatus,
   Delete,
 } from '@nestjs/common';
-import { UserService } from 'src/modules/user/services/user.service';
-import { CreateProfessorDto } from '../dtos/create-professor.dto';
 import { FindProfessorDto } from '../dtos/find-professor.dto';
 import { UpdateProfessorDto } from '../dtos/update-professor.dto';
 import { ProfessorService } from '../services/professor.service';
-import { Public } from 'src/common/decorators/public.decorator';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 
 @Controller('professor')
 export class ProfessorController {
-  constructor(
-    private readonly professorService: ProfessorService,
-    private readonly userService: UserService,
-  ) {}
-
-  @Public()
-  @Post()
-  async create(@Body() { userId, ...body }: CreateProfessorDto) {
-    try {
-      if (!(await this.userService.findById(userId))) {
-        throw new NotFoundException(`User with ID "${userId}" not found`);
-      }
-
-      return await this.professorService.create({ userId, ...body });
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
-  }
+  constructor(private readonly professorService: ProfessorService) {}
 
   @UseGuards(JwtAccessTokenGuard)
   @Get()

@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto } from '../dtos/create-user.dto';
+import { CreateProfessorDto } from '../dtos/professor/create-professor.dto';
 import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { hashString } from 'src/common/helpers/hashString';
-import { Professor, ROLE, Student } from '@prisma/client';
-import { verify } from 'argon2';
 import { removeKeys } from 'src/common/helpers/removeKeys';
+import { verify } from 'argon2';
+import { ROLE, Professor, Student } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -26,6 +27,20 @@ export class UserService {
     }
 
     return removeKeys(user, ['password']);
+  }
+
+  async createProfessor({ User, ...body }: CreateProfessorDto) {
+    const { password, role, ...userBody } = User;
+    const professor = await this.userRepository.create({
+      data: {
+        Professor: { create: { ...body } },
+        password: await hashString(password),
+        role,
+        ...userBody,
+      },
+    });
+
+    return removeKeys(professor, ['password']);
   }
 
   async find({ fullName, ...body }: FindUserDto) {
@@ -89,8 +104,13 @@ export class UserService {
   ): Promise<Student | Professor> {
     await this.userRepository.update({ where: { id: userId }, data: { role } });
 
-    return role === 'STUDENT'
-      ? this.userRepository.addStudentRole(userId)
-      : this.userRepository.addProfessorRole(userId);
+    switch (role) {
+      case 'STUDENT':
+        return this.userRepository.addStudentRole(userId);
+      case 'PROFESSOR':
+        this.userRepository.addProfessorRole(userId);
+      default:
+        throw new BadRequestException(`Invalid role`);
+    }
   }
 }

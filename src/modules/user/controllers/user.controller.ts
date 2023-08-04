@@ -21,6 +21,7 @@ import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
+import { CreateProfessorDto } from '../dtos/professor/create-professor.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,13 +29,26 @@ export class UserController {
 
   @Public()
   @Post()
-  async create(@Body() { email, ...body }: CreateUserDto) {
+  async create(@Body() body: CreateUserDto) {
     try {
+      const { email } = body;
+
       if ((await this.userService.findByEmail(email)) !== null) {
         throw new ConflictException(`Email "${email}" already exists`);
       }
 
-      return await this.userService.create({ email, ...body });
+      return await this.userService.create(body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @Public()
+  @Post('professor')
+  async createProfessor(@Body() body: CreateProfessorDto) {
+    try {
+      return await this.userService.createProfessor(body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

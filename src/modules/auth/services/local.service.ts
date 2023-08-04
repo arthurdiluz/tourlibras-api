@@ -20,7 +20,7 @@ export class LocalAuthService {
     role,
     ...body
   }: JwtSignUpDto): Promise<Omit<User, 'password'>> {
-    return this.userService.create({ role, ...body });
+    return this.userService.createProfessor({ role, ...body });
   }
 
   async signIn(email: string): Promise<IJwtToken> {

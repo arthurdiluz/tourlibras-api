@@ -6,10 +6,6 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 export class ProfessorRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public create(args: Prisma.ProfessorCreateArgs) {
-    return this.prismaService.professor.create(args);
-  }
-
   public findMany(args: Prisma.ProfessorFindManyArgs) {
     return this.prismaService.professor.findMany(args);
   }
