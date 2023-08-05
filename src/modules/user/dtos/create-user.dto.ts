@@ -1,12 +1,11 @@
 import { Transform } from 'class-transformer';
 import {
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsOptional,
   IsString,
   Length,
-  IsStrongPassword,
+  IsNotEmpty,
+  IsEmail,
+  IsOptional,
+  IsEnum,
 } from 'class-validator';
 import { ROLE } from '@prisma/client';
 

@@ -1,16 +1,13 @@
-import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsObject, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { CreateUserDto } from '../create-user.dto';
-import { GRAMMAR } from '@prisma/client';
+import { IsEnum, IsOptional } from 'class-validator';
+import { ROLE, GRAMMAR } from '@prisma/client';
 
-export class CreateProfessorDto {
-  @IsObject()
-  @Type(() => CreateUserDto)
-  @IsNotEmpty()
-  User: CreateUserDto;
-
+export class CreateProfessorDto extends CreateUserDto {
   @Transform(({ value }) => String(value).toUpperCase())
   @IsEnum(GRAMMAR)
   @IsOptional()
   grammar?: GRAMMAR;
+
+  role: ROLE = 'PROFESSOR';
 }

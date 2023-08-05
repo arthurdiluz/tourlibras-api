@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateJwtTokenDto } from '../dtos/jwt/create-jwt-token.dto';
 import { JwtSignUpDto } from '../dtos/jwt/jwt-sign-up.dto';
+import { JwtSignInDto } from '../dtos/jwt/jwt-sign-in.dto';
 import { ConfigService } from 'src/config/config.service';
 import { UserService } from 'src/modules/user/services/user.service';
 import { IJwtToken } from 'src/common/interfaces/jwt-token.interface';
@@ -16,14 +17,15 @@ export class LocalAuthService {
     private readonly userService: UserService,
   ) {}
 
-  async signUp({
-    role,
-    ...body
-  }: JwtSignUpDto): Promise<Omit<User, 'password'>> {
-    return this.userService.create({ role, ...body });
+  async signUp(body: JwtSignUpDto): Promise<Omit<User, 'password'>> {
+    return this.userService.create(body);
   }
 
-  async signIn(email: string): Promise<IJwtToken> {
+  async signIn({ email, password }: JwtSignInDto): Promise<IJwtToken> {
+    if (!(await this.userService.isValidCredentials(email, password))) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     const { id: userId } = await this.userService.findByEmail(email);
     const accessToken = await this.createJwtToken({ userId, email });
 

@@ -28,13 +28,10 @@ export class UserService {
     return removeKeys(user, ['password']);
   }
 
-  async createProfessor({ User, ...body }: CreateProfessorDto) {
-    const { password, role, ...userBody } = User;
+  async createProfessor({ grammar, ...userBody }: CreateProfessorDto) {
     const professor = await this.userRepository.create({
       data: {
-        Professor: { create: { ...body } },
-        password: await hashString(password),
-        role,
+        Professor: { create: { grammar } },
         ...userBody,
       },
     });
@@ -42,20 +39,11 @@ export class UserService {
     return removeKeys(professor, ['password']);
   }
 
-  async createStudent({ User, professorId, ...body }: CreateStudentDto) {
-    const { password, role, ...userBody } = User;
+  async createStudent({ professorId, ...userBody }: CreateStudentDto) {
     const student = await this.userRepository.create({
       data: {
-        Student: {
-          create: {
-            Professor: professorId
-              ? { connect: { id: professorId } }
-              : undefined,
-            ...body,
-          },
-        },
-        password: await hashString(password),
-        role,
+        Student: { create: {} },
+        Professor: { connect: { id: professorId } },
         ...userBody,
       },
     });
