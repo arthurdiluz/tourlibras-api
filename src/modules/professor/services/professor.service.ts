@@ -5,6 +5,13 @@ import { ProfessorRepository } from '../repositories/professor.repository';
 
 @Injectable()
 export class ProfessorService {
+  private professorInclude = {
+    User: true,
+    Students: true,
+    Medals: true,
+    Items: true,
+  };
+
   constructor(private readonly professorRepository: ProfessorRepository) {}
 
   async find({
@@ -24,11 +31,15 @@ export class ProfessorService {
         },
         grammar,
       },
+      include: { ...this.professorInclude },
     });
   }
 
   async findById(professorId: number) {
-    return this.professorRepository.findUnique({ where: { id: professorId } });
+    return this.professorRepository.findUnique({
+      where: { id: professorId },
+      include: { ...this.professorInclude },
+    });
   }
 
   async update(id: number, body: UpdateProfessorDto) {
@@ -38,10 +49,14 @@ export class ProfessorService {
         updatedAt: new Date(),
         ...body,
       },
+      include: { ...this.professorInclude },
     });
   }
 
   async delete(professorId: number) {
-    return this.professorRepository.delete({ where: { id: professorId } });
+    return this.professorRepository.delete({
+      where: { id: professorId },
+      include: { ...this.professorInclude },
+    });
   }
 }

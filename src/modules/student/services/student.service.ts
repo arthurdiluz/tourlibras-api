@@ -5,6 +5,15 @@ import { StudentRepository } from '../repositories/student.repository';
 
 @Injectable()
 export class StudentService {
+  private studentInclude = {
+    User: true,
+    Professor: true,
+    Lessons: true,
+    DoneExercises: true,
+    Medals: true,
+    Items: true,
+  };
+
   constructor(private readonly studentRepository: StudentRepository) {}
 
   async find({
@@ -28,27 +37,33 @@ export class StudentService {
         money,
         theme,
       },
+      include: { ...this.studentInclude },
     });
   }
 
   async findById(studentId: number) {
-    return this.studentRepository.findUnique({ where: { id: studentId } });
+    return this.studentRepository.findUnique({
+      where: { id: studentId },
+      include: { ...this.studentInclude },
+    });
   }
 
   async update(id: number, { professorId, ...body }: UpdateStudentDto) {
-    const data = {
-      updatedAt: new Date(),
-      ...body,
-    };
-
-    if (professorId) {
-      data['Professor'] = { connect: { id: professorId } };
-    }
-
-    return this.studentRepository.update({ where: { id }, data });
+    return this.studentRepository.update({
+      where: { id },
+      data: {
+        updatedAt: new Date(),
+        Professor: professorId ? { connect: { id: professorId } } : undefined,
+        ...body,
+      },
+      include: { ...this.studentInclude },
+    });
   }
 
   async delete(studentId: number) {
-    return this.studentRepository.delete({ where: { id: studentId } });
+    return this.studentRepository.delete({
+      where: { id: studentId },
+      include: { ...this.studentInclude },
+    });
   }
 }
