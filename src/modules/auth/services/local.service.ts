@@ -21,11 +21,7 @@ export class LocalAuthService {
     return this.userService.create(body);
   }
 
-  async signIn({ email, password }: JwtSignInDto): Promise<IJwtToken> {
-    if (!(await this.userService.isValidCredentials(email, password))) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
+  async signIn({ email }: JwtSignInDto): Promise<IJwtToken> {
     const { id: userId } = await this.userService.findByEmail(email);
     const accessToken = await this.createJwtToken({ userId, email });
 

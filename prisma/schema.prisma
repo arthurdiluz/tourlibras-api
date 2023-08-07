@@ -191,8 +191,8 @@ model StudentOnLesson {
 }
 
 enum ROLE {
-  PROFESSOR
   STUDENT
+  PROFESSOR
 }
 
 enum GRAMMAR {

@@ -94,7 +94,7 @@ export class UserController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
-  async findById(@Param() id: number) {
+  async findById(@Param('id') id: number) {
     try {
       const user = await this.userService.findById(id);
 
@@ -111,7 +111,10 @@ export class UserController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
-  async update(@Param() id: number, @Body() { email, ...body }: UpdateUserDto) {
+  async update(
+    @Param('id') id: number,
+    @Body() { email, ...body }: UpdateUserDto,
+  ) {
     try {
       const user = await this.userService.findById(id);
 
@@ -146,7 +149,7 @@ export class UserController {
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param() id: number) {
+  async delete(@Param('id') id: number) {
     try {
       const user = await this.userService.delete(id);
 

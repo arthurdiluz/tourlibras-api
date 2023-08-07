@@ -7,31 +7,36 @@ import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { hashString } from 'src/common/helpers/hashString';
 import { removeKeys } from 'src/common/helpers/removeKeys';
-import { verify } from 'argon2';
 import { ROLE, Professor, Student } from '@prisma/client';
+import { verify } from 'argon2';
+import { JwtSignInDto } from 'src/modules/auth/dtos/jwt/jwt-sign-in.dto';
 
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async create({ password, role, ...body }: CreateUserDto) {
+  async create({ password, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({
       data: {
         password: await hashString(password),
-        role,
         ...body,
       },
     });
 
-    if (role) await this.linkUserToRole(user.id, user.role);
+    await this.linkUserToRole(user.id, user.role);
 
     return removeKeys(user, ['password']);
   }
 
-  async createProfessor({ grammar, ...userBody }: CreateProfessorDto) {
+  async createProfessor({
+    grammar,
+    password,
+    ...userBody
+  }: CreateProfessorDto) {
     const professor = await this.userRepository.create({
       data: {
         Professor: { create: { grammar } },
+        password: await hashString(password),
         ...userBody,
       },
     });
@@ -39,11 +44,16 @@ export class UserService {
     return removeKeys(professor, ['password']);
   }
 
-  async createStudent({ professorId, ...userBody }: CreateStudentDto) {
+  async createStudent({
+    professorId,
+    password,
+    ...userBody
+  }: CreateStudentDto) {
     const student = await this.userRepository.create({
       data: {
         Student: { create: {} },
         Professor: { connect: { id: professorId } },
+        password: await hashString(password),
         ...userBody,
       },
     });
@@ -98,7 +108,7 @@ export class UserService {
     return removeKeys(user, ['password']);
   }
 
-  async isValidCredentials(email: string, password: string) {
+  async isValidCredentials({ email, password }: JwtSignInDto) {
     const user = await this.userRepository.findUnique({
       where: { email },
     });
@@ -116,7 +126,7 @@ export class UserService {
       case 'STUDENT':
         return this.userRepository.addStudentRole(userId);
       case 'PROFESSOR':
-        this.userRepository.addProfessorRole(userId);
+        return this.userRepository.addProfessorRole(userId);
       default:
         throw new BadRequestException(`Invalid role`);
     }

@@ -46,7 +46,7 @@ export class LocalAuthController {
   @HttpCode(HttpStatus.OK)
   async signIn(@Body() { email, password }: JwtSignInDto): Promise<IJwtToken> {
     try {
-      if (!(await this.userService.isValidCredentials(email, password))) {
+      if (!(await this.userService.isValidCredentials({ email, password }))) {
         throw new UnauthorizedException('Invalid credentials');
       }
 
