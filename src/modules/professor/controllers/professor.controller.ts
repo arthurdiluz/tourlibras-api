@@ -85,9 +85,23 @@ export class ProfessorController {
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param() id: number) {
+  async delete(@Param('id') id: number) {
     try {
       return await this.professorService.delete(id);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id/student/:studentId')
+  async removeStudent(
+    @Param('id') id: number,
+    @Param('studentId') studentId: number,
+  ) {
+    try {
+      return await this.professorService.removeStudent(id, studentId);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

@@ -21,4 +21,12 @@ export class ProfessorRepository {
   public delete(args: Prisma.ProfessorDeleteArgs) {
     return this.prismaService.professor.delete(args);
   }
+
+  public removeStudent(studentId: number) {
+    return this.prismaService.student.update({
+      where: { id: studentId },
+      data: { Professor: { disconnect: true } },
+      include: { Professor: true },
+    });
+  }
 }

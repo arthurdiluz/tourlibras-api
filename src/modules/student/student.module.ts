@@ -8,6 +8,6 @@ import { StudentService } from './services/student.service';
   imports: [forwardRef(() => ProfessorModule)],
   controllers: [StudentController],
   providers: [StudentService, StudentRepository],
-  exports: [StudentService],
+  exports: [StudentService, StudentRepository],
 })
 export class StudentModule {}

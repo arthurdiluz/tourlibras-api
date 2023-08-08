@@ -10,10 +10,16 @@ import { removeKeys } from 'src/common/helpers/removeKeys';
 import { ROLE, Professor, Student } from '@prisma/client';
 import { verify } from 'argon2';
 import { JwtSignInDto } from 'src/modules/auth/dtos/jwt/jwt-sign-in.dto';
+import { ProfessorRepository } from 'src/modules/professor/repositories/professor.repository';
+import { StudentRepository } from 'src/modules/student/repositories/student.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly professorRepository: ProfessorRepository,
+    private readonly studentRepository: StudentRepository,
+  ) {}
 
   async create({ password, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({
@@ -49,13 +55,25 @@ export class UserService {
     password,
     ...userBody
   }: CreateStudentDto) {
-    const student = await this.userRepository.create({
+    const { id: userId } = await this.userRepository.create({
       data: {
         Student: { create: {} },
-        Professor: { connect: { id: professorId } },
         password: await hashString(password),
         ...userBody,
       },
+      include: { Student: true, Professor: true },
+    });
+
+    if (professorId) {
+      await this.studentRepository.update({
+        where: { userId },
+        data: { Professor: { connect: { id: professorId } } },
+      });
+    }
+
+    const student = await this.userRepository.findUnique({
+      where: { id: userId },
+      include: { Student: true, Professor: true },
     });
 
     return removeKeys(student, ['password']);
