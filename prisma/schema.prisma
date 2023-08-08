@@ -34,11 +34,11 @@ model Student {
   userId      Int   @unique
   professorId Int?
 
-  User      User              @relation(fields: [userId], references: [id])
-  Professor Professor?        @relation(fields: [professorId], references: [id])
+  User      User                      @relation(fields: [userId], references: [id])
+  Professor Professor?                @relation(fields: [professorId], references: [id])
   Lessons   StudentOnLesson[]
   Items     ItemOnStudent[]
-  Medals    MedalOnStudent[]
+  Medals    ProfessorMedalOnStudent[]
 }
 
 model Professor {
@@ -49,11 +49,11 @@ model Professor {
   grammar GRAMMAR?
   userId  Int      @unique
 
-  User     User      @relation(fields: [userId], references: [id])
+  User     User             @relation(fields: [userId], references: [id])
   Students Student[]
   Lessons  Lesson[]
   Items    Item[]
-  Medals   Medal[]
+  Medals   ProfessorMedal[]
 }
 
 model Item {
@@ -71,7 +71,7 @@ model Item {
   Students  ItemOnStudent[]
 }
 
-model Medal {
+model ProfessorMedal {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -82,9 +82,9 @@ model Medal {
   isCumultative Boolean @default(false) @db.Boolean
   professorId   Int
 
-  Professor Professor        @relation(fields: [professorId], references: [id])
+  Professor Professor                 @relation(fields: [professorId], references: [id])
   Lessons   Lesson[]
-  Students  MedalOnStudent[]
+  Students  ProfessorMedalOnStudent[]
 }
 
 model Lesson {
@@ -100,7 +100,7 @@ model Lesson {
   Professor Professor         @relation(fields: [professorId], references: [id])
   Students  StudentOnLesson[]
   Levels    LessonLevel[]
-  Medal     Medal             @relation(fields: [medalId], references: [id])
+  Medal     ProfessorMedal    @relation(fields: [medalId], references: [id])
 }
 
 model LessonLevel {
@@ -165,7 +165,7 @@ model ItemOnStudent {
   Student Student @relation(fields: [studentId], references: [id])
 }
 
-model MedalOnStudent {
+model ProfessorMedalOnStudent {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -174,8 +174,8 @@ model MedalOnStudent {
   medalId   Int
   studentId Int
 
-  Medal   Medal   @relation(fields: [medalId], references: [id])
-  Student Student @relation(fields: [studentId], references: [id])
+  Medal   ProfessorMedal @relation(fields: [medalId], references: [id])
+  Student Student        @relation(fields: [studentId], references: [id])
 }
 
 model StudentOnLesson {
