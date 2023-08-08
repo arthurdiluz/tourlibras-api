@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { FindProfessorDto } from '../dtos/find-professor.dto';
 import { UpdateProfessorDto } from '../dtos/update-professor.dto';
 import { ProfessorRepository } from '../repositories/professor.repository';
+import { StudentService } from 'src/modules/student/services/student.service';
 
 @Injectable()
 export class ProfessorService {
@@ -12,7 +13,10 @@ export class ProfessorService {
     Items: true,
   };
 
-  constructor(private readonly professorRepository: ProfessorRepository) {}
+  constructor(
+    private readonly professorRepository: ProfessorRepository,
+    private readonly studentService: StudentService,
+  ) {}
 
   async find({
     email,
@@ -40,6 +44,12 @@ export class ProfessorService {
       where: { id: professorId },
       include: { ...this.professorInclude },
     });
+  }
+
+  async leaderboard(professorId: number) {
+    const result = await this.studentService.find({ professorId });
+    console.log({ result });
+    return result;
   }
 
   async update(id: number, body: UpdateProfessorDto) {

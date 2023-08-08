@@ -7,6 +7,11 @@ export class FindStudentDto extends FindUserDto {
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
   @IsOptional()
+  professorId?: number;
+
+  @Transform(({ value }) => Number.parseInt(value))
+  @IsNumber()
+  @IsOptional()
   experience?: number;
 
   @Transform(({ value }) => Number.parseFloat(value))

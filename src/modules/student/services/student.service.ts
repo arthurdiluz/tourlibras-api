@@ -9,7 +9,6 @@ export class StudentService {
     User: true,
     Professor: true,
     Lessons: true,
-    DoneExercises: true,
     Medals: true,
     Items: true,
   };
@@ -24,14 +23,18 @@ export class StudentService {
     experience,
     money,
     theme,
+    professorId,
+    role,
   }: FindStudentDto) {
     return this.studentRepository.findMany({
       where: {
         User: {
+          Professor: { id: professorId },
           fullName: { contains: fullName, mode: 'insensitive' },
           email,
           isActive,
           profilePhoto,
+          role,
         },
         experience,
         money,

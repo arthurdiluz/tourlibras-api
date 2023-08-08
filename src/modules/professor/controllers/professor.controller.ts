@@ -11,6 +11,7 @@ import {
   HttpCode,
   HttpStatus,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { FindProfessorDto } from '../dtos/find-professor.dto';
 import { UpdateProfessorDto } from '../dtos/update-professor.dto';
@@ -34,7 +35,7 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
-  async findById(@Param() id: number) {
+  async findById(@Param('id') id: number) {
     try {
       const professor = await this.professorService.findById(id);
 
@@ -43,6 +44,23 @@ export class ProfessorController {
       }
 
       return professor;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id/leaderboard')
+  async leaderboard(@Param('id') id: number) {
+    try {
+      if (!(await this.professorService.findById(id))) {
+        throw new BadRequestException(
+          `Professor with ID #${id} does not exists`,
+        );
+      }
+
+      return await this.professorService.leaderboard(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
