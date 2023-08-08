@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   IsEmail,
   IsOptional,
+  IsEnum,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -28,7 +29,7 @@ export class CreateUserDto {
   password: string;
 
   @Transform(({ value }) => ROLE[String(value).toUpperCase().trim()])
-  @IsString()
+  @IsEnum(ROLE)
   @IsOptional()
   role: ROLE;
 

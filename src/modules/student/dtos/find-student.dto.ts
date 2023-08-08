@@ -19,6 +19,7 @@ export class FindStudentDto extends FindUserDto {
   @IsOptional()
   money?: number;
 
+  @Transform(({ value }) => THEME[String(value).toUpperCase().trim()])
   @IsEnum(THEME)
   @IsOptional()
   theme?: THEME;

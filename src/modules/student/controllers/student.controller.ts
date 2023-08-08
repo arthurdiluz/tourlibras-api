@@ -38,7 +38,7 @@ export class StudentController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
-  async findById(@Param() id: number) {
+  async findById(@Param('id') id: number) {
     try {
       const student = await this.studentService.findById(id);
 
@@ -56,7 +56,7 @@ export class StudentController {
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
   async update(
-    @Param() id: number,
+    @Param('id') id: number,
     @Body() { professorId, ...body }: UpdateStudentDto,
   ) {
     try {
@@ -82,7 +82,7 @@ export class StudentController {
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async delete(@Param() id: number) {
+  async delete(@Param('id') id: number) {
     try {
       return await this.studentService.delete(id);
     } catch (error: unknown) {
