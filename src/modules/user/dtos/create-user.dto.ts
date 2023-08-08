@@ -2,29 +2,29 @@ import { ROLE } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsString,
-  Length,
   IsNotEmpty,
   IsEmail,
   IsOptional,
   IsEnum,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateUserDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @Length(3, 31)
+  @MaxLength(31)
   @IsNotEmpty()
   fullName: string;
 
   @Transform(({ value }) => String(value).trim())
   @IsEmail()
-  @Length(3, 31)
+  @MaxLength(31)
   @IsNotEmpty()
   email: string;
 
   @Transform(({ value }) => String(value).trim())
   // @IsStrongPassword()
-  @Length(8, 63)
+  @MaxLength(63)
   @IsNotEmpty()
   password: string;
 

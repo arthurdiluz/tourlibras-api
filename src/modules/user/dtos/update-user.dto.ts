@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  Length,
   MaxLength,
   IsStrongPassword,
 } from 'class-validator';
@@ -30,7 +29,7 @@ export class UpdateUserDto {
 
   @Transform(({ value }) => String(value).trim())
   // @IsStrongPassword()
-  @Length(8, 63)
+  @MaxLength(63)
   @IsNotEmpty()
   password?: string;
 
