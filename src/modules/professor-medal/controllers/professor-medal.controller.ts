@@ -55,4 +55,24 @@ export class ProfessorMedalController {
       throw new InternalServerErrorException(error, { cause: error as Error });
     }
   }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':professorId/medal/:id')
+  async findById(
+    @Param('professorId') professorId: number,
+    @Param('id') id: number,
+  ) {
+    try {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new BadRequestException(
+          `Professor with ID #${professorId} does not exists`,
+        );
+      }
+
+      return await this.professorMedalService.findById(id);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
 }

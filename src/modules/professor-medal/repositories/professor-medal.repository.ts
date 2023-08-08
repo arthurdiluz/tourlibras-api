@@ -13,4 +13,8 @@ export class ProfessorMedalRepository {
   public findMany(args: Prisma.ProfessorMedalFindManyArgs) {
     return this.prismaService.professorMedal.findMany(args);
   }
+
+  public findUnique(args: Prisma.ProfessorMedalFindUniqueArgs) {
+    return this.prismaService.professorMedal.findUnique(args);
+  }
 }

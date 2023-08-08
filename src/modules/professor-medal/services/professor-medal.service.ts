@@ -31,4 +31,10 @@ export class ProfessorMedalService {
       include: { Professor: true, Students: true, Lessons: true },
     });
   }
+
+  async findById(professorMedalId: number) {
+    return this.professorMedalRepository.findUnique({
+      where: { id: professorMedalId },
+    });
+  }
 }
