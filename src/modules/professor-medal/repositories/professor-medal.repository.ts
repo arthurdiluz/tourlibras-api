@@ -9,4 +9,8 @@ export class ProfessorMedalRepository {
   public create(args: Prisma.ProfessorMedalCreateArgs) {
     return this.prismaService.professorMedal.create(args);
   }
+
+  public findMany(args: Prisma.ProfessorMedalFindManyArgs) {
+    return this.prismaService.professorMedal.findMany(args);
+  }
 }
