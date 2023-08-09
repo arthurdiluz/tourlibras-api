@@ -10,6 +10,7 @@ import { StudentModule } from './modules/student/student.module';
 import { ProfessorModule } from './modules/professor/professor.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ProfessorMedalModule } from './modules/professor-medal/professor-medal.module';
+import { ProfessorLessonModule } from './modules/professor-lesson/professor-lesson.module';
 
 const configService = new ConfigService();
 
@@ -26,6 +27,7 @@ const configService = new ConfigService();
     StudentModule,
     ProfessorModule,
     ProfessorMedalModule,
+    ProfessorLessonModule,
   ],
   providers: [
     {
