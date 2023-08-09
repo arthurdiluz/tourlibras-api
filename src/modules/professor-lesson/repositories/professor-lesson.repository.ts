@@ -5,4 +5,8 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 @Injectable()
 export class ProfessorLessonRepository {
   constructor(private readonly prismaService: PrismaService) {}
+
+  public create(args: Prisma.ProfessorLessonCreateArgs) {
+    return this.prismaService.professorLesson.create(args);
+  }
 }

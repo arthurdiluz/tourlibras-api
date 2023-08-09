@@ -7,11 +7,11 @@ import { FindUserDto } from '../dtos/find-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { hashString } from 'src/common/helpers/hashString';
 import { removeKeys } from 'src/common/helpers/removeKeys';
-import { ROLE, Professor, Student } from '@prisma/client';
-import { verify } from 'argon2';
 import { JwtSignInDto } from 'src/modules/auth/dtos/jwt/jwt-sign-in.dto';
 import { ProfessorRepository } from 'src/modules/professor/repositories/professor.repository';
 import { StudentRepository } from 'src/modules/student/repositories/student.repository';
+import { ROLE, Professor, Student } from '@prisma/client';
+import { verify } from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -21,12 +21,14 @@ export class UserService {
     private readonly studentRepository: StudentRepository,
   ) {}
 
-  async create({ password, ...body }: CreateUserDto) {
+  async create({ password, role, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({
       data: {
         password: await hashString(password),
+        role,
         ...body,
       },
+      include: role === 'STUDENT' ? { Student: true } : { Professor: true },
     });
 
     await this.linkUserToRole(user.id, user.role);
@@ -45,6 +47,7 @@ export class UserService {
         password: await hashString(password),
         ...userBody,
       },
+      include: { Professor: true },
     });
 
     return removeKeys(professor, ['password']);
