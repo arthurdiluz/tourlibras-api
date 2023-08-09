@@ -3,6 +3,7 @@ import { ProfessorMedalRepository } from '../repositories/professor-medal.reposi
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { CreateProfessorMedalDto } from '../dtos/create-professor-medal.dto';
 import { FindProfessorMedalDto } from '../dtos/find-professor-medal.dto';
+import { UpdateProfessorMedalDto } from '../dtos/update-professor-medal.dto';
 
 @Injectable()
 export class ProfessorMedalService {
@@ -35,6 +36,15 @@ export class ProfessorMedalService {
   async findById(professorMedalId: number) {
     return this.professorMedalRepository.findUnique({
       where: { id: professorMedalId },
+      include: { Professor: true, Students: true, Lessons: true },
+    });
+  }
+
+  async update(professorMedalId: number, body: UpdateProfessorMedalDto) {
+    return this.professorMedalRepository.update({
+      where: { id: professorMedalId },
+      data: { ...body },
+      include: { Professor: true, Students: true, Lessons: true },
     });
   }
 }

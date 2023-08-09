@@ -17,4 +17,8 @@ export class ProfessorMedalRepository {
   public findUnique(args: Prisma.ProfessorMedalFindUniqueArgs) {
     return this.prismaService.professorMedal.findUnique(args);
   }
+
+  public update(args: Prisma.ProfessorMedalUpdateArgs) {
+    return this.prismaService.professorMedal.update(args);
+  }
 }

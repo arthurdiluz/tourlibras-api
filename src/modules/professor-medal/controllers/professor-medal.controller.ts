@@ -4,7 +4,9 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  NotFoundException,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -14,6 +16,7 @@ import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access
 import { CreateProfessorMedalDto } from '../dtos/create-professor-medal.dto';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { FindProfessorMedalDto } from '../dtos/find-professor-medal.dto';
+import { UpdateProfessorMedalDto } from '../dtos/update-professor-medal.dto';
 
 @Controller('professor')
 export class ProfessorMedalController {
@@ -69,7 +72,36 @@ export class ProfessorMedalController {
         );
       }
 
-      return await this.professorMedalService.findById(id);
+      const medal = await this.professorMedalService.findById(id);
+
+      if (!medal) throw new NotFoundException(`Medal with ID #${id} not found`);
+
+      return medal;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':professorId/medal/:id')
+  async update(
+    @Param('professorId') professorId: number,
+    @Param('id') id: number,
+    @Body() body: UpdateProfessorMedalDto,
+  ) {
+    try {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new BadRequestException(
+          `Professor with ID #${professorId} does not exists`,
+        );
+      }
+
+      if (!(await this.professorMedalService.findById(id))) {
+        throw new BadRequestException(`Medal with ID #${id} does not exists`);
+      }
+
+      return await this.professorMedalService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
