@@ -33,4 +33,11 @@ export class ProfessorLessonService {
       include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
+
+  async findById(id: number) {
+    return this.professorLessonRepository.findUnique({
+      where: { id },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
+    });
+  }
 }
