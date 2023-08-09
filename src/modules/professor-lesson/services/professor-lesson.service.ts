@@ -52,4 +52,11 @@ export class ProfessorLessonService {
       include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
+
+  async delete(id: number) {
+    return this.professorLessonRepository.delete({
+      where: { id },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
+    });
+  }
 }

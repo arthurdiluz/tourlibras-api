@@ -21,4 +21,8 @@ export class ProfessorLessonRepository {
   public update(args: Prisma.ProfessorLessonUpdateArgs) {
     return this.prismaService.professorLesson.update(args);
   }
+
+  public delete(args: Prisma.ProfessorLessonDeleteArgs) {
+    return this.prismaService.professorLesson.delete(args);
+  }
 }
