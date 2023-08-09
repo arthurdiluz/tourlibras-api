@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessorMedalRepository } from '../repositories/professor-medal.repository';
-import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { CreateProfessorMedalDto } from '../dtos/create-professor-medal.dto';
 import { FindProfessorMedalDto } from '../dtos/find-professor-medal.dto';
 import { UpdateProfessorMedalDto } from '../dtos/update-professor-medal.dto';
@@ -9,7 +8,6 @@ import { UpdateProfessorMedalDto } from '../dtos/update-professor-medal.dto';
 export class ProfessorMedalService {
   constructor(
     private readonly professorMedalRepository: ProfessorMedalRepository,
-    private readonly professorService: ProfessorService,
   ) {}
 
   async create(professorId: number, body: CreateProfessorMedalDto) {
@@ -44,6 +42,13 @@ export class ProfessorMedalService {
     return this.professorMedalRepository.update({
       where: { id: professorMedalId },
       data: { ...body },
+      include: { Professor: true, Students: true, Lessons: true },
+    });
+  }
+
+  async delete(professorMedalId: number) {
+    return this.professorMedalRepository.delete({
+      where: { id: professorMedalId },
       include: { Professor: true, Students: true, Lessons: true },
     });
   }
