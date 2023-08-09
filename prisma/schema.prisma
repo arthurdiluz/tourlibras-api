@@ -49,14 +49,14 @@ model Professor {
   grammar GRAMMAR?
   userId  Int      @unique
 
-  User     User             @relation(fields: [userId], references: [id])
+  User     User              @relation(fields: [userId], references: [id])
   Students Student[]
-  Lessons  Lesson[]
-  Items    Item[]
+  Lessons  ProfessorLesson[]
+  Items    ProfessorItem[]
   Medals   ProfessorMedal[]
 }
 
-model Item {
+model ProfessorItem {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -83,11 +83,11 @@ model ProfessorMedal {
   professorId   Int
 
   Professor Professor                 @relation(fields: [professorId], references: [id])
-  Lessons   Lesson[]
+  Lessons   ProfessorLesson[]
   Students  ProfessorMedalOnStudent[]
 }
 
-model Lesson {
+model ProfessorLesson {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -113,7 +113,7 @@ model LessonLevel {
   earnedMoney Float @db.Real
   lessonId    Int
 
-  Lesson Lesson @relation(fields: [lessonId], references: [id])
+  Lesson ProfessorLesson @relation(fields: [lessonId], references: [id])
 }
 
 model LessonLevelExercise {
@@ -161,8 +161,8 @@ model ItemOnStudent {
   itemId    Int
   studentId Int
 
-  Item    Item    @relation(fields: [itemId], references: [id])
-  Student Student @relation(fields: [studentId], references: [id])
+  Item    ProfessorItem @relation(fields: [itemId], references: [id])
+  Student Student       @relation(fields: [studentId], references: [id])
 }
 
 model ProfessorMedalOnStudent {
@@ -191,7 +191,7 @@ model StudentOnLesson {
   lessonId  Int
 
   Student                  Student                              @relation(fields: [studentId], references: [id])
-  Lesson                   Lesson                               @relation(fields: [lessonId], references: [id])
+  Lesson                   ProfessorLesson                      @relation(fields: [lessonId], references: [id])
   ExerciseAlternativesDone LessonLevelExerciseAlternativeDone[]
 }
 
