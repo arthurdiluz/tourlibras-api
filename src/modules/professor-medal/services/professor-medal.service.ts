@@ -23,8 +23,8 @@ export class ProfessorMedalService {
   async find({ name, description, ...query }: FindProfessorMedalDto) {
     return this.professorMedalRepository.findMany({
       where: {
-        name: { contains: name },
-        description: { contains: description },
+        name: { contains: name, mode: 'insensitive' },
+        description: { contains: description, mode: 'insensitive' },
         ...query,
       },
       include: { Professor: true, Students: true, Lessons: true },

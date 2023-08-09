@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ProfessorLessonRepository } from '../repositories/professor-lesson.repository';
 import { CreateProfessorLessonDto } from '../dtos/create-professor-lesson.dto';
+import { FindProfessorLessonDto } from '../dtos/find-professor-lesson.dto';
 
 @Injectable()
 export class ProfessorLessonService {
@@ -19,6 +20,17 @@ export class ProfessorLessonService {
         ...body,
       },
       include: { Professor: true, Medal: true },
+    });
+  }
+
+  async find(professorId: number, { title, ...query }: FindProfessorLessonDto) {
+    return this.professorLessonRepository.findMany({
+      where: {
+        professorId,
+        title: { contains: title, mode: 'insensitive' },
+        ...query,
+      },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
 }

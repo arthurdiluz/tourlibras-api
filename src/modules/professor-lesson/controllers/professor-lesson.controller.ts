@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ProfessorLessonService } from '../services/professor-lesson.service';
@@ -12,6 +14,7 @@ import { ProfessorService } from 'src/modules/professor/services/professor.servi
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateProfessorLessonDto } from '../dtos/create-professor-lesson.dto';
 import { ProfessorMedalService } from 'src/modules/professor-medal/services/professor-medal.service';
+import { FindProfessorLessonDto } from '../dtos/find-professor-lesson.dto';
 
 @Controller('professor')
 export class ProfessorLessonController {
@@ -45,6 +48,23 @@ export class ProfessorLessonController {
       }
 
       return await this.professorLessonService.create(id, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id/lesson')
+  async find(@Param('id') id: number, @Query() query: FindProfessorLessonDto) {
+    try {
+      if (!(await this.professorService.findById(id))) {
+        throw new BadRequestException(
+          `Professor with ID #${id} does not exists`,
+        );
+      }
+
+      return await this.professorLessonService.find(id, query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
