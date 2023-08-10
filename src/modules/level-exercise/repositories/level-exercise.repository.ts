@@ -21,4 +21,8 @@ export class LevelExerciseRepository {
   public update(args: Prisma.LessonLevelExerciseUpdateArgs) {
     return this.prismaService.lessonLevelExercise.update(args);
   }
+
+  public delete(args: Prisma.LessonLevelExerciseDeleteArgs) {
+    return this.prismaService.lessonLevelExercise.delete(args);
+  }
 }

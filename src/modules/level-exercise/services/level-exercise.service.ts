@@ -80,4 +80,11 @@ export class LevelExerciseService {
       include: { Level: true, Alternatives: true },
     });
   }
+
+  async delete(id: number) {
+    return this.exerciseRepository.delete({
+      where: { id },
+      include: { Level: true, Alternatives: true },
+    });
+  }
 }

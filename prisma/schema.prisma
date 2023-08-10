@@ -140,7 +140,7 @@ model LessonLevelExerciseAlternative {
   exerciseId Int
 
   DoneExercise LessonLevelExerciseAlternativeDone?
-  Exercise     LessonLevelExercise                 @relation(fields: [exerciseId], references: [id])
+  Exercise     LessonLevelExercise                 @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 }
 
 model LessonLevelExerciseAlternativeDone {

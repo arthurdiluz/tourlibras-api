@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -100,6 +101,28 @@ export class LevelExerciseController {
       // TODO: add alternative id validation
 
       return await this.levelExerciseService.update(exerciseId, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id/exercise/:exerciseId')
+  async delete(
+    @Param('id') id: number,
+    @Param('exerciseId') exerciseId: number,
+  ) {
+    try {
+      if (!(await this.LevelService.findById(id))) {
+        throw new BadRequestException(`Level with ID #${id} not found`);
+      }
+
+      if (!(await this.levelExerciseService.findById(exerciseId))) {
+        throw new BadRequestException(`Exercise with ID #${id} not found`);
+      }
+
+      return await this.levelExerciseService.delete(exerciseId);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
