@@ -8,6 +8,6 @@ import { ProfessorLessonModule } from '../professor-lesson/professor-lesson.modu
   imports: [ProfessorLessonModule],
   controllers: [LessonLevelController],
   providers: [LessonLevelService, LessonLevelRepository],
-  exports: [],
+  exports: [LessonLevelService],
 })
 export class LessonLevelModule {}
