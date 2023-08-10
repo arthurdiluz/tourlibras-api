@@ -26,4 +26,11 @@ export class LessonLevelService {
       include: { Lesson: true },
     });
   }
+
+  async findById(id: number) {
+    return this.lessonLevelRepository.findUnique({
+      where: { id },
+      include: { Lesson: true },
+    });
+  }
 }

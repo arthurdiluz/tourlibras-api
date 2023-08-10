@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  NotFoundException,
   Param,
   Post,
   Query,
@@ -46,6 +47,27 @@ export class LessonLevelController {
       }
 
       return await this.lessonLevelService.find(id, query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id/level/:levelId')
+  async findById(@Param('id') id: number, @Param('levelId') levelId: number) {
+    try {
+      if (!(await this.lessonService.findById(id))) {
+        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
+      }
+
+      const level = await this.lessonLevelService.findById(levelId);
+
+      if (!level) {
+        throw new NotFoundException(`Level with ID #${level} not found`);
+      }
+
+      return level;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
