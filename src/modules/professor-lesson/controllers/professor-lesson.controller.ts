@@ -34,9 +34,9 @@ export class ProfessorLessonController {
     @Param('id') id: number,
     @Body() body: CreateProfessorLessonDto,
   ) {
-    const { medalId } = body;
-
     try {
+      const { medalId } = body;
+
       if (!(await this.professorService.findById(id))) {
         throw new BadRequestException(
           `Professor with ID #${id} does not exists`,
