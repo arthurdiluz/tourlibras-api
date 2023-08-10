@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { LessonLevelRepository } from '../repositories/lesson-level.repository';
 import { CreateLessonLevelDto } from '../dtos/create-lesson-level.dto';
 import { FindLessonLevelDto } from '../dtos/find-lesson-level.dto';
+import { UpdateLessonLevelDto } from '../dtos/update-lesson-level.dto';
 
 @Injectable()
 export class LessonLevelService {
@@ -30,6 +31,14 @@ export class LessonLevelService {
   async findById(id: number) {
     return this.lessonLevelRepository.findUnique({
       where: { id },
+      include: { Lesson: true },
+    });
+  }
+
+  async update(id: number, body: UpdateLessonLevelDto) {
+    return this.lessonLevelRepository.update({
+      where: { id },
+      data: { ...body },
       include: { Lesson: true },
     });
   }

@@ -17,4 +17,8 @@ export class LessonLevelRepository {
   public findUnique(args: Prisma.LessonLevelFindUniqueArgs) {
     return this.prismaService.lessonLevel.findUnique(args);
   }
+
+  public update(args: Prisma.LessonLevelUpdateArgs) {
+    return this.prismaService.lessonLevel.update(args);
+  }
 }

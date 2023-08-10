@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -15,6 +16,7 @@ import { ProfessorLessonService } from 'src/modules/professor-lesson/services/pr
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateLessonLevelDto } from '../dtos/create-lesson-level.dto';
 import { FindLessonLevelDto } from '../dtos/find-lesson-level.dto';
+import { UpdateLessonLevelDto } from '../dtos/update-lesson-level.dto';
 
 @Controller('lesson')
 export class LessonLevelController {
@@ -68,6 +70,29 @@ export class LessonLevelController {
       }
 
       return level;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id/level/:levelId')
+  async update(
+    @Param('id') id: number,
+    @Param('levelId') levelId: number,
+    @Body() body: UpdateLessonLevelDto,
+  ) {
+    try {
+      if (!(await this.lessonService.findById(id))) {
+        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
+      }
+
+      if (!(await this.lessonLevelService.findById(levelId))) {
+        throw new BadRequestException(`Level with ID #${id} does not exists`);
+      }
+
+      return await this.lessonLevelService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
