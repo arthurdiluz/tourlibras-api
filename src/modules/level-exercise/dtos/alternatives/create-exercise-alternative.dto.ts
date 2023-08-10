@@ -7,27 +7,15 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CreateProfessorMedalDto {
+export class CreateExerciseAlternative {
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(15)
   @IsNotEmpty()
-  name: string;
-
-  @Transform(({ value }) => String(value).trim())
-  @IsString()
-  @MaxLength(63)
-  @IsNotEmpty()
-  description: string;
+  text: string;
 
   @Transform(({ value }) => Boolean(eval(value)))
   @IsBoolean()
   @IsOptional()
-  isCumultative?: boolean;
-
-  @Transform(({ value }) => String(value).trim())
-  @IsString()
-  @MaxLength(255)
-  @IsNotEmpty()
-  media: string;
+  isCorrect?: boolean;
 }
