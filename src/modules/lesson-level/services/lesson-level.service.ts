@@ -42,4 +42,8 @@ export class LessonLevelService {
       include: { Lesson: true },
     });
   }
+
+  async delete(id: number) {
+    return this.lessonLevelRepository.delete({ where: { id } });
+  }
 }

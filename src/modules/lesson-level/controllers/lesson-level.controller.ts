@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -92,7 +93,26 @@ export class LessonLevelController {
         throw new BadRequestException(`Level with ID #${id} does not exists`);
       }
 
-      return await this.lessonLevelService.update(id, body);
+      return await this.lessonLevelService.update(levelId, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id/level/:levelId')
+  async delete(@Param('id') id: number, @Param('levelId') levelId: number) {
+    try {
+      if (!(await this.lessonService.findById(id))) {
+        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
+      }
+
+      if (!(await this.lessonLevelService.findById(levelId))) {
+        throw new BadRequestException(`Level with ID #${id} does not exists`);
+      }
+
+      return await this.lessonLevelService.delete(levelId);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
