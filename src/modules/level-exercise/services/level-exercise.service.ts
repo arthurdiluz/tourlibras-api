@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { LevelExerciseRepository } from '../repositories/level-exercise.repository';
 import { CreateLevelExerciseDto } from '../dtos/create-level-exercise.dto';
+import { FindLessonLevelDto } from 'src/modules/lesson-level/dtos/find-lesson-level.dto';
 
 @Injectable()
 export class LevelExerciseService {
@@ -27,6 +28,16 @@ export class LevelExerciseService {
           },
         },
         ...body,
+      },
+      include: { Level: true, Alternatives: true },
+    });
+  }
+
+  async find(levelId: number, query: FindLessonLevelDto) {
+    return this.exerciseRepository.findMany({
+      where: {
+        Level: { id: levelId },
+        ...query,
       },
       include: { Level: true, Alternatives: true },
     });
