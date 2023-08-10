@@ -15,9 +15,9 @@ import {
 import { LevelExerciseService } from '../services/level-exercise.service';
 import { LessonLevelService } from 'src/modules/lesson-level/services/lesson-level.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
-import { CreateLevelExerciseDto } from '../dtos/create-level-exercise.dto';
-import { FindLevelExerciseDto } from '../dtos/find-level-exercise.dto';
-import { UpdateLevelExerciseDto } from '../dtos/update-level-exercise.dto';
+import { CreateLevelExerciseDto } from '../dtos/exercise/create-level-exercise.dto';
+import { FindLevelExerciseDto } from '../dtos/exercise/find-level-exercise.dto';
+import { UpdateLevelExerciseDto } from '../dtos/exercise/update-level-exercise.dto';
 
 @Controller('level')
 export class LevelExerciseController {

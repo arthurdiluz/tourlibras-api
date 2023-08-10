@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsOptional, IsString, MaxLength } from 'class-validator';
-import { FindExerciseAlternative } from './alternatives/find-exercise-alternative.dto';
+import { FindExerciseAlternative } from '../alternative/find-exercise-alternative.dto';
 
 export class FindLevelExerciseDto extends FindExerciseAlternative {
   @Transform(({ value }) => String(value).trim())

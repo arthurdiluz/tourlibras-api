@@ -1,33 +1,33 @@
 import { Transform, Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsNotEmpty,
   IsString,
   MaxLength,
-  IsArray,
-  ArrayMinSize,
-  ArrayMaxSize,
   ValidateNested,
-  IsOptional,
 } from 'class-validator';
-import { UpdateExerciseAlternative } from './alternatives/update-exercise-alternative.dto';
+import { CreateExerciseAlternative } from '../alternative/create-exercise-alternative.dto';
 
-export class UpdateLevelExerciseDto {
+export class CreateLevelExerciseDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(255)
-  @IsOptional()
-  media?: string;
+  @IsNotEmpty()
+  media: string;
 
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(31)
-  @IsOptional()
-  statement?: string;
+  @IsNotEmpty()
+  statement: string;
 
-  @Type(() => UpdateExerciseAlternative)
+  @Type(() => CreateExerciseAlternative)
   @IsArray()
   @ArrayMinSize(4)
   @ArrayMaxSize(4)
   @ValidateNested({ each: true })
-  @IsOptional()
-  Alternative?: UpdateExerciseAlternative;
+  @IsNotEmpty()
+  Alternatives: Array<CreateExerciseAlternative>;
 }
