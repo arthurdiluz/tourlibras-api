@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LessonLevelRepository } from '../repositories/lesson-level.repository';
 import { CreateLessonLevelDto } from '../dtos/create-lesson-level.dto';
+import { FindLessonLevelDto } from '../dtos/find-lesson-level.dto';
 
 @Injectable()
 export class LessonLevelService {
@@ -11,6 +12,16 @@ export class LessonLevelService {
       data: {
         Lesson: { connect: { id: lessonId } },
         ...body,
+      },
+      include: { Lesson: true },
+    });
+  }
+
+  async find(lessonId: number, query: FindLessonLevelDto) {
+    return this.lessonLevelRepository.findMany({
+      where: {
+        Lesson: { id: lessonId },
+        ...query,
       },
       include: { Lesson: true },
     });

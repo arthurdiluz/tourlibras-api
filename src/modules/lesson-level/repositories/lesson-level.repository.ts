@@ -9,4 +9,8 @@ export class LessonLevelRepository {
   public create(args: Prisma.LessonLevelCreateArgs) {
     return this.prismaService.lessonLevel.create(args);
   }
+
+  public findMany(args: Prisma.LessonLevelFindManyArgs) {
+    return this.prismaService.lessonLevel.findMany(args);
+  }
 }
