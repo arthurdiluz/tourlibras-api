@@ -17,4 +17,8 @@ export class LevelExerciseRepository {
   public findUnique(args: Prisma.LessonLevelExerciseFindUniqueArgs) {
     return this.prismaService.lessonLevelExercise.findUnique(args);
   }
+
+  public update(args: Prisma.LessonLevelExerciseUpdateArgs) {
+    return this.prismaService.lessonLevelExercise.update(args);
+  }
 }

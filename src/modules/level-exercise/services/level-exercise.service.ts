@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { LevelExerciseRepository } from '../repositories/level-exercise.repository';
 import { CreateLevelExerciseDto } from '../dtos/create-level-exercise.dto';
 import { FindLevelExerciseDto } from '../dtos/find-level-exercise.dto';
+import { UpdateLevelExerciseDto } from '../dtos/update-level-exercise.dto';
 
 @Injectable()
 export class LevelExerciseService {
@@ -55,6 +56,27 @@ export class LevelExerciseService {
   async findById(id: number) {
     return this.exerciseRepository.findUnique({
       where: { id },
+      include: { Level: true, Alternatives: true },
+    });
+  }
+
+  async update(id: number, { Alternative, ...body }: UpdateLevelExerciseDto) {
+    const Alternatives = undefined;
+
+    if (Alternative) {
+      const { alternativeId, ...alternativeBody } = Alternative;
+      Alternatives['update'] = {
+        where: { id: alternativeId },
+        data: { ...alternativeBody },
+      };
+    }
+
+    return this.exerciseRepository.update({
+      where: { id },
+      data: {
+        ...body,
+        Alternatives,
+      },
       include: { Level: true, Alternatives: true },
     });
   }

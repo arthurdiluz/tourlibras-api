@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -15,6 +16,7 @@ import { LessonLevelService } from 'src/modules/lesson-level/services/lesson-lev
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateLevelExerciseDto } from '../dtos/create-level-exercise.dto';
 import { FindLevelExerciseDto } from '../dtos/find-level-exercise.dto';
+import { UpdateLevelExerciseDto } from '../dtos/update-level-exercise.dto';
 
 @Controller('level')
 export class LevelExerciseController {
@@ -73,6 +75,31 @@ export class LevelExerciseController {
       }
 
       return exercise;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id/exercise/:exerciseId')
+  async update(
+    @Param('id') id: number,
+    @Param('exerciseId') exerciseId: number,
+    @Body() body: UpdateLevelExerciseDto,
+  ) {
+    try {
+      if (!(await this.LevelService.findById(id))) {
+        throw new BadRequestException(`Level with ID #${id} not found`);
+      }
+
+      if (!(await this.levelExerciseService.findById(exerciseId))) {
+        throw new BadRequestException(`Exercise with ID #${id} not found`);
+      }
+
+      // TODO: add alternative id validation
+
+      return await this.levelExerciseService.update(exerciseId, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
