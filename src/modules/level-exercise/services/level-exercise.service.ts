@@ -51,4 +51,11 @@ export class LevelExerciseService {
       include: { Level: true, Alternatives: true },
     });
   }
+
+  async findById(id: number) {
+    return this.exerciseRepository.findUnique({
+      where: { id },
+      include: { Level: true, Alternatives: true },
+    });
+  }
 }

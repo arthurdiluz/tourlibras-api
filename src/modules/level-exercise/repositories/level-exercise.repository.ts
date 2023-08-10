@@ -13,4 +13,8 @@ export class LevelExerciseRepository {
   public findMany(args: Prisma.LessonLevelExerciseFindManyArgs) {
     return this.prismaService.lessonLevelExercise.findMany(args);
   }
+
+  public findUnique(args: Prisma.LessonLevelExerciseFindUniqueArgs) {
+    return this.prismaService.lessonLevelExercise.findUnique(args);
+  }
 }
