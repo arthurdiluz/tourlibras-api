@@ -28,5 +28,6 @@ export class CreateLevelExerciseDto {
   @ArrayMinSize(4)
   @ArrayMaxSize(4)
   @ValidateNested({ each: true })
+  @IsNotEmpty()
   Alternatives: Array<CreateExerciseAlternative>;
 }
