@@ -60,23 +60,10 @@ export class LevelExerciseService {
     });
   }
 
-  async update(id: number, { Alternative, ...body }: UpdateLevelExerciseDto) {
-    const Alternatives = undefined;
-
-    if (Alternative) {
-      const { alternativeId, ...alternativeBody } = Alternative;
-      Alternatives['update'] = {
-        where: { id: alternativeId },
-        data: { ...alternativeBody },
-      };
-    }
-
+  async update(id: number, body: UpdateLevelExerciseDto) {
     return this.exerciseRepository.update({
       where: { id },
-      data: {
-        ...body,
-        Alternatives,
-      },
+      data: { ...body },
       include: { Level: true, Alternatives: true },
     });
   }

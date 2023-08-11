@@ -1,19 +1,7 @@
 import { Transform } from 'class-transformer';
-import {
-  IsString,
-  MaxLength,
-  IsOptional,
-  IsBoolean,
-  IsNumber,
-  IsNotEmpty,
-} from 'class-validator';
+import { IsString, MaxLength, IsOptional, IsBoolean } from 'class-validator';
 
-export class UpdateExerciseAlternative {
-  @Transform(({ value }) => Number.parseInt(value))
-  @IsNumber()
-  @IsNotEmpty()
-  alternativeId: number;
-
+export class UpdateExerciseAlternativeDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(15)
