@@ -1,7 +1,7 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
-export class FindExerciseAlternativeDto {
+export class FindExerciseAlternative {
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(15)

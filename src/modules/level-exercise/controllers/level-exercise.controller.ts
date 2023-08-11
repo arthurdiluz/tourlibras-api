@@ -98,6 +98,8 @@ export class LevelExerciseController {
         throw new BadRequestException(`Exercise with ID #${id} not found`);
       }
 
+      // TODO: add alternative id validation
+
       return await this.levelExerciseService.update(exerciseId, body);
     } catch (error: unknown) {
       console.error(error);
