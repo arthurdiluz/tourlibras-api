@@ -8,7 +8,7 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 
-export class UpdateExerciseAlternative {
+export class UpdateExerciseAlternativeDto {
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
   @IsNotEmpty()

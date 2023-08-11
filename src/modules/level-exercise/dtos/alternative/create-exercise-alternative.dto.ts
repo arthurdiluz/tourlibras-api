@@ -7,7 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CreateExerciseAlternative {
+export class CreateExerciseAlternativeDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(15)

@@ -8,7 +8,7 @@ import {
   ValidateNested,
   IsOptional,
 } from 'class-validator';
-import { UpdateExerciseAlternative } from '../alternative/update-exercise-alternative.dto';
+import { UpdateExerciseAlternativeDto } from '../alternative/update-exercise-alternative.dto';
 
 export class UpdateLevelExerciseDto {
   @Transform(({ value }) => String(value).trim())
@@ -23,11 +23,11 @@ export class UpdateLevelExerciseDto {
   @IsOptional()
   statement?: string;
 
-  @Type(() => UpdateExerciseAlternative)
+  @Type(() => UpdateExerciseAlternativeDto)
   @IsArray()
   @ArrayMinSize(4)
   @ArrayMaxSize(4)
   @ValidateNested({ each: true })
   @IsOptional()
-  Alternative?: UpdateExerciseAlternative;
+  Alternative?: UpdateExerciseAlternativeDto;
 }

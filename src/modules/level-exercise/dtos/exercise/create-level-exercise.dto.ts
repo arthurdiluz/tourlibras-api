@@ -8,7 +8,7 @@ import {
   MaxLength,
   ValidateNested,
 } from 'class-validator';
-import { CreateExerciseAlternative } from '../alternative/create-exercise-alternative.dto';
+import { CreateExerciseAlternativeDto } from '../alternative/create-exercise-alternative.dto';
 
 export class CreateLevelExerciseDto {
   @Transform(({ value }) => String(value).trim())
@@ -23,11 +23,11 @@ export class CreateLevelExerciseDto {
   @IsNotEmpty()
   statement: string;
 
-  @Type(() => CreateExerciseAlternative)
+  @Type(() => CreateExerciseAlternativeDto)
   @IsArray()
   @ArrayMinSize(4)
   @ArrayMaxSize(4)
   @ValidateNested({ each: true })
   @IsNotEmpty()
-  Alternatives: Array<CreateExerciseAlternative>;
+  Alternatives: Array<CreateExerciseAlternativeDto>;
 }
