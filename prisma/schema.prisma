@@ -128,6 +128,7 @@ model LessonLevelExercise {
 
   Level        LessonLevel                      @relation(fields: [levelId], references: [id])
   Alternatives LessonLevelExerciseAlternative[]
+  doneExercise LessonLevelExerciseDone?
 }
 
 model LessonLevelExerciseAlternative {
@@ -139,11 +140,10 @@ model LessonLevelExerciseAlternative {
   isCorrect  Boolean @default(false) @db.Boolean
   exerciseId Int
 
-  DoneExercise LessonLevelExerciseAlternativeDone?
-  Exercise     LessonLevelExercise                 @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  Exercise LessonLevelExercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 }
 
-model LessonLevelExerciseAlternativeDone {
+model LessonLevelExerciseDone {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -152,8 +152,8 @@ model LessonLevelExerciseAlternativeDone {
   studentId        Int
   exerciseId       Int     @unique
 
-  Student             StudentOnLesson                @relation(fields: [studentId], references: [id])
-  ExerciseAlternative LessonLevelExerciseAlternative @relation(fields: [exerciseId], references: [id])
+  Student  StudentOnLesson     @relation(fields: [studentId], references: [id])
+  Exercise LessonLevelExercise @relation(fields: [exerciseId], references: [id])
 }
 
 model ItemOnStudent {
@@ -193,9 +193,9 @@ model StudentOnLesson {
   studentId Int
   lessonId  Int
 
-  Student                  Student                              @relation(fields: [studentId], references: [id])
-  Lesson                   ProfessorLesson                      @relation(fields: [lessonId], references: [id])
-  ExerciseAlternativesDone LessonLevelExerciseAlternativeDone[]
+  Student          Student                   @relation(fields: [studentId], references: [id])
+  Lesson           ProfessorLesson           @relation(fields: [lessonId], references: [id])
+  doneAlternatives LessonLevelExerciseDone[]
 }
 
 enum ROLE {
