@@ -25,4 +25,10 @@ export class LevelExerciseRepository {
   public delete(args: Prisma.LessonLevelExerciseDeleteArgs) {
     return this.prismaService.lessonLevelExercise.delete(args);
   }
+
+  public findAlternative(
+    args: Prisma.LessonLevelExerciseAlternativeFindUniqueArgs,
+  ) {
+    return this.prismaService.lessonLevelExerciseAlternative.findUnique(args);
+  }
 }

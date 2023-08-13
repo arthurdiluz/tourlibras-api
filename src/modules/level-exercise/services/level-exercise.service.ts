@@ -3,6 +3,7 @@ import { LevelExerciseRepository } from '../repositories/level-exercise.reposito
 import { CreateLevelExerciseDto } from '../dtos/exercise/create-level-exercise.dto';
 import { FindLevelExerciseDto } from '../dtos/exercise/find-level-exercise.dto';
 import { UpdateLevelExerciseDto } from '../dtos/exercise/update-level-exercise.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class LevelExerciseService {
@@ -12,8 +13,13 @@ export class LevelExerciseService {
     levelId: number,
     { Alternatives, ...body }: CreateLevelExerciseDto,
   ) {
-    if (Alternatives.length !== 4) {
-      throw new BadRequestException('An exercise must have 4 alternatives');
+    const alternativesData = Alternatives.map(({ text, isCorrect }) => ({
+      text,
+      isCorrect,
+    }));
+
+    if (!this.isValidAlternatives(alternativesData)) {
+      throw new BadRequestException('Invalid alternatives');
     }
 
     return this.exerciseRepository.create({
@@ -22,10 +28,7 @@ export class LevelExerciseService {
         Alternatives: {
           createMany: {
             skipDuplicates: false,
-            data: Alternatives.map(({ text, isCorrect }) => ({
-              text,
-              isCorrect,
-            })),
+            data: alternativesData,
           },
         },
         ...body,
@@ -60,22 +63,38 @@ export class LevelExerciseService {
     });
   }
 
-  async update(id: number, { Alternative, ...body }: UpdateLevelExerciseDto) {
-    const Alternatives = undefined;
+  async update(id: number, { Alternatives, ...body }: UpdateLevelExerciseDto) {
+    let alternativesData:
+      | Prisma.LessonLevelExerciseAlternativeUncheckedUpdateManyWithoutExerciseNestedInput
+      | Prisma.LessonLevelExerciseAlternativeUpdateManyWithoutExerciseNestedInput =
+      undefined;
 
-    if (Alternative) {
-      const { alternativeId, ...alternativeBody } = Alternative;
-      Alternatives['update'] = {
-        where: { id: alternativeId },
-        data: { ...alternativeBody },
+    if (Alternatives) {
+      alternativesData = {
+        updateMany: {
+          where: { exerciseId: 1 }, // TODO: update exercise id
+          data: Alternatives.map(({ text, isCorrect }) => ({
+            updatedAt: new Date(),
+            text,
+            isCorrect,
+          })),
+        },
       };
+
+      if (
+        !this.isValidAlternatives(
+          Alternatives as Prisma.LessonLevelExerciseAlternativeCreateManyExerciseInput[],
+        )
+      ) {
+        throw new BadRequestException('Invalid alternatives');
+      }
     }
 
     return this.exerciseRepository.update({
       where: { id },
       data: {
         ...body,
-        Alternatives,
+        Alternatives: { ...alternativesData },
       },
       include: { Level: true, Alternatives: true },
     });
@@ -86,5 +105,25 @@ export class LevelExerciseService {
       where: { id },
       include: { Level: true, Alternatives: true },
     });
+  }
+
+  async findAlternativeById(alternativeId: number) {
+    return this.exerciseRepository.findAlternative({
+      where: { id: alternativeId },
+      include: { Exercise: true },
+    });
+  }
+
+  private isValidAlternatives(
+    alternatives: Prisma.LessonLevelExerciseAlternativeCreateManyExerciseInput[],
+  ): boolean {
+    if (alternatives.length !== 4) return false;
+
+    const correctCount = alternatives.reduce((count, alternative) => {
+      if (alternative.isCorrect) count++;
+      return count;
+    }, 0);
+
+    return correctCount === 1;
   }
 }

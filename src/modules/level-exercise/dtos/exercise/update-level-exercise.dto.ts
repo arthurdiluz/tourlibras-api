@@ -29,5 +29,5 @@ export class UpdateLevelExerciseDto {
   @ArrayMaxSize(4)
   @ValidateNested({ each: true })
   @IsOptional()
-  Alternative?: UpdateExerciseAlternativeDto;
+  Alternatives?: Array<UpdateExerciseAlternativeDto>;
 }

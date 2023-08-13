@@ -98,8 +98,6 @@ export class LevelExerciseController {
         throw new BadRequestException(`Exercise with ID #${id} not found`);
       }
 
-      // TODO: add alternative id validation
-
       return await this.levelExerciseService.update(exerciseId, body);
     } catch (error: unknown) {
       console.error(error);
@@ -123,6 +121,39 @@ export class LevelExerciseController {
       }
 
       return await this.levelExerciseService.delete(exerciseId);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id/exercise/:exerciseId/alternative/:alternativeId')
+  async findAlternativeById(
+    @Param('id') id: number,
+    @Param('exerciseId') exerciseId: number,
+    @Param('alternativeId') alternativeId: number,
+  ) {
+    try {
+      if (!(await this.LevelService.findById(id))) {
+        throw new BadRequestException(`Level with ID #${id} not found`);
+      }
+
+      if (!(await this.levelExerciseService.findById(exerciseId))) {
+        throw new BadRequestException(`Exercise with ID #${id} not found`);
+      }
+
+      const alternative = await this.levelExerciseService.findAlternativeById(
+        exerciseId,
+      );
+
+      if (!alternative) {
+        throw new NotFoundException(
+          `alternative with ID #${alternativeId} not found `,
+        );
+      }
+
+      return alternative;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
