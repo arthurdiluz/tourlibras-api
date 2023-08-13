@@ -195,7 +195,7 @@ model StudentOnLesson {
 
   Student          Student                   @relation(fields: [studentId], references: [id])
   Lesson           ProfessorLesson           @relation(fields: [lessonId], references: [id])
-  doneAlternatives LessonLevelExerciseDone[]
+  DoneAlternatives LessonLevelExerciseDone[]
 }
 
 enum ROLE {
