@@ -13,6 +13,7 @@ import { ProfessorMedalModule } from './modules/professor-medal/professor-medal.
 import { ProfessorLessonModule } from './modules/professor-lesson/professor-lesson.module';
 import { LessonLevelModule } from './modules/lesson-level/lesson-level.module';
 import { LevelExerciseModule } from './modules/level-exercise/level-exercise.module';
+import { StudentLessonModule } from './modules/student-lesson/student-lesson.module';
 
 const configService = new ConfigService();
 
@@ -32,6 +33,7 @@ const configService = new ConfigService();
     ProfessorLessonModule,
     LessonLevelModule,
     LevelExerciseModule,
+    StudentLessonModule,
   ],
   providers: [
     {
