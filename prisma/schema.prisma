@@ -115,7 +115,7 @@ model LessonLevel {
 
   Lesson              ProfessorLesson       @relation(fields: [lessonId], references: [id])
   LessonLevelExercise LessonLevelExercise[]
-  DoneLessons         LessonLevelDone?
+  LessonLevelDone     LessonLevelDone[]
 }
 
 model LessonLevelExercise {
@@ -150,7 +150,7 @@ model LessonLevelDone {
 
   isCorrectAttempt Boolean @db.Boolean
   studentId        Int
-  lessonLevelId    Int     @unique
+  lessonLevelId    Int
 
   Student     StudentOnLesson @relation(fields: [studentId], references: [id])
   LessonLevel LessonLevel     @relation(fields: [lessonLevelId], references: [id])
@@ -186,14 +186,14 @@ model StudentOnLesson {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  // currentLevel Int     @default(1) @db.SmallInt
-  // isCompleted  Boolean @default(false) @db.Boolean
+  currentLevel Int     @default(1) @db.SmallInt
+  isCompleted  Boolean @default(false) @db.Boolean
   // isUnlocked   Boolean @default(false) @db.Boolean
 
   studentId Int
   lessonId  Int
 
-  LessonLevelDone LessonLevelDone[]
+  LessonLevelDone LessonLevelDone[] // TODO: this will be after finishing the lesson
   Student         Student           @relation(fields: [studentId], references: [id])
   Lesson          ProfessorLesson   @relation(fields: [lessonId], references: [id])
 }
