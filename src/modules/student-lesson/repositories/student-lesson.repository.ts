@@ -13,4 +13,8 @@ export class StudentLessonRepository {
   public findMany(args: Prisma.StudentOnLessonFindManyArgs) {
     return this.prismaService.studentOnLesson.findMany(args);
   }
+
+  public findUnique(args: Prisma.StudentOnLessonFindUniqueArgs) {
+    return this.prismaService.studentOnLesson.findFirst(args);
+  }
 }

@@ -36,4 +36,11 @@ export class StudentLessonService {
       include: { Student: true, Lesson: true, LessonLevelDone: true },
     });
   }
+
+  async findById(id: number) {
+    return this.studentLessonRepository.findUnique({
+      where: { id },
+      include: { Student: true, Lesson: true, LessonLevelDone: true },
+    });
+  }
 }
