@@ -186,14 +186,14 @@ model StudentOnLesson {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  currentLevel Int     @default(1) @db.SmallInt
-  isCompleted  Boolean @default(false) @db.Boolean
+  // currentLevel Int     @default(1) @db.SmallInt
+  // isCompleted  Boolean @default(false) @db.Boolean
   // isUnlocked   Boolean @default(false) @db.Boolean
 
   studentId Int
   lessonId  Int
 
-  DoneLessonLevel LessonLevelDone[]
+  LessonLevelDone LessonLevelDone[]
   Student         Student           @relation(fields: [studentId], references: [id])
   Lesson          ProfessorLesson   @relation(fields: [lessonId], references: [id])
 }
