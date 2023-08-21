@@ -9,4 +9,8 @@ export class StudentLessonRepository {
   public create(args: Prisma.StudentOnLessonCreateArgs) {
     return this.prismaService.studentOnLesson.create(args);
   }
+
+  public findMany(args: Prisma.StudentOnLessonFindManyArgs) {
+    return this.prismaService.studentOnLesson.findMany(args);
+  }
 }

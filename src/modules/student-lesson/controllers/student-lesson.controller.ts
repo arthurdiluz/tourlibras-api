@@ -2,9 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { StudentLessonService } from '../services/student-lesson.service';
@@ -12,6 +14,8 @@ import { StudentService } from 'src/modules/student/services/student.service';
 import { ProfessorLessonService } from 'src/modules/professor-lesson/services/professor-lesson.service';
 import { CreateStudentLessonDto } from '../dtos/create-student-lesson.dto';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
+import { FindStudentLessonDto } from '../dtos/find-student-lesson.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('student')
 export class StudentLessonController {
@@ -42,6 +46,33 @@ export class StudentLessonController {
       }
 
       return await this.studentLessonService.create(studentId, lessonId, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id/lesson/:lessonId')
+  async find(
+    @Param('id') studentId: number,
+    @Param('lessonId') lessonId: number,
+    @Query() query: FindStudentLessonDto,
+  ) {
+    try {
+      if (!(await this.studentService.findById(studentId))) {
+        throw new BadRequestException(
+          `Student with ID #${studentId} does not exists`,
+        );
+      }
+
+      if (!(await this.lessonService.findById(lessonId))) {
+        throw new BadRequestException(
+          `Lesson with ID #${lessonId} does not exists`,
+        );
+      }
+
+      return await this.studentLessonService.find(studentId, lessonId, query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
