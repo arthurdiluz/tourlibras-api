@@ -149,11 +149,11 @@ model LessonLevelDone {
   updatedAt DateTime @default(now())
 
   isCorrectAttempt Boolean @db.Boolean
-  studentId        Int
+  studentOnLesson  Int
   lessonLevelId    Int
 
   LessonLevel LessonLevel     @relation(fields: [lessonLevelId], references: [id])
-  Student     StudentOnLesson @relation(fields: [studentId], references: [id])
+  Student     StudentOnLesson @relation(fields: [studentOnLesson], references: [id])
 }
 
 model ItemOnStudent {
