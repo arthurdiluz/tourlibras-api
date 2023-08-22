@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
+  Patch,
   Post,
   Query,
   UseGuards,
@@ -17,6 +18,7 @@ import { CreateStudentLessonDto } from '../dtos/create-student-lesson.dto';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { FindStudentLessonDto } from '../dtos/find-student-lesson.dto';
 import { Public } from 'src/common/decorators/public.decorator';
+import { UpdateStudentLessonDto } from '../dtos/update-student-lesson.dto';
 
 @Controller('student')
 export class StudentLessonController {
@@ -107,6 +109,43 @@ export class StudentLessonController {
       }
 
       return studentOnLesson;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @Public()
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':studentId/lesson/:lessonId')
+  async update(
+    @Param('studentId') studentId: number,
+    @Param('lessonId') lessonId: number,
+    @Body() body: UpdateStudentLessonDto,
+  ) {
+    try {
+      if (!(await this.studentService.findById(studentId))) {
+        throw new BadRequestException(
+          `Student with ID #${studentId} does not exists`,
+        );
+      }
+
+      if (!(await this.lessonService.findById(lessonId))) {
+        throw new BadRequestException(
+          `Lesson with ID #${lessonId} does not exists`,
+        );
+      }
+
+      const id = await this.studentLessonService.findIdByRelation(
+        studentId,
+        lessonId,
+      );
+
+      if (!(await this.studentLessonService.findById(id))) {
+        throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
+      }
+
+      return await this.studentLessonService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
