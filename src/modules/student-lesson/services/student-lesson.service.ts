@@ -21,7 +21,7 @@ export class StudentLessonService {
         Lesson: { connect: { id: lessonId } },
         ...body,
       },
-      include: { Student: true, Lesson: true, LessonLevelDone: true },
+      include: { Student: true, Lesson: true, DoneExercises: true },
     });
   }
 
@@ -32,21 +32,21 @@ export class StudentLessonService {
         Lesson: { id: lessonId },
         ...query,
       },
-      include: { Student: true, Lesson: true, LessonLevelDone: true },
+      include: { Student: true, Lesson: true, DoneExercises: true },
     });
   }
 
   async findById(id: number) {
     return this.studentLessonRepository.findUnique({
       where: { id },
-      include: { Student: true, Lesson: true, LessonLevelDone: true },
+      include: { Student: true, Lesson: true, DoneExercises: true },
     });
   }
 
   async findByRelationId(studentId: number, lessonId: number) {
     return this.studentLessonRepository.findUnique({
       where: { studentId_lessonId: { studentId, lessonId } },
-      include: { Student: true, Lesson: true, LessonLevelDone: true },
+      include: { Student: true, Lesson: true, DoneExercises: true },
     });
   }
 
@@ -62,14 +62,14 @@ export class StudentLessonService {
     return this.studentLessonRepository.update({
       where: { id },
       data: { ...body },
-      include: { Student: true, Lesson: true, LessonLevelDone: true },
+      include: { Student: true, Lesson: true, DoneExercises: true },
     });
   }
 
   async delete(id: number) {
     return this.studentLessonRepository.delete({
       where: { id },
-      include: { Student: true, Lesson: true, LessonLevelDone: true },
+      include: { Student: true, Lesson: true, DoneExercises: true },
     });
   }
 }

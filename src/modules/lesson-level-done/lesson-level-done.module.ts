@@ -3,10 +3,10 @@ import { LessonLevelDoneController } from './controllers/lesson-level-done.contr
 import { LessonLevelDoneService } from './services/lesson-level-done.service';
 import { LessonLevelDoneRepository } from './repositories/lesson-level-done.repository';
 import { StudentLessonModule } from '../student-lesson/student-lesson.module';
-import { LessonLevelModule } from '../lesson-level/lesson-level.module';
+import { LevelExerciseModule } from '../level-exercise/level-exercise.module';
 
 @Module({
-  imports: [StudentLessonModule, LessonLevelModule],
+  imports: [StudentLessonModule, LevelExerciseModule],
   controllers: [LessonLevelDoneController],
   providers: [LessonLevelDoneService, LessonLevelDoneRepository],
   exports: [LessonLevelDoneService],
