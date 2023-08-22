@@ -148,11 +148,11 @@ model LessonLevelDone {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  isCorrectAttempt Boolean @db.Boolean
-  studentOnLesson  Int
-  lessonLevelId    Int
+  isCorrectAttempt  Boolean @db.Boolean
+  studentOnLessonId Int
+  lessonLevelId     Int
 
-  Student     StudentOnLesson @relation(fields: [studentOnLesson], references: [id])
+  Student     StudentOnLesson @relation(fields: [studentOnLessonId], references: [id])
   LessonLevel LessonLevel     @relation(fields: [lessonLevelId], references: [id])
 }
 
