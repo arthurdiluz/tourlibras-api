@@ -196,6 +196,8 @@ model StudentOnLesson {
   LessonLevelDone LessonLevelDone[] // TODO: this will be after finishing the lesson
   Student         Student           @relation(fields: [studentId], references: [id])
   Lesson          ProfessorLesson   @relation(fields: [lessonId], references: [id])
+
+  @@unique([studentId, lessonId])
 }
 
 enum ROLE {
