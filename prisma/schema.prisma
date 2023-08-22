@@ -152,8 +152,8 @@ model LessonLevelDone {
   studentOnLesson  Int
   lessonLevelId    Int
 
-  LessonLevel LessonLevel     @relation(fields: [lessonLevelId], references: [id])
   Student     StudentOnLesson @relation(fields: [studentOnLesson], references: [id])
+  LessonLevel LessonLevel     @relation(fields: [lessonLevelId], references: [id])
 }
 
 model ItemOnStudent {
