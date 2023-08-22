@@ -15,10 +15,14 @@ export class StudentLessonRepository {
   }
 
   public findUnique(args: Prisma.StudentOnLessonFindUniqueArgs) {
-    return this.prismaService.studentOnLesson.findFirst(args);
+    return this.prismaService.studentOnLesson.findUnique(args);
   }
 
   public update(args: Prisma.StudentOnLessonUpdateArgs) {
     return this.prismaService.studentOnLesson.update(args);
+  }
+
+  public delete(args: Prisma.StudentOnLessonDeleteArgs) {
+    return this.prismaService.studentOnLesson.delete(args);
   }
 }

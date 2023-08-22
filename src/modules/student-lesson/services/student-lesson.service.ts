@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { StudentLessonRepository } from '../repositories/student-lesson.repository';
 import { CreateStudentLessonDto } from '../dtos/create-student-lesson.dto';
-import { LessonLevelService } from 'src/modules/lesson-level/services/lesson-level.service';
 import { FindStudentLessonDto } from '../dtos/find-student-lesson.dto';
 import { UpdateStudentLessonDto } from '../dtos/update-student-lesson.dto';
 
@@ -9,7 +8,6 @@ import { UpdateStudentLessonDto } from '../dtos/update-student-lesson.dto';
 export class StudentLessonService {
   constructor(
     private readonly studentLessonRepository: StudentLessonRepository,
-    private readonly lessonLevel: LessonLevelService,
   ) {}
 
   async create(
@@ -64,6 +62,13 @@ export class StudentLessonService {
     return this.studentLessonRepository.update({
       where: { id },
       data: { ...body },
+      include: { Student: true, Lesson: true, LessonLevelDone: true },
+    });
+  }
+
+  async delete(id: number) {
+    return this.studentLessonRepository.delete({
+      where: { id },
       include: { Student: true, Lesson: true, LessonLevelDone: true },
     });
   }
