@@ -4,6 +4,7 @@ import { StudentLessonService } from 'src/modules/student-lesson/services/studen
 import { LevelExerciseService } from 'src/modules/level-exercise/services/level-exercise.service';
 import { CreateLessonLevelDoneDto } from '../dto/create-lesson-level-done.dto';
 import { StudentService } from 'src/modules/student/services/student.service';
+import { FindLessonLevelDoneDto } from '../dto/find-lesson-level-done.dto';
 
 @Injectable()
 export class LessonLevelDoneService {
@@ -52,6 +53,24 @@ export class LessonLevelDoneService {
         Student: { connect: { id: studentLessonId } },
         Exercise: { connect: { id: exerciseId } },
         isCorrectAttempt,
+      },
+      include: {
+        Student: true,
+        Exercise: { include: { Level: true, DoneExercises: true } },
+      },
+    });
+  }
+
+  async find(
+    studentLessonId: number,
+    exerciseId: number,
+    query: FindLessonLevelDoneDto,
+  ) {
+    return this.lessonLevelDoneRepository.findMany({
+      where: {
+        Student: { id: studentLessonId },
+        Exercise: { id: exerciseId },
+        ...query,
       },
       include: {
         Student: true,
