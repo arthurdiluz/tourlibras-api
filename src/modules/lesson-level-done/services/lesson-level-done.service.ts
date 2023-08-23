@@ -34,11 +34,16 @@ export class LessonLevelDoneService {
         studentLessonId,
       );
       const current = await this.studentService.findById(studentId);
-      const { earnedXp, earnedMoney } = exercise['Level'];
+      const { level, earnedXp, earnedMoney } = exercise['Level'];
 
       await this.studentService.update(studentId, {
         experience: current.experience + earnedXp,
         money: current.money + earnedMoney,
+      });
+
+      await this.studentLessonService.update(studentLessonId, {
+        isCompleted: true,
+        currentLevel: level + 1,
       });
     }
 
