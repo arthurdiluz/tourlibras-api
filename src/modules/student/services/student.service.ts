@@ -6,7 +6,16 @@ import { StudentRepository } from '../repositories/student.repository';
 @Injectable()
 export class StudentService {
   private studentInclude = {
-    User: true,
+    User: {
+      select: {
+        id: true,
+        isActive: true,
+        fullName: true,
+        email: true,
+        profilePhoto: true,
+        role: true,
+      },
+    },
     Professor: true,
     Lessons: true,
     Medals: true,
@@ -67,6 +76,30 @@ export class StudentService {
     return this.studentRepository.delete({
       where: { id: studentId },
       include: { ...this.studentInclude },
+    });
+  }
+
+  async addMedal(studentId: number, medalId: number) {
+    const whereClause = { medalId_studentId: { medalId, studentId } };
+    const studentHasMedal = !!(await this.studentRepository.findMedal({
+      where: whereClause,
+    }));
+
+    if (studentHasMedal) {
+      return this.studentRepository.updateMedal({
+        where: { medalId_studentId: { medalId, studentId } },
+        data: { amount: { increment: 1 } },
+        include: { Student: true, Medal: true },
+      });
+    }
+
+    return this.studentRepository.addMedal({
+      data: {
+        amount: 1,
+        Student: { connect: { id: studentId } },
+        Medal: { connect: { id: medalId } },
+      },
+      include: { Student: true, Medal: true },
     });
   }
 }

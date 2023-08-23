@@ -27,14 +27,14 @@ export class ProfessorMedalService {
         description: { contains: description, mode: 'insensitive' },
         ...query,
       },
-      include: { Professor: true, Students: true, Lessons: true },
+      include: { Professor: true, Students: true, LessonLevels: true },
     });
   }
 
   async findById(professorMedalId: number) {
     return this.professorMedalRepository.findUnique({
       where: { id: professorMedalId },
-      include: { Professor: true, Students: true, Lessons: true },
+      include: { Professor: true, Students: true, LessonLevels: true },
     });
   }
 
@@ -42,14 +42,14 @@ export class ProfessorMedalService {
     return this.professorMedalRepository.update({
       where: { id: professorMedalId },
       data: { ...body },
-      include: { Professor: true, Students: true, Lessons: true },
+      include: { Professor: true, Students: true, LessonLevels: true },
     });
   }
 
   async delete(professorMedalId: number) {
     return this.professorMedalRepository.delete({
       where: { id: professorMedalId },
-      include: { Professor: true, Students: true, Lessons: true },
+      include: { Professor: true, Students: true, LessonLevels: true },
     });
   }
 }

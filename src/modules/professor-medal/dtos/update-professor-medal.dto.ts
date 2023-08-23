@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UpdateProfessorMedalDto {
   @Transform(({ value }) => String(value).trim())
@@ -13,11 +13,6 @@ export class UpdateProfessorMedalDto {
   @MaxLength(63)
   @IsOptional()
   description: string;
-
-  @Transform(({ value }) => Boolean(eval(value)))
-  @IsBoolean()
-  @IsOptional()
-  isCumultative?: boolean;
 
   @Transform(({ value }) => String(value).trim())
   @IsString()

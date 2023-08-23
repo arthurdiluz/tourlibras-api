@@ -8,42 +8,50 @@ import { UpdateLessonLevelDto } from '../dtos/update-lesson-level.dto';
 export class LessonLevelService {
   constructor(private readonly lessonLevelRepository: LessonLevelRepository) {}
 
-  async create(lessonId: number, body: CreateLessonLevelDto) {
+  async create(lessonId: number, { medalId, ...body }: CreateLessonLevelDto) {
     return this.lessonLevelRepository.create({
       data: {
         Lesson: { connect: { id: lessonId } },
+        Medal: medalId ? { connect: { id: medalId } } : undefined,
         ...body,
       },
-      include: { Lesson: true },
+      include: { Lesson: true, Medal: true },
     });
   }
 
-  async find(lessonId: number, query: FindLessonLevelDto) {
+  async find(lessonId: number, { medalId, ...query }: FindLessonLevelDto) {
     return this.lessonLevelRepository.findMany({
       where: {
         Lesson: { id: lessonId },
+        Medal: medalId ? { id: medalId } : undefined,
         ...query,
       },
-      include: { Lesson: true },
+      include: { Lesson: true, Medal: true },
     });
   }
 
   async findById(id: number) {
     return this.lessonLevelRepository.findUnique({
       where: { id },
-      include: { Lesson: true },
+      include: { Lesson: true, Medal: true },
     });
   }
 
-  async update(id: number, body: UpdateLessonLevelDto) {
+  async update(id: number, { medalId, ...body }: UpdateLessonLevelDto) {
     return this.lessonLevelRepository.update({
       where: { id },
-      data: { ...body },
-      include: { Lesson: true },
+      data: {
+        Medal: medalId ? { update: { id: medalId } } : undefined,
+        ...body,
+      },
+      include: { Lesson: true, Medal: true },
     });
   }
 
   async delete(id: number) {
-    return this.lessonLevelRepository.delete({ where: { id } });
+    return this.lessonLevelRepository.delete({
+      where: { id },
+      include: { Lesson: true, Medal: true },
+    });
   }
 }

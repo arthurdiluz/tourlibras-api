@@ -1,12 +1,7 @@
 import { Transform } from 'class-transformer';
-import { IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UpdateProfessorLessonDto {
-  @Transform(({ value }) => Number.parseInt(value))
-  @IsNumber()
-  @IsOptional()
-  medalId?: number;
-
   @Transform(({ value }) => String(value).trim())
   @IsString()
   @MaxLength(255)

@@ -5,11 +5,13 @@ import { LevelExerciseService } from 'src/modules/level-exercise/services/level-
 import { CreateLessonLevelDoneDto } from '../dto/create-lesson-level-done.dto';
 import { StudentService } from 'src/modules/student/services/student.service';
 import { FindLessonLevelDoneDto } from '../dto/find-lesson-level-done.dto';
+import { LessonLevelService } from 'src/modules/lesson-level/services/lesson-level.service';
 
 @Injectable()
 export class LessonLevelDoneService {
   constructor(
     private readonly lessonLevelDoneRepository: LessonLevelDoneRepository,
+    private readonly lessonLevelService: LessonLevelService,
     private readonly studentLessonService: StudentLessonService,
     private readonly exerciseService: LevelExerciseService,
     private readonly studentService: StudentService,
@@ -42,6 +44,11 @@ export class LessonLevelDoneService {
         money: current.money + earnedMoney,
       });
 
+      const { medalId } = (await this.exerciseService.findById(exerciseId))[
+        'Level'
+      ];
+
+      await this.studentService.addMedal(studentId, medalId);
       await this.studentLessonService.update(studentLessonId, {
         isCompleted: true,
         currentLevel: level + 1,
@@ -55,7 +62,7 @@ export class LessonLevelDoneService {
         isCorrectAttempt,
       },
       include: {
-        Student: true,
+        Student: { include: { Student: { include: { Medals: true } } } },
         Exercise: { include: { Level: true, DoneExercises: true } },
       },
     });
@@ -72,6 +79,16 @@ export class LessonLevelDoneService {
         Exercise: { id: exerciseId },
         ...query,
       },
+      include: {
+        Student: true,
+        Exercise: { include: { Level: true, DoneExercises: true } },
+      },
+    });
+  }
+
+  async findById(id: number) {
+    return this.lessonLevelDoneRepository.findUnique({
+      where: { id },
       include: {
         Student: true,
         Exercise: { include: { Level: true, DoneExercises: true } },

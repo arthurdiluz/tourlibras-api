@@ -8,7 +8,16 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class ProfessorService {
   private professorInclude = {
-    User: true,
+    User: {
+      select: {
+        id: true,
+        isActive: true,
+        fullName: true,
+        email: true,
+        profilePhoto: true,
+        role: true,
+      },
+    },
     Students: true,
     Medals: true,
     Items: true,

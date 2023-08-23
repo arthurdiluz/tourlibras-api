@@ -5,9 +5,15 @@ import { LessonLevelDoneRepository } from './repositories/lesson-level-done.repo
 import { StudentLessonModule } from '../student-lesson/student-lesson.module';
 import { LevelExerciseModule } from '../level-exercise/level-exercise.module';
 import { StudentModule } from '../student/student.module';
+import { LessonLevelModule } from '../lesson-level/lesson-level.module';
 
 @Module({
-  imports: [StudentLessonModule, LevelExerciseModule, StudentModule],
+  imports: [
+    StudentLessonModule,
+    LessonLevelModule,
+    LevelExerciseModule,
+    StudentModule,
+  ],
   controllers: [LessonLevelDoneController],
   providers: [LessonLevelDoneService, LessonLevelDoneRepository],
   exports: [LessonLevelDoneService],

@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Param,
   Post,
   Query,
@@ -49,7 +50,7 @@ export class LessonLevelDoneController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @Post(':studentOnLessonId/level-exercise/:lessonLevelExerciseId/done')
+  @Get(':studentOnLessonId/level-exercise/:lessonLevelExerciseId/done')
   async find(
     @Param('studentOnLessonId') studentId: number,
     @Param('lessonLevelExerciseId') exerciseId: number,

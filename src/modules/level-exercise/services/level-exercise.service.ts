@@ -33,7 +33,10 @@ export class LevelExerciseService {
         },
         ...body,
       },
-      include: { Level: true, Alternatives: true },
+      include: {
+        Level: { include: { Lesson: true } },
+        Alternatives: true,
+      },
     });
   }
 
@@ -52,14 +55,20 @@ export class LevelExerciseService {
           },
         },
       },
-      include: { Level: true, Alternatives: true },
+      include: {
+        Level: { include: { Lesson: true } },
+        Alternatives: true,
+      },
     });
   }
 
   async findById(id: number) {
     return this.exerciseRepository.findUnique({
       where: { id },
-      include: { Level: true, Alternatives: true },
+      include: {
+        Level: { include: { Lesson: true } },
+        Alternatives: true,
+      },
     });
   }
 
@@ -96,14 +105,20 @@ export class LevelExerciseService {
         ...body,
         Alternatives: { ...alternativesData },
       },
-      include: { Level: true, Alternatives: true },
+      include: {
+        Level: { include: { Lesson: true } },
+        Alternatives: true,
+      },
     });
   }
 
   async delete(id: number) {
     return this.exerciseRepository.delete({
       where: { id },
-      include: { Level: true, Alternatives: true },
+      include: {
+        Level: { include: { Lesson: true } },
+        Alternatives: true,
+      },
     });
   }
 
