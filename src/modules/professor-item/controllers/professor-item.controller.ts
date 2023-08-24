@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   NotFoundException,
@@ -103,6 +104,30 @@ export class ProfessorItemController {
       }
 
       return await this.professorItemService.update(id, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':professorId/item/:id')
+  async delete(
+    @Param('professorId') professorId: number,
+    @Param('id') id: number,
+  ) {
+    try {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new BadRequestException(
+          `Professor with ID #${professorId} does not exist`,
+        );
+      }
+
+      if (!(await this.professorItemService.findById(id))) {
+        throw new BadRequestException(`Item with ID #${id} does not exist`);
+      }
+
+      return await this.professorItemService.delete(id);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

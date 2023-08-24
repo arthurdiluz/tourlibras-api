@@ -47,4 +47,11 @@ export class ProfessorItemService {
       include: { Professor: true },
     });
   }
+
+  async delete(id: number) {
+    return this.itemRepository.delete({
+      where: { id },
+      include: { Professor: true },
+    });
+  }
 }

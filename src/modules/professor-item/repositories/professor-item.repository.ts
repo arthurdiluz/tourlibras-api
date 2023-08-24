@@ -21,4 +21,8 @@ export class ProfessorItemRepository {
   public update(args: Prisma.ProfessorItemUpdateArgs) {
     return this.prismaService.professorItem.update(args);
   }
+
+  public delete(args: Prisma.ProfessorItemDeleteArgs) {
+    return this.prismaService.professorItem.delete(args);
+  }
 }
