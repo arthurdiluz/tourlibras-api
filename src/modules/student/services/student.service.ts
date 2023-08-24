@@ -102,6 +102,4 @@ export class StudentService {
       include: { Student: true, Medal: true },
     });
   }
-
-  async scoreboard() {}
 }
