@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ProfessorItemRepository } from '../repositories/professor-item.repository';
 import { CreateProfessorItemDto } from '../dtos/create-professor-item.dto';
 import { FindProfessorItemDto } from '../dtos/find-professor-item.dto';
+import { UpdateProfessorItemDto } from '../dtos/update-professor-item.dto';
 
 @Injectable()
 export class ProfessorItemService {
@@ -35,6 +36,14 @@ export class ProfessorItemService {
   async findById(id: number) {
     return this.itemRepository.findUnique({
       where: { id },
+      include: { Professor: true },
+    });
+  }
+
+  async update(id: number, { media, ...body }: UpdateProfessorItemDto) {
+    return this.itemRepository.update({
+      where: { id },
+      data: { media, ...body },
       include: { Professor: true },
     });
   }

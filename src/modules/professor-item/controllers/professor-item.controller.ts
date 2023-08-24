@@ -6,6 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { ProfessorService } from 'src/modules/professor/services/professor.servi
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateProfessorItemDto } from '../dtos/create-professor-item.dto';
 import { FindProfessorItemDto } from '../dtos/find-professor-item.dto';
+import { UpdateProfessorItemDto } from '../dtos/update-professor-item.dto';
 
 @Controller('professor')
 export class ProfessorItemController {
@@ -76,6 +78,31 @@ export class ProfessorItemController {
       }
 
       return item;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':professorId/item/:id')
+  async update(
+    @Param('professorId') professorId: number,
+    @Param('id') id: number,
+    @Body() body: UpdateProfessorItemDto,
+  ) {
+    try {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new BadRequestException(
+          `Professor with ID #${professorId} does not exist`,
+        );
+      }
+
+      if (!(await this.professorItemService.findById(id))) {
+        throw new BadRequestException(`Item with ID #${id} does not exist`);
+      }
+
+      return await this.professorItemService.update(id, body);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

@@ -16,6 +16,7 @@ import { LevelExerciseModule } from './modules/level-exercise/level-exercise.mod
 import { StudentLessonModule } from './modules/student-lesson/student-lesson.module';
 import { LessonLevelDoneModule } from './modules/lesson-level-done/lesson-level-done.module';
 import { StudentItemModule } from './modules/student-item/student-item.module';
+import { ProfessorItemModule } from './modules/professor-item/professor-item.module';
 
 const configService = new ConfigService();
 
@@ -33,6 +34,7 @@ const configService = new ConfigService();
     ProfessorModule,
     ProfessorMedalModule,
     ProfessorLessonModule,
+    ProfessorItemModule,
     LessonLevelModule,
     LevelExerciseModule,
     StudentLessonModule,

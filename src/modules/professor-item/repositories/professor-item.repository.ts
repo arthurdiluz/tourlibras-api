@@ -17,4 +17,8 @@ export class ProfessorItemRepository {
   public findUnique(args: Prisma.ProfessorItemFindUniqueArgs) {
     return this.prismaService.professorItem.findUnique(args);
   }
+
+  public update(args: Prisma.ProfessorItemUpdateArgs) {
+    return this.prismaService.professorItem.update(args);
+  }
 }
