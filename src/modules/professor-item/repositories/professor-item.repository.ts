@@ -9,4 +9,8 @@ export class ProfessorItemRepository {
   public create(args: Prisma.ProfessorItemCreateArgs) {
     return this.prismaService.professorItem.create(args);
   }
+
+  public findMany(args: Prisma.ProfessorItemFindManyArgs) {
+    return this.prismaService.professorItem.findMany(args);
+  }
 }
