@@ -38,13 +38,13 @@ export class StudentService {
     return this.studentRepository.findMany({
       where: {
         User: {
-          Professor: { id: professorId },
           fullName: { contains: fullName, mode: 'insensitive' },
           email,
           isActive,
           profilePhoto,
           role,
         },
+        Professor: { id: professorId },
         experience,
         money,
         theme,
@@ -102,4 +102,6 @@ export class StudentService {
       include: { Student: true, Medal: true },
     });
   }
+
+  async scoreboard() {}
 }
