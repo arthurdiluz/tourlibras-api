@@ -28,6 +28,14 @@ export class ProfessorItemService {
         description: { contains: description, mode: 'insensitive' },
         ...query,
       },
+      include: { Professor: true },
+    });
+  }
+
+  async findById(id: number) {
+    return this.itemRepository.findUnique({
+      where: { id },
+      include: { Professor: true },
     });
   }
 }

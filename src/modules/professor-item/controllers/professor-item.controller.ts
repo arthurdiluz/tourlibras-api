@@ -4,6 +4,7 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
+  NotFoundException,
   Param,
   Post,
   UseGuards,
@@ -49,6 +50,32 @@ export class ProfessorItemController {
       }
 
       return await this.professorItemService.find(id, query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':professorId/item/:id')
+  async findById(
+    @Param('professorId') professorId: number,
+    @Param('id') id: number,
+  ) {
+    try {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new BadRequestException(
+          `Professor with ID #${professorId} does not exist`,
+        );
+      }
+
+      const item = await this.professorItemService.findById(id);
+
+      if (!item) {
+        throw new NotFoundException(`Item with ID #${id} not found`);
+      }
+
+      return item;
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
