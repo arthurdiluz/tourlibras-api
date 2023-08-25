@@ -9,6 +9,6 @@ RUN npm i -g @nestjs/cli
 RUN npm run prisma:generate
 RUN npm run build
 
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:production" ]
 
 EXPOSE 3000
