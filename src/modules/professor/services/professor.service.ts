@@ -35,6 +35,7 @@ export class ProfessorService {
     isActive,
     profilePhoto,
     grammar,
+    sortBy,
   }: FindProfessorDto) {
     return this.professorRepository.findMany({
       where: {
@@ -45,6 +46,11 @@ export class ProfessorService {
           profilePhoto,
         },
         grammar,
+      },
+      orderBy: {
+        [sortBy]: {
+          _count: 'asc',
+        },
       },
       include: { ...this.professorInclude },
     });

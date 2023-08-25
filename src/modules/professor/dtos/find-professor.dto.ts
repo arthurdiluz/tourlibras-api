@@ -8,4 +8,6 @@ export class FindProfessorDto extends FindUserDto {
   @IsEnum(GRAMMAR)
   @IsOptional()
   grammar?: GRAMMAR;
+
+  sortBy?: 'Students' | 'Lessons';
 }
