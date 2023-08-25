@@ -37,4 +37,12 @@ export class StudentRepository {
   public updateMedal(args: Prisma.ProfessorMedalOnStudentUpdateArgs) {
     return this.prismaService.professorMedalOnStudent.update(args);
   }
+
+  public unlinkProfessor(studentId: number, professorId: number) {
+    return this.prismaService.student.update({
+      where: { id: studentId },
+      data: { Professor: { disconnect: { id: professorId } } },
+      include: { Professor: true },
+    });
+  }
 }

@@ -90,4 +90,28 @@ export class StudentController {
       throw new InternalServerErrorException(error, { cause: error as Error });
     }
   }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id/professor/:professorId')
+  async leaveProfessor(
+    @Param('id') id: number,
+    @Param('professorId') professorId: number,
+  ) {
+    try {
+      if (!(await this.studentService.findById(id))) {
+        throw new NotFoundException(`Student with ID "${id}" not found`);
+      }
+
+      if (!(await this.professorService.findById(professorId))) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
+      }
+
+      return await this.studentService.leaveProfessor(id, professorId);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
 }

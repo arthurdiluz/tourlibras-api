@@ -102,4 +102,8 @@ export class StudentService {
       include: { Student: true, Medal: true },
     });
   }
+
+  async leaveProfessor(studentId: number, professorId: number) {
+    return this.studentRepository.unlinkProfessor(studentId, professorId);
+  }
 }
