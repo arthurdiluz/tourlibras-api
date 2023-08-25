@@ -22,11 +22,15 @@ export class ProfessorRepository {
     return this.prismaService.professor.delete(args);
   }
 
-  public removeStudent(studentId: number) {
+  public unlinkStudent(studentId: number) {
     return this.prismaService.student.update({
       where: { id: studentId },
       data: { Professor: { disconnect: true } },
       include: { Professor: true },
     });
+  }
+
+  public leaderboard(args: Prisma.StudentFindManyArgs) {
+    return this.prismaService.student.findMany(args);
   }
 }

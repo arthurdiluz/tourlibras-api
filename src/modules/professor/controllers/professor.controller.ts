@@ -17,6 +17,7 @@ import { FindProfessorDto } from '../dtos/find-professor.dto';
 import { UpdateProfessorDto } from '../dtos/update-professor.dto';
 import { ProfessorService } from '../services/professor.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
+import { LeaderboardDto } from '../dtos/leaderboard.dto';
 
 @Controller('professor')
 export class ProfessorController {
@@ -52,7 +53,7 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/leaderboard')
-  async leaderboard(@Param('id') id: number) {
+  async leaderboard(@Param('id') id: number, @Query() query: LeaderboardDto) {
     try {
       if (!(await this.professorService.findById(id))) {
         throw new BadRequestException(
@@ -60,7 +61,7 @@ export class ProfessorController {
         );
       }
 
-      return await this.professorService.leaderboard(id);
+      return await this.professorService.leaderboard(id, query);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

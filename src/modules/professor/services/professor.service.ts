@@ -4,6 +4,7 @@ import { UpdateProfessorDto } from '../dtos/update-professor.dto';
 import { ProfessorRepository } from '../repositories/professor.repository';
 import { StudentService } from 'src/modules/student/services/student.service';
 import { Prisma } from '@prisma/client';
+import { LeaderboardDto } from '../dtos/leaderboard.dto';
 
 @Injectable()
 export class ProfessorService {
@@ -56,10 +57,17 @@ export class ProfessorService {
     });
   }
 
-  async leaderboard(professorId: number) {
-    const result = await this.studentService.find({ professorId });
-    console.log({ result });
-    return result;
+  async leaderboard(
+    professorId: number,
+    { experience, money }: LeaderboardDto,
+  ) {
+    return this.professorRepository.leaderboard({
+      where: { Professor: { id: professorId } },
+      orderBy: { experience, money },
+      include: {
+        User: { select: { fullName: true, email: true, profilePhoto: true } },
+      },
+    });
   }
 
   async update(id: number, body: UpdateProfessorDto) {
@@ -95,7 +103,7 @@ export class ProfessorService {
       );
     }
 
-    await this.professorRepository.removeStudent(studentId);
+    await this.professorRepository.unlinkStudent(studentId);
 
     return this.findById(professorId);
   }
