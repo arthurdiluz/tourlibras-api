@@ -81,7 +81,7 @@ export class LevelExerciseService {
     if (Alternatives) {
       alternativesData = {
         updateMany: {
-          where: { exerciseId: 1 }, // TODO: update exercise id
+          where: { exerciseId: id },
           data: Alternatives.map(({ text, isCorrect }) => ({
             updatedAt: new Date(),
             text,
