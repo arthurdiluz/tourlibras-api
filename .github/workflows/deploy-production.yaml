@@ -1,4 +1,4 @@
-name: Deploy Certify My Rent API (production) to AWS
+name: Deploy TourLibras API (production) to AWS
 on:
   # workflow_dispatch:
   push:
