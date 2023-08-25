@@ -1,5 +1,7 @@
+import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 
+@Injectable()
 export class ConfigService {
   private readonly envConfig: Record<string, string>;
   constructor() {
@@ -16,48 +18,55 @@ export class ConfigService {
     return this.envConfig[key];
   }
 
-  get appEnv() {
-    return this.get('APP_ENV') || 'development';
-  }
-
-  get isProductionEnv(): boolean {
-    const env = this.get('APP_ENV') || process.env.APP_ENV;
-    return env === 'production';
+  get getAppEnv() {
+    return this.get('APP_ENV');
   }
 
   get getAppDomain() {
-    return this.get('APP_DOMAIN') || 'localhost';
+    return this.get('APP_DOMAIN');
   }
 
   get getAppPort() {
     return this.get('APP_PORT');
   }
 
-  get ttl() {
+  get getJwtAccessSecret() {
+    return this.get('JWT_ACCESS_SECRET');
+  }
+
+  get getAccessTokenExpiresIn() {
+    return this.get('ACCESS_TOKEN_EXPIRES_IN');
+  }
+
+  get getTimeToLive() {
     return this.get('TIME_TO_LIVE');
   }
 
-  get requestsLimit() {
+  get getRequestsLimit() {
     return this.get('REQUESTS_LIMIT');
   }
 
-  get getDatabaseVersion() {
-    return this.get('POSTGRES_VERSION');
-  }
-
-  get getDatabaseName() {
-    return this.get('POSTGRES_DATABASE_NAME');
-  }
-
-  get getDatabaseUser() {
+  get getPostgresUser() {
     return this.get('POSTGRES_USER');
   }
 
-  get getDatabasePassword() {
+  get getPostgresPassword() {
     return this.get('POSTGRES_PASSWORD');
   }
 
-  get getDatabaseUrl() {
+  get getPostgresHost() {
+    return this.get('POSTGRES_HOST');
+  }
+
+  get getPostgresPort() {
+    return this.get('POSTGRES_PORT');
+  }
+
+  get getPostgresDb() {
+    return this.get('POSTGRES_DB');
+  }
+
+  get getPostgresUrl() {
     return this.get('POSTGRES_URL');
   }
 }

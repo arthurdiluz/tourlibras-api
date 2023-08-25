@@ -1,0 +1,111 @@
+import {
+  Controller,
+  Body,
+  NotFoundException,
+  InternalServerErrorException,
+  UseGuards,
+  Get,
+  Query,
+  Param,
+  Patch,
+  HttpCode,
+  HttpStatus,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
+import { FindProfessorDto } from '../dtos/find-professor.dto';
+import { UpdateProfessorDto } from '../dtos/update-professor.dto';
+import { ProfessorService } from '../services/professor.service';
+import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
+import { LeaderboardDto } from '../dtos/leaderboard.dto';
+
+@Controller('professor')
+export class ProfessorController {
+  constructor(private readonly professorService: ProfessorService) {}
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get()
+  async find(@Query() query: FindProfessorDto) {
+    try {
+      return await this.professorService.find(query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    try {
+      const professor = await this.professorService.findById(id);
+
+      if (!professor) {
+        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      }
+
+      return professor;
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Get(':id/leaderboard')
+  async leaderboard(@Param('id') id: number, @Query() query: LeaderboardDto) {
+    try {
+      if (!(await this.professorService.findById(id))) {
+        throw new BadRequestException(
+          `Professor with ID #${id} does not exists`,
+        );
+      }
+
+      return await this.professorService.leaderboard(id, query);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Patch(':id')
+  async update(@Param() id: number, @Body() body: UpdateProfessorDto) {
+    try {
+      if (!(await this.professorService.findById(id))) {
+        throw new NotFoundException(`Professor with ID "${id}" not found`);
+      }
+
+      return await this.professorService.update(id, body);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    try {
+      return await this.professorService.delete(id);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Delete(':id/student/:studentId')
+  async removeStudent(
+    @Param('id') id: number,
+    @Param('studentId') studentId: number,
+  ) {
+    try {
+      return await this.professorService.removeStudent(id, studentId);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+}
