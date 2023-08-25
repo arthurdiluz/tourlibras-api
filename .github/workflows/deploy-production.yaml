@@ -20,7 +20,7 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: tourlibras
-          environment_name: tourlibras-production
+          environment_name: tourlibras-api
           version_label: ${{ github.sha }}
           existing_bucket_name: elasticbeanstalk-sa-east-1-784540341408
           region: sa-east-1
