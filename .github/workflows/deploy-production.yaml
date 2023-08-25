@@ -22,6 +22,6 @@ jobs:
           application_name: tourlibras-api
           environment_name: production
           version_label: ${{ github.sha }}
-          existing_bucket_name: elasticbeanstalk-us-west-1-911807136446
+          existing_bucket_name: elasticbeanstalk-sa-east-1-784540341408
           region: sa-east-1
           deployment_package: deploy.zip
