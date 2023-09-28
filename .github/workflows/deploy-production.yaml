@@ -1,6 +1,5 @@
 name: Deploy TourLibras API (production) to AWS
 on:
-  # workflow_dispatch:
   push:
     branches:
       - 'main'
@@ -22,6 +21,6 @@ jobs:
           application_name: tourlibras
           environment_name: tourlibras-api
           version_label: ${{ github.sha }}
-          existing_bucket_name: elasticbeanstalk-sa-east-1-784540341408
+          existing_bucket_name: elasticbeanstalk-sa-east-1-931455534125
           region: sa-east-1
           deployment_package: deploy.zip
