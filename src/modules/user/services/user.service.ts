@@ -82,6 +82,10 @@ export class UserService {
   async findById(userId: number) {
     const user = await this.userRepository.findUnique({
       where: { id: userId },
+      include: {
+        Professor: { select: { id: true } },
+        Student: { select: { id: true } },
+      },
     });
 
     if (!user) return null;
