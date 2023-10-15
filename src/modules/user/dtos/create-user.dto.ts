@@ -23,7 +23,7 @@ export class CreateUserDto {
   email: string;
 
   @Transform(({ value }) => String(value).trim())
-  // @IsStrongPassword()
+  // TODO: @IsStrongPassword()
   @MaxLength(63)
   @IsNotEmpty()
   password: string;
@@ -32,9 +32,4 @@ export class CreateUserDto {
   @IsEnum(ROLE)
   @IsOptional()
   role: ROLE;
-
-  @Transform(({ value }) => String(value).trim())
-  @IsString()
-  @IsOptional()
-  profilePhoto?: string;
 }
