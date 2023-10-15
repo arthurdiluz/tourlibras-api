@@ -163,7 +163,7 @@ export class UserService {
       throw new InternalServerErrorException(`Could not upload file to AWS`);
     }
 
-    await this.userRepository.update({
+    return await this.userRepository.update({
       where: { id },
       data: { profilePhoto: key },
     });
