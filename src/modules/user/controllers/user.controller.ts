@@ -175,7 +175,7 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      const user = await this.userService.delete(id);
+      const user = await this.userService.findById(id);
 
       if (!user) {
         throw new NotFoundException(`User with ID "${id}" not found`);
