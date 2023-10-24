@@ -70,7 +70,7 @@ export class ProfessorController {
 
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
-  async update(@Param() id: number, @Body() body: UpdateProfessorDto) {
+  async update(@Param('id') id: number, @Body() body: UpdateProfessorDto) {
     try {
       if (!(await this.professorService.findById(id))) {
         throw new NotFoundException(`Professor with ID "${id}" not found`);
