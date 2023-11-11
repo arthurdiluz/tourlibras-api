@@ -81,9 +81,9 @@ model ProfessorMedal {
   media       String @db.VarChar(255)
   professorId Int
 
-  Professor    Professor                 @relation(fields: [professorId], references: [id])
-  LessonLevels LessonLevel[]
-  Students     ProfessorMedalOnStudent[]
+  Professor Professor                 @relation(fields: [professorId], references: [id])
+  Students  ProfessorMedalOnStudent[]
+  Lessons   ProfessorLesson[]
 }
 
 model ProfessorLesson {
@@ -94,10 +94,12 @@ model ProfessorLesson {
   icon        String @db.VarChar(255)
   title       String @db.VarChar(15)
   professorId Int
+  medalId     Int?
 
   Professor Professor         @relation(fields: [professorId], references: [id])
   Students  StudentOnLesson[]
   Levels    LessonLevel[]
+  Medal     ProfessorMedal?   @relation(fields: [medalId], references: [id])
 }
 
 model LessonLevel {
@@ -109,11 +111,9 @@ model LessonLevel {
   earnedXp    Int   @db.SmallInt
   earnedMoney Float @db.Real
   lessonId    Int
-  medalId     Int?
 
   Lesson              ProfessorLesson       @relation(fields: [lessonId], references: [id])
   LessonLevelExercise LessonLevelExercise[]
-  Medal               ProfessorMedal?       @relation(fields: [medalId], references: [id])
 }
 
 model LessonLevelExercise {

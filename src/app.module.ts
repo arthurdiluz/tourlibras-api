@@ -3,12 +3,13 @@ import { JwtAccessTokenGuard } from './common/decorators/guards/jwt/jwt-access-t
 import { ConfigService } from './config/config.service';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { AwsModule } from './common/aws/aws.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { StudentModule } from './modules/student/student.module';
 import { ProfessorModule } from './modules/professor/professor.module';
-import { APP_GUARD } from '@nestjs/core';
 import { ProfessorMedalModule } from './modules/professor-medal/professor-medal.module';
 import { ProfessorLessonModule } from './modules/professor-lesson/professor-lesson.module';
 import { LessonLevelModule } from './modules/lesson-level/lesson-level.module';
@@ -28,6 +29,7 @@ const configService = new ConfigService();
       limit: Number(configService.getRequestsLimit),
     }),
     PrismaModule,
+    AwsModule,
     AuthModule,
     UserModule,
     StudentModule,

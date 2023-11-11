@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { UserRepository } from '../repositories/user.repository';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { CreateProfessorDto } from '../dtos/professor/create-professor.dto';
@@ -10,15 +14,20 @@ import { removeKeys } from 'src/common/helpers/removeKeys';
 import { JwtSignInDto } from 'src/modules/auth/dtos/jwt/jwt-sign-in.dto';
 import { ROLE, Professor, Student } from '@prisma/client';
 import { verify } from 'argon2';
+import { S3Service } from 'src/common/aws/services/aws.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async create({ password, role, ...body }: CreateUserDto) {
     const user = await this.userRepository.create({
       data: {
         password: await hashString(password),
+        profilePhoto: '',
         role,
         ...body,
       },
@@ -82,6 +91,10 @@ export class UserService {
   async findById(userId: number) {
     const user = await this.userRepository.findUnique({
       where: { id: userId },
+      include: {
+        Professor: { select: { id: true } },
+        Student: { select: { id: true } },
+      },
     });
 
     if (!user) return null;
@@ -137,5 +150,24 @@ export class UserService {
       default:
         throw new BadRequestException(`Invalid role`);
     }
+  }
+
+  async uploadProfilePicutre(
+    id: number,
+    file: Express.Multer.File,
+    path: string,
+  ) {
+    const key = await this.s3Service.upload(file, path);
+
+    if (!key) {
+      throw new InternalServerErrorException(`Could not upload file to AWS`);
+    }
+
+    await this.userRepository.update({
+      where: { id },
+      data: { profilePhoto: key },
+    });
+
+    return key;
   }
 }

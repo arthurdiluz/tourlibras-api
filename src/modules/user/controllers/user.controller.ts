@@ -7,13 +7,14 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from '../services/user.service';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
@@ -24,6 +25,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateProfessorDto } from '../dtos/professor/create-professor.dto';
 import { CreateStudentDto } from '../dtos/student/create-student.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('user')
 export class UserController {
@@ -45,7 +47,7 @@ export class UserController {
       return await this.userService.create(body);
     } catch (error: unknown) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
     }
   }
 
@@ -56,7 +58,7 @@ export class UserController {
       return await this.userService.createProfessor(body);
     } catch (error: unknown) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
     }
   }
 
@@ -77,7 +79,7 @@ export class UserController {
       return await this.userService.createStudent(body);
     } catch (error: unknown) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
     }
   }
 
@@ -88,7 +90,7 @@ export class UserController {
       return await this.userService.find(query);
     } catch (error: unknown) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
     }
   }
 
@@ -105,7 +107,7 @@ export class UserController {
       return user;
     } catch (error: unknown) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
     }
   }
 
@@ -142,7 +144,7 @@ export class UserController {
       return await this.userService.update(id, { email, ...body });
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
     }
   }
 
@@ -160,7 +162,32 @@ export class UserController {
       return await this.userService.delete(id);
     } catch (error) {
       console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+      throw error;
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Post(':id/profile-picture')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadProfilePicutre(
+    @Param('id') id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    try {
+      const user = await this.userService.findById(id);
+
+      if (!user) {
+        throw new NotFoundException(`User with ID "${id}" not found`);
+      }
+
+      return await this.userService.uploadProfilePicutre(
+        id,
+        file,
+        `users/${id}/profile-picture`,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 }

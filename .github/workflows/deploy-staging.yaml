@@ -1,6 +1,5 @@
-name: Deploy Certify My Rent API (production) to AWS
+name: Deploy TourLibras API (staging) to AWS
 on:
-  # workflow_dispatch:
   push:
     branches:
       - 'main'
@@ -20,8 +19,8 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: tourlibras-api
-          environment_name: production
+          environment_name: tourlibras-api-staging
           version_label: ${{ github.sha }}
-          existing_bucket_name: elasticbeanstalk-us-west-1-911807136446
+          existing_bucket_name: elasticbeanstalk-sa-east-1-931455534125
           region: sa-east-1
           deployment_package: deploy.zip

@@ -9,3 +9,4 @@ dist/
 tourlibras.pem
 
 .DS_Store
+.vercel

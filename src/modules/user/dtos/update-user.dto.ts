@@ -2,11 +2,9 @@ import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
-  IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
-  IsStrongPassword,
 } from 'class-validator';
 
 export class UpdateUserDto {
@@ -28,9 +26,8 @@ export class UpdateUserDto {
   email?: string;
 
   @Transform(({ value }) => String(value).trim())
-  // @IsStrongPassword()
   @MaxLength(63)
-  @IsNotEmpty()
+  @IsOptional()
   password?: string;
 
   @Transform(({ value }) => String(value).trim())

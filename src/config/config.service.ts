@@ -69,4 +69,20 @@ export class ConfigService {
   get getPostgresUrl() {
     return this.get('POSTGRES_URL');
   }
+
+  get getAwsAccessKeyId() {
+    return this.get('AWS_ACCESS_KEY_ID');
+  }
+
+  get getAwsSecretAccessKey() {
+    return this.get('AWS_SECRET_ACCESS_KEY');
+  }
+
+  get getAwsRegion() {
+    return this.get('AWS_REGION');
+  }
+
+  get getAwsS3BucketName() {
+    return this.get('AWS_S3_BUCKET_NAME');
+  }
 }
