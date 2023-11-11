@@ -18,32 +18,20 @@ import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access
 import { CreateLessonLevelDto } from '../dtos/create-lesson-level.dto';
 import { FindLessonLevelDto } from '../dtos/find-lesson-level.dto';
 import { UpdateLessonLevelDto } from '../dtos/update-lesson-level.dto';
-import { ProfessorMedalService } from 'src/modules/professor-medal/services/professor-medal.service';
 
 @Controller('lesson')
 export class LessonLevelController {
   constructor(
     private readonly lessonLevelService: LessonLevelService,
     private readonly lessonService: ProfessorLessonService,
-    private readonly medalService: ProfessorMedalService,
   ) {}
 
   @UseGuards(JwtAccessTokenGuard)
   @Post(':id/level')
   async create(@Param('id') id: number, @Body() body: CreateLessonLevelDto) {
     try {
-      const { medalId } = body;
-
       if (!(await this.lessonService.findById(id))) {
         throw new BadRequestException(`Lesson with ID #${id} does not exists`);
-      }
-
-      if (medalId) {
-        if (!(await this.medalService.findById(medalId))) {
-          throw new BadRequestException(
-            `Medal with ID #${medalId} does not exists`,
-          );
-        }
       }
 
       return await this.lessonLevelService.create(id, body);
@@ -97,22 +85,12 @@ export class LessonLevelController {
     @Body() body: UpdateLessonLevelDto,
   ) {
     try {
-      const { medalId } = body;
-
       if (!(await this.lessonService.findById(id))) {
         throw new BadRequestException(`Lesson with ID #${id} does not exists`);
       }
 
       if (!(await this.lessonLevelService.findById(levelId))) {
         throw new BadRequestException(`Level with ID #${id} does not exists`);
-      }
-
-      if (medalId) {
-        if (!(await this.medalService.findById(medalId))) {
-          throw new BadRequestException(
-            `Medal with ID #${medalId} does not exists`,
-          );
-        }
       }
 
       return await this.lessonLevelService.update(levelId, body);

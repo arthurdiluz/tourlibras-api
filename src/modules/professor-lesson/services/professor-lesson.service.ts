@@ -10,46 +10,57 @@ export class ProfessorLessonService {
     private readonly professorLessonRepository: ProfessorLessonRepository,
   ) {}
 
-  async create(professorId: number, body: CreateProfessorLessonDto) {
+  async create(
+    professorId: number,
+    { medalId, ...body }: CreateProfessorLessonDto,
+  ) {
     return this.professorLessonRepository.create({
       data: {
         Professor: { connect: { id: professorId } },
+        Medal: medalId ? { connect: { id: medalId } } : undefined,
         ...body,
       },
-      include: { Professor: true },
+      include: { Professor: true, Medal: true },
     });
   }
 
-  async find(professorId: number, { title, ...query }: FindProfessorLessonDto) {
+  async find(
+    professorId: number,
+    { title, medalId, ...query }: FindProfessorLessonDto,
+  ) {
     return this.professorLessonRepository.findMany({
       where: {
         professorId,
         title: { contains: title, mode: 'insensitive' },
+        Medal: medalId ? { id: medalId } : undefined,
         ...query,
       },
-      include: { Professor: true, Students: true, Levels: true },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
 
   async findById(id: number) {
     return this.professorLessonRepository.findUnique({
       where: { id },
-      include: { Professor: true, Students: true, Levels: true },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
 
-  async update(id: number, body: UpdateProfessorLessonDto) {
+  async update(id: number, { medalId, ...body }: UpdateProfessorLessonDto) {
     return await this.professorLessonRepository.update({
       where: { id },
-      data: { ...body },
-      include: { Professor: true, Students: true, Levels: true },
+      data: {
+        Medal: medalId ? { update: { id: medalId } } : undefined,
+        ...body,
+      },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
 
   async delete(id: number) {
     return this.professorLessonRepository.delete({
       where: { id },
-      include: { Professor: true, Students: true, Levels: true },
+      include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
   }
 }

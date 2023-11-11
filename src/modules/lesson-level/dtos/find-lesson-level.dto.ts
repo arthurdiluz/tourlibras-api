@@ -5,11 +5,6 @@ export class FindLessonLevelDto {
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
   @IsOptional()
-  medalId?: number;
-
-  @Transform(({ value }) => Number.parseInt(value))
-  @IsNumber()
-  @IsOptional()
   level?: number;
 
   @Transform(({ value }) => Number.parseInt(value))

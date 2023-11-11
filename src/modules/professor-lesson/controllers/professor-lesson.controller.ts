@@ -18,12 +18,14 @@ import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access
 import { CreateProfessorLessonDto } from '../dtos/create-professor-lesson.dto';
 import { FindProfessorLessonDto } from '../dtos/find-professor-lesson.dto';
 import { UpdateProfessorLessonDto } from '../dtos/update-professor-lesson.dto';
+import { ProfessorMedalService } from 'src/modules/professor-medal/services/professor-medal.service';
 
 @Controller('professor')
 export class ProfessorLessonController {
   constructor(
     private readonly professorLessonService: ProfessorLessonService,
     private readonly professorService: ProfessorService,
+    private readonly medalService: ProfessorMedalService,
   ) {}
 
   @UseGuards(JwtAccessTokenGuard)
@@ -33,10 +35,20 @@ export class ProfessorLessonController {
     @Body() body: CreateProfessorLessonDto,
   ) {
     try {
+      const { medalId } = body;
+
       if (!(await this.professorService.findById(id))) {
         throw new BadRequestException(
           `Professor with ID #${id} does not exists`,
         );
+      }
+
+      if (medalId) {
+        if (!(await this.medalService.findById(medalId))) {
+          throw new BadRequestException(
+            `Medal with ID #${medalId} does not exists`,
+          );
+        }
       }
 
       return await this.professorLessonService.create(id, body);
@@ -93,11 +105,21 @@ export class ProfessorLessonController {
     @Param('lessonId') lessonId: number,
     @Body() body: UpdateProfessorLessonDto,
   ) {
+    const { medalId } = body;
+
     try {
       if (!(await this.professorService.findById(id))) {
         throw new BadRequestException(
           `Professor with ID #${id} does not exists`,
         );
+      }
+
+      if (medalId) {
+        if (!(await this.medalService.findById(medalId))) {
+          throw new BadRequestException(
+            `Medal with ID #${medalId} does not exists`,
+          );
+        }
       }
 
       return await this.professorLessonService.update(lessonId, body);

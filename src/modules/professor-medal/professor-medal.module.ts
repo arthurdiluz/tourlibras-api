@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ProfessorMedalService } from './services/professor-medal.service';
 import { ProfessorMedalController } from './controllers/professor-medal.controller';
-import { ProfessorModule } from '../professor/professor.module';
+import { ProfessorMedalService } from './services/professor-medal.service';
 import { ProfessorMedalRepository } from './repositories/professor-medal.repository';
+import { ProfessorModule } from '../professor/professor.module';
 
 @Module({
   imports: [ProfessorModule],
