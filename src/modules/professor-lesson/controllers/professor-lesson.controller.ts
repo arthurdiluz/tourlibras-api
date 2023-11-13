@@ -22,6 +22,7 @@ import { FindProfessorLessonDto } from '../dtos/find-professor-lesson.dto';
 import { UpdateProfessorLessonDto } from '../dtos/update-professor-lesson.dto';
 import { ProfessorMedalService } from 'src/modules/professor-medal/services/professor-medal.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { log } from 'console';
 
 @Controller('professor')
 export class ProfessorLessonController {
@@ -156,24 +157,26 @@ export class ProfessorLessonController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @Post(':id/lesson/:lessonId/icon')
+  @Post(':professorId/lesson/:lessonId/icon')
   @UseInterceptors(FileInterceptor('file'))
   async uploadProfilePicutre(
-    @Param('id') id: number,
+    @Param('professorId') professorId: number,
     @Param('lessonId') lessonId: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
     try {
-      const user = await this.professorLessonService.findById(id);
+      const professor = await this.professorLessonService.findById(professorId);
 
-      if (!user) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
+      if (!professor) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
       }
 
       return await this.professorLessonService.uploadIcon(
         lessonId,
         file,
-        `professors/${id}/lessons/${lessonId}/icon/`,
+        `professors/${professorId}/lessons/${lessonId}/icon/`,
       );
     } catch (error) {
       console.error(error);
