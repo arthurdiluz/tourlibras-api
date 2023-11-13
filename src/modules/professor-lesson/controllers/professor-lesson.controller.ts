@@ -22,7 +22,6 @@ import { FindProfessorLessonDto } from '../dtos/find-professor-lesson.dto';
 import { UpdateProfessorLessonDto } from '../dtos/update-professor-lesson.dto';
 import { ProfessorMedalService } from 'src/modules/professor-medal/services/professor-medal.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { log } from 'console';
 
 @Controller('professor')
 export class ProfessorLessonController {
