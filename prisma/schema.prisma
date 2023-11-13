@@ -91,8 +91,8 @@ model ProfessorLesson {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  icon        String @db.VarChar(255)
-  title       String @db.VarChar(15)
+  title       String  @db.VarChar(15)
+  icon        String? @db.VarChar(255)
   professorId Int
   medalId     Int?
 

@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ProfessorLessonRepository } from '../repositories/professor-lesson.repository';
 import { CreateProfessorLessonDto } from '../dtos/create-professor-lesson.dto';
 import { FindProfessorLessonDto } from '../dtos/find-professor-lesson.dto';
 import { UpdateProfessorLessonDto } from '../dtos/update-professor-lesson.dto';
+import { S3Service } from 'src/common/aws/services/aws.service';
 
 @Injectable()
 export class ProfessorLessonService {
   constructor(
     private readonly professorLessonRepository: ProfessorLessonRepository,
+    private readonly s3Service: S3Service,
   ) {}
 
   async create(
@@ -62,5 +64,20 @@ export class ProfessorLessonService {
       where: { id },
       include: { Professor: true, Students: true, Levels: true, Medal: true },
     });
+  }
+
+  async uploadIcon(id: number, file: Express.Multer.File, path: string) {
+    const key = await this.s3Service.upload(file, path);
+
+    if (!key) {
+      throw new InternalServerErrorException(`Could not upload file to AWS`);
+    }
+
+    await this.professorLessonRepository.update({
+      where: { id },
+      data: { icon: key },
+    });
+
+    return key;
   }
 }

@@ -10,15 +10,15 @@ import {
 export class CreateProfessorLessonDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(255)
-  @IsNotEmpty()
-  icon: string;
-
-  @Transform(({ value }) => String(value).trim())
-  @IsString()
   @MaxLength(15)
   @IsNotEmpty()
   title: string;
+
+  @Transform(({ value }) => String(value).trim())
+  @IsString()
+  @MaxLength(255)
+  @IsOptional()
+  icon?: string;
 
   @Transform(({ value }) => Number.parseInt(value))
   @IsNumber()
