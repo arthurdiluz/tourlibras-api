@@ -173,7 +173,7 @@ export class ProfessorLessonController {
       return await this.professorLessonService.uploadIcon(
         lessonId,
         file,
-        `professors/${id}/lessons/${lessonId}/profile-picture`,
+        `professors/${id}/lessons/${lessonId}/icon/`,
       );
     } catch (error) {
       console.error(error);
