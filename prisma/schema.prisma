@@ -112,8 +112,8 @@ model LessonLevel {
   earnedMoney Float @db.Real
   lessonId    Int
 
-  Lesson              ProfessorLesson       @relation(fields: [lessonId], references: [id])
-  LessonLevelExercise LessonLevelExercise[]
+  Lesson               ProfessorLesson       @relation(fields: [lessonId], references: [id])
+  LessonLevelExercises LessonLevelExercise[]
 }
 
 model LessonLevelExercise {
