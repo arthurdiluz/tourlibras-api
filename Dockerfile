@@ -1,14 +1,14 @@
-FROM node:18-alpine
+FROM node:lts-iron
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm i --omit=dev
 RUN npm i -g @nestjs/cli
-RUN npm run prisma:generate
+RUN npm i
+RUN npx prisma generate
 RUN npm run build
 
-CMD [ "npm", "run", "start:production" ]
+CMD [ "npm", "run", "start:prod" ]
 
 EXPOSE 3000
