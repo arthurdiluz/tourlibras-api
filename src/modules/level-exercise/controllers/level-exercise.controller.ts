@@ -10,7 +10,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LevelExerciseService } from '../services/level-exercise.service';
 import { LessonLevelService } from 'src/modules/lesson-level/services/lesson-level.service';
@@ -18,12 +20,15 @@ import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access
 import { CreateLevelExerciseDto } from '../dtos/exercise/create-level-exercise.dto';
 import { FindLevelExerciseDto } from '../dtos/exercise/find-level-exercise.dto';
 import { UpdateLevelExerciseDto } from '../dtos/exercise/update-level-exercise.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ProfessorLessonService } from 'src/modules/professor-lesson/services/professor-lesson.service';
 
 @Controller('level')
 export class LevelExerciseController {
   constructor(
     private readonly levelExerciseService: LevelExerciseService,
     private readonly LevelService: LessonLevelService,
+    private readonly lessonService: ProfessorLessonService,
   ) {}
 
   @UseGuards(JwtAccessTokenGuard)
@@ -157,6 +162,43 @@ export class LevelExerciseController {
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Post(':levelId/exercise/:exerciseId/video')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadVideo(
+    @Param('levelId') levelId: number,
+    @Param('exerciseId') exerciseId: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    try {
+      const level = await this.LevelService.findById(levelId);
+
+      if (!level) {
+        throw new BadRequestException(`Level with ID #${levelId} not found`);
+      }
+
+      const exercise = await this.levelExerciseService.findById(exerciseId);
+
+      if (!exercise) {
+        throw new NotFoundException(
+          `Exercise with ID #${exerciseId} not found `,
+        );
+      }
+
+      const lesson = await this.lessonService.findById(level.lessonId);
+      const { professorId } = await this.lessonService.findById(lesson.id);
+
+      return await this.levelExerciseService.uploadVideo(
+        exerciseId,
+        file,
+        `/professors/${professorId}/lessons/${level.lessonId}/levels/${levelId}/exercises/${exerciseId}`,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
   }
 }

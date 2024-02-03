@@ -12,10 +12,9 @@ export class LessonLevelService {
     return this.lessonLevelRepository.create({
       data: {
         Lesson: { connect: { id: lessonId } },
-
         ...body,
       },
-      include: { Lesson: true },
+      include: { Lesson: true, LessonLevelExercises: true },
     });
   }
 
@@ -23,17 +22,16 @@ export class LessonLevelService {
     return this.lessonLevelRepository.findMany({
       where: {
         Lesson: { id: lessonId },
-
         ...query,
       },
-      include: { Lesson: true },
+      include: { Lesson: true, LessonLevelExercises: true },
     });
   }
 
   async findById(id: number) {
     return this.lessonLevelRepository.findUnique({
       where: { id },
-      include: { Lesson: true },
+      include: { Lesson: true, LessonLevelExercises: true },
     });
   }
 
@@ -41,14 +39,14 @@ export class LessonLevelService {
     return this.lessonLevelRepository.update({
       where: { id },
       data: { ...body },
-      include: { Lesson: true },
+      include: { Lesson: true, LessonLevelExercises: true },
     });
   }
 
   async delete(id: number) {
     return this.lessonLevelRepository.delete({
       where: { id },
-      include: { Lesson: true },
+      include: { Lesson: true, LessonLevelExercises: true },
     });
   }
 }

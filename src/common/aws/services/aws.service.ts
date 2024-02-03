@@ -19,8 +19,8 @@ export class S3Service {
     const Key = formatPath({ directory, fileName: file?.originalname });
     const result = await this.s3.putObject({
       Bucket: this.configService?.getAwsS3BucketName,
-      Key: Key,
       Body: file.buffer,
+      Key,
     });
 
     if (!result) {
