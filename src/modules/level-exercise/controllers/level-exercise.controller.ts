@@ -166,7 +166,7 @@ export class LevelExerciseController {
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @Post(':levelId/exercise/:exerciseId')
+  @Post(':levelId/exercise/:exerciseId/video')
   @UseInterceptors(FileInterceptor('file'))
   async uploadVideo(
     @Param('levelId') levelId: number,
