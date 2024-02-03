@@ -1,13 +1,21 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { LevelExerciseRepository } from '../repositories/level-exercise.repository';
 import { CreateLevelExerciseDto } from '../dtos/exercise/create-level-exercise.dto';
 import { FindLevelExerciseDto } from '../dtos/exercise/find-level-exercise.dto';
 import { UpdateLevelExerciseDto } from '../dtos/exercise/update-level-exercise.dto';
 import { Prisma } from '@prisma/client';
+import { S3Service } from 'src/common/aws/services/aws.service';
 
 @Injectable()
 export class LevelExerciseService {
-  constructor(private readonly exerciseRepository: LevelExerciseRepository) {}
+  constructor(
+    private readonly exerciseRepository: LevelExerciseRepository,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async create(
     levelId: number,
@@ -127,6 +135,21 @@ export class LevelExerciseService {
       where: { id: alternativeId },
       include: { Exercise: true },
     });
+  }
+
+  async uploadVideo(id: number, file: Express.Multer.File, path: string) {
+    const key = await this.s3Service.upload(file, path);
+
+    if (!key) {
+      throw new InternalServerErrorException(`Could not upload file to AWS`);
+    }
+
+    await this.exerciseRepository.update({
+      where: { id },
+      data: { media: key },
+    });
+
+    return key;
   }
 
   private isValidAlternatives(
