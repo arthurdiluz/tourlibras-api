@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -85,6 +86,30 @@ export class StudentController {
   async delete(@Param('id') id: number) {
     try {
       return await this.studentService.delete(id);
+    } catch (error: unknown) {
+      console.error(error);
+      throw new InternalServerErrorException(error, { cause: error as Error });
+    }
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Post(':id/professor/:professorId')
+  async joinProfessor(
+    @Param('id') id: number,
+    @Param('professorId') professorId: number,
+  ) {
+    try {
+      if (!(await this.studentService.findById(id))) {
+        throw new NotFoundException(`Student with ID "${id}" not found`);
+      }
+
+      if (!(await this.professorService.findById(professorId))) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
+      }
+
+      return await this.studentService.joinProfessor(id, professorId);
     } catch (error: unknown) {
       console.error(error);
       throw new InternalServerErrorException(error, { cause: error as Error });

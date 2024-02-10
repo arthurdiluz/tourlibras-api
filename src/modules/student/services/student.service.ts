@@ -103,6 +103,10 @@ export class StudentService {
     });
   }
 
+  async joinProfessor(studentId: number, professorId: number) {
+    return this.studentRepository.linkProfessor(studentId, professorId);
+  }
+
   async leaveProfessor(studentId: number, professorId: number) {
     return this.studentRepository.unlinkProfessor(studentId, professorId);
   }

@@ -11,6 +11,8 @@ export class ProfessorService {
   private professorInclude = {
     User: {
       select: {
+        createdAt: true,
+        updatedAt: true,
         id: true,
         isActive: true,
         fullName: true,
@@ -22,6 +24,7 @@ export class ProfessorService {
     Students: true,
     Medals: true,
     Items: true,
+    Lessons: true,
   };
 
   constructor(
@@ -35,12 +38,13 @@ export class ProfessorService {
     isActive,
     profilePhoto,
     grammar,
-    sortBy,
+    search,
+    sortBy = 'Students',
   }: FindProfessorDto) {
     return this.professorRepository.findMany({
       where: {
         User: {
-          fullName: { contains: fullName, mode: 'insensitive' },
+          fullName: { contains: fullName || search, mode: 'insensitive' },
           email,
           isActive,
           profilePhoto,
@@ -49,7 +53,7 @@ export class ProfessorService {
       },
       orderBy: {
         [sortBy]: {
-          _count: 'asc',
+          _count: 'desc',
         },
       },
       include: { ...this.professorInclude },

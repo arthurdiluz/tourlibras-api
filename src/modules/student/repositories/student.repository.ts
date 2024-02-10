@@ -38,6 +38,14 @@ export class StudentRepository {
     return this.prismaService.professorMedalOnStudent.update(args);
   }
 
+  public linkProfessor(studentId: number, professorId: number) {
+    return this.prismaService.student.update({
+      where: { id: studentId },
+      data: { Professor: { connect: { id: professorId } } },
+      include: { Professor: true },
+    });
+  }
+
   public unlinkProfessor(studentId: number, professorId: number) {
     return this.prismaService.student.update({
       where: { id: studentId },
