@@ -14,7 +14,10 @@ export class LessonLevelService {
         Lesson: { connect: { id: lessonId } },
         ...body,
       },
-      include: { Lesson: true, LessonLevelExercises: true },
+      include: {
+        Lesson: true,
+        LessonLevelExercises: { include: { Level: true, Alternatives: true } },
+      },
     });
   }
 
@@ -24,14 +27,20 @@ export class LessonLevelService {
         Lesson: { id: lessonId },
         ...query,
       },
-      include: { Lesson: true, LessonLevelExercises: true },
+      include: {
+        Lesson: true,
+        LessonLevelExercises: { include: { Level: true, Alternatives: true } },
+      },
     });
   }
 
   async findById(id: number) {
     return this.lessonLevelRepository.findUnique({
       where: { id },
-      include: { Lesson: true, LessonLevelExercises: true },
+      include: {
+        Lesson: true,
+        LessonLevelExercises: { include: { Level: true, Alternatives: true } },
+      },
     });
   }
 
@@ -39,14 +48,20 @@ export class LessonLevelService {
     return this.lessonLevelRepository.update({
       where: { id },
       data: { ...body },
-      include: { Lesson: true, LessonLevelExercises: true },
+      include: {
+        Lesson: true,
+        LessonLevelExercises: { include: { Level: true, Alternatives: true } },
+      },
     });
   }
 
   async delete(id: number) {
     return this.lessonLevelRepository.delete({
       where: { id },
-      include: { Lesson: true, LessonLevelExercises: true },
+      include: {
+        Lesson: true,
+        LessonLevelExercises: { include: { Level: true, Alternatives: true } },
+      },
     });
   }
 }
