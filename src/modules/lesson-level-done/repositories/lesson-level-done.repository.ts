@@ -6,15 +6,15 @@ import { PrismaService } from 'src/common/prisma/prisma.service';
 export class LessonLevelDoneRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public create(args: Prisma.LessonLevelExerciseDoneCreateArgs) {
-    return this.prismaService.lessonLevelExerciseDone.create(args);
+  public create(args: Prisma.LessonLevelDoneCreateArgs) {
+    return this.prismaService.lessonLevelDone.create(args);
   }
 
-  public findMany(args: Prisma.LessonLevelExerciseDoneFindManyArgs) {
-    return this.prismaService.lessonLevelExerciseDone.findMany(args);
+  public findMany(args: Prisma.LessonLevelDoneFindManyArgs) {
+    return this.prismaService.lessonLevelDone.findMany(args);
   }
 
-  public findUnique(args: Prisma.LessonLevelExerciseDoneFindUniqueArgs) {
-    return this.prismaService.lessonLevelExerciseDone.findUnique(args);
+  public findUnique(args: Prisma.LessonLevelDoneFindUniqueArgs) {
+    return this.prismaService.lessonLevelDone.findUnique(args);
   }
 }

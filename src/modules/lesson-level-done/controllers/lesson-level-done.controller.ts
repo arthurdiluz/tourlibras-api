@@ -12,48 +12,48 @@ import { LessonLevelDoneService } from '../services/lesson-level-done.service';
 import { StudentLessonService } from 'src/modules/student-lesson/services/student-lesson.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
 import { CreateLessonLevelDoneDto } from '../dto/create-lesson-level-done.dto';
-import { LevelExerciseService } from 'src/modules/level-exercise/services/level-exercise.service';
 import { FindLessonLevelDoneDto } from '../dto/find-lesson-level-done.dto';
+import { LessonLevelService } from 'src/modules/lesson-level/services/lesson-level.service';
 
 @Controller('student-lesson')
 export class LessonLevelDoneController {
   constructor(
     private readonly lessonLevelDoneService: LessonLevelDoneService,
     private readonly studentService: StudentLessonService,
-    private readonly exerciseService: LevelExerciseService,
+    private readonly levelService: LessonLevelService,
   ) {}
 
   @UseGuards(JwtAccessTokenGuard)
-  @Post(':studentOnLessonId/level-exercise/:lessonLevelExerciseId/done')
+  @Post(':studentOnLessonId/lesson-level/:lessonLevelId/done')
   async create(
-    @Param('studentOnLessonId') studentId: number,
-    @Param('lessonLevelExerciseId') exerciseId: number,
+    @Param('studentOnLessonId') studentOnLesson: number,
+    @Param('lessonLevelId') lessonLevelId: number,
     @Body() body: CreateLessonLevelDoneDto,
   ) {
-    if (!(await this.studentService.findById(studentId))) {
+    if (!(await this.studentService.findById(studentOnLesson))) {
       throw new BadRequestException(
-        `StudentOnLesson with ID #${studentId} does not exist`,
+        `StudentOnLesson with ID #${studentOnLesson} does not exist`,
       );
     }
 
-    if (!(await this.exerciseService.findById(exerciseId))) {
+    if (!(await this.levelService.findById(lessonLevelId))) {
       throw new BadRequestException(
-        `LessonLevelExercise with ID #${exerciseId} does not exist`,
+        `LessonLevel with ID #${lessonLevelId} does not exist`,
       );
     }
 
     return await this.lessonLevelDoneService.create(
-      studentId,
-      exerciseId,
+      studentOnLesson,
+      lessonLevelId,
       body,
     );
   }
 
   @UseGuards(JwtAccessTokenGuard)
-  @Get(':studentOnLessonId/level-exercise/:lessonLevelExerciseId/done')
+  @Get(':studentOnLessonId/lesson-level/:lessonLevelId/done')
   async find(
     @Param('studentOnLessonId') studentId: number,
-    @Param('lessonLevelExerciseId') exerciseId: number,
+    @Param('lessonLevelId') lessonLevelId: number,
     @Query() query: FindLessonLevelDoneDto,
   ) {
     if (!(await this.studentService.findById(studentId))) {
@@ -62,12 +62,16 @@ export class LessonLevelDoneController {
       );
     }
 
-    if (!(await this.exerciseService.findById(exerciseId))) {
+    if (!(await this.levelService.findById(lessonLevelId))) {
       throw new BadRequestException(
-        `LessonLevelExercise with ID #${exerciseId} does not exist`,
+        `LessonLevelExercise with ID #${lessonLevelId} does not exist`,
       );
     }
 
-    return await this.lessonLevelDoneService.find(studentId, exerciseId, query);
+    return await this.lessonLevelDoneService.find(
+      studentId,
+      lessonLevelId,
+      query,
+    );
   }
 }

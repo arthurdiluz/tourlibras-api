@@ -114,6 +114,7 @@ model LessonLevel {
 
   Lesson               ProfessorLesson       @relation(fields: [lessonId], references: [id])
   LessonLevelExercises LessonLevelExercise[]
+  LessonLevelDone      LessonLevelDone[]
 }
 
 model LessonLevelExercise {
@@ -125,9 +126,8 @@ model LessonLevelExercise {
   statement String @db.VarChar(31)
   levelId   Int
 
-  Level         LessonLevel                      @relation(fields: [levelId], references: [id])
-  Alternatives  LessonLevelExerciseAlternative[]
-  DoneExercises LessonLevelExerciseDone[]
+  Level        LessonLevel                      @relation(fields: [levelId], references: [id])
+  Alternatives LessonLevelExerciseAlternative[]
 }
 
 model LessonLevelExerciseAlternative {
@@ -142,17 +142,17 @@ model LessonLevelExerciseAlternative {
   Exercise LessonLevelExercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 }
 
-model LessonLevelExerciseDone {
+model LessonLevelDone {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   isCorrectAttempt Boolean @db.Boolean
   studentId        Int
-  exerciseId       Int
+  levelId          Int
 
-  Student  StudentOnLesson     @relation(fields: [studentId], references: [id])
-  Exercise LessonLevelExercise @relation(fields: [exerciseId], references: [id])
+  Student StudentOnLesson @relation(fields: [studentId], references: [id])
+  Level   LessonLevel     @relation(fields: [levelId], references: [id])
 }
 
 model ItemOnStudent {
@@ -194,9 +194,9 @@ model StudentOnLesson {
   studentId Int
   lessonId  Int
 
-  DoneExercises LessonLevelExerciseDone[] // TODO: this will be after finishing the lesson
-  Student       Student                   @relation(fields: [studentId], references: [id])
-  Lesson        ProfessorLesson           @relation(fields: [lessonId], references: [id])
+  DoneLevels LessonLevelDone[]
+  Student    Student           @relation(fields: [studentId], references: [id])
+  Lesson     ProfessorLesson   @relation(fields: [lessonId], references: [id])
 
   @@unique([studentId, lessonId])
 }
