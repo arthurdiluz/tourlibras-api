@@ -10,7 +10,7 @@ import {
 export class CreateExerciseAlternativeDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(15)
+  @MaxLength(31)
   @IsNotEmpty()
   text: string;
 
