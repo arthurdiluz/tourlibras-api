@@ -19,7 +19,7 @@ export class StudentItemService {
 
     if (price > money) {
       throw new ForbiddenException(
-        `Insufficient funds. Earn ${price - money} and try again`,
+        `Salvo insuficiente. Ganhe ${price - money} e tente novamente`,
       );
     }
 
