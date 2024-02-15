@@ -4,7 +4,7 @@ import { IsString, MaxLength, IsOptional, IsBoolean } from 'class-validator';
 export class UpdateExerciseAlternativeDto {
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(15)
+  @MaxLength(31)
   @IsOptional()
   text?: string;
 
