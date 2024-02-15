@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 import { FindStudentDto } from '../dtos/find-student.dto';
 import { UpdateStudentDto } from '../dtos/update-student.dto';
 import { StudentRepository } from '../repositories/student.repository';
 
 @Injectable()
 export class StudentService {
-  private studentInclude = {
+  private include: Prisma.StudentInclude<DefaultArgs> = {
     User: {
       select: {
         id: true,
@@ -34,11 +36,13 @@ export class StudentService {
     theme,
     professorId,
     role,
+    search,
+    sortBy = 'Experience',
   }: FindStudentDto) {
     return this.studentRepository.findMany({
       where: {
         User: {
-          fullName: { contains: fullName, mode: 'insensitive' },
+          fullName: { contains: fullName || search, mode: 'insensitive' },
           email,
           isActive,
           profilePhoto,
@@ -49,14 +53,17 @@ export class StudentService {
         money,
         theme,
       },
-      include: { ...this.studentInclude },
+      orderBy: {
+        [sortBy.toLowerCase()]: sortBy ? 'desc' : undefined,
+      },
+      include: this.include,
     });
   }
 
   async findById(studentId: number) {
     return this.studentRepository.findUnique({
       where: { id: studentId },
-      include: { ...this.studentInclude },
+      include: this.include,
     });
   }
 
@@ -68,14 +75,14 @@ export class StudentService {
         Professor: professorId ? { connect: { id: professorId } } : undefined,
         ...body,
       },
-      include: { ...this.studentInclude },
+      include: this.include,
     });
   }
 
   async delete(studentId: number) {
     return this.studentRepository.delete({
       where: { id: studentId },
-      include: { ...this.studentInclude },
+      include: this.include,
     });
   }
 
