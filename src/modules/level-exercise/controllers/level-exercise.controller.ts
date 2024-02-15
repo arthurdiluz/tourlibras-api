@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
@@ -34,31 +33,21 @@ export class LevelExerciseController {
   @UseGuards(JwtAccessTokenGuard)
   @Post(':id/exercise')
   async create(@Param('id') id: number, @Body() body: CreateLevelExerciseDto) {
-    try {
-      if (!(await this.LevelService.findById(id))) {
-        throw new BadRequestException(`Level with ID #${id} not found`);
-      }
-
-      return await this.levelExerciseService.create(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.LevelService.findById(id))) {
+      throw new BadRequestException(`Level with ID #${id} not found`);
     }
+
+    return await this.levelExerciseService.create(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/exercise')
   async find(@Param('id') id: number, @Query() query: FindLevelExerciseDto) {
-    try {
-      if (!(await this.LevelService.findById(id))) {
-        throw new BadRequestException(`Level with ID #${id} not found`);
-      }
-
-      return await this.levelExerciseService.find(id, query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.LevelService.findById(id))) {
+      throw new BadRequestException(`Level with ID #${id} not found`);
     }
+
+    return await this.levelExerciseService.find(id, query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -67,24 +56,17 @@ export class LevelExerciseController {
     @Param('id') id: number,
     @Param('exerciseId') exerciseId: number,
   ) {
-    try {
-      if (!(await this.LevelService.findById(id))) {
-        throw new BadRequestException(`Level with ID #${id} not found`);
-      }
-
-      const exercise = await this.levelExerciseService.findById(exerciseId);
-
-      if (!exercise) {
-        throw new NotFoundException(
-          `Exercise with ID #${exerciseId} not found `,
-        );
-      }
-
-      return exercise;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.LevelService.findById(id))) {
+      throw new BadRequestException(`Level with ID #${id} not found`);
     }
+
+    const exercise = await this.levelExerciseService.findById(exerciseId);
+
+    if (!exercise) {
+      throw new NotFoundException(`Exercise with ID #${exerciseId} not found `);
+    }
+
+    return exercise;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -94,20 +76,15 @@ export class LevelExerciseController {
     @Param('exerciseId') exerciseId: number,
     @Body() body: UpdateLevelExerciseDto,
   ) {
-    try {
-      if (!(await this.LevelService.findById(id))) {
-        throw new BadRequestException(`Level with ID #${id} not found`);
-      }
-
-      if (!(await this.levelExerciseService.findById(exerciseId))) {
-        throw new BadRequestException(`Exercise with ID #${id} not found`);
-      }
-
-      return await this.levelExerciseService.update(exerciseId, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.LevelService.findById(id))) {
+      throw new BadRequestException(`Level with ID #${id} not found`);
     }
+
+    if (!(await this.levelExerciseService.findById(exerciseId))) {
+      throw new BadRequestException(`Exercise with ID #${id} not found`);
+    }
+
+    return await this.levelExerciseService.update(exerciseId, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -116,20 +93,15 @@ export class LevelExerciseController {
     @Param('id') id: number,
     @Param('exerciseId') exerciseId: number,
   ) {
-    try {
-      if (!(await this.LevelService.findById(id))) {
-        throw new BadRequestException(`Level with ID #${id} not found`);
-      }
-
-      if (!(await this.levelExerciseService.findById(exerciseId))) {
-        throw new BadRequestException(`Exercise with ID #${id} not found`);
-      }
-
-      return await this.levelExerciseService.delete(exerciseId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.LevelService.findById(id))) {
+      throw new BadRequestException(`Level with ID #${id} not found`);
     }
+
+    if (!(await this.levelExerciseService.findById(exerciseId))) {
+      throw new BadRequestException(`Exercise with ID #${id} not found`);
+    }
+
+    return await this.levelExerciseService.delete(exerciseId);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -139,30 +111,25 @@ export class LevelExerciseController {
     @Param('exerciseId') exerciseId: number,
     @Param('alternativeId') alternativeId: number,
   ) {
-    try {
-      if (!(await this.LevelService.findById(id))) {
-        throw new BadRequestException(`Level with ID #${id} not found`);
-      }
-
-      if (!(await this.levelExerciseService.findById(exerciseId))) {
-        throw new BadRequestException(`Exercise with ID #${id} not found`);
-      }
-
-      const alternative = await this.levelExerciseService.findAlternativeById(
-        exerciseId,
-      );
-
-      if (!alternative) {
-        throw new NotFoundException(
-          `alternative with ID #${alternativeId} not found `,
-        );
-      }
-
-      return alternative;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.LevelService.findById(id))) {
+      throw new BadRequestException(`Level with ID #${id} not found`);
     }
+
+    if (!(await this.levelExerciseService.findById(exerciseId))) {
+      throw new BadRequestException(`Exercise with ID #${id} not found`);
+    }
+
+    const alternative = await this.levelExerciseService.findAlternativeById(
+      exerciseId,
+    );
+
+    if (!alternative) {
+      throw new NotFoundException(
+        `alternative with ID #${alternativeId} not found `,
+      );
+    }
+
+    return alternative;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -173,32 +140,25 @@ export class LevelExerciseController {
     @Param('exerciseId') exerciseId: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    try {
-      const level = await this.LevelService.findById(levelId);
+    const level = await this.LevelService.findById(levelId);
 
-      if (!level) {
-        throw new BadRequestException(`Level with ID #${levelId} not found`);
-      }
-
-      const exercise = await this.levelExerciseService.findById(exerciseId);
-
-      if (!exercise) {
-        throw new NotFoundException(
-          `Exercise with ID #${exerciseId} not found `,
-        );
-      }
-
-      const lesson = await this.lessonService.findById(level.lessonId);
-      const { professorId } = await this.lessonService.findById(lesson.id);
-
-      return await this.levelExerciseService.uploadVideo(
-        exerciseId,
-        file,
-        `/professors/${professorId}/lessons/${level.lessonId}/levels/${levelId}/exercises/${exerciseId}`,
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (!level) {
+      throw new BadRequestException(`Level with ID #${levelId} not found`);
     }
+
+    const exercise = await this.levelExerciseService.findById(exerciseId);
+
+    if (!exercise) {
+      throw new NotFoundException(`Exercise with ID #${exerciseId} not found `);
+    }
+
+    const lesson = await this.lessonService.findById(level.lessonId);
+    const { professorId } = await this.lessonService.findById(lesson.id);
+
+    return await this.levelExerciseService.uploadVideo(
+      exerciseId,
+      file,
+      `/professors/${professorId}/lessons/${level.lessonId}/levels/${levelId}/exercises/${exerciseId}`,
+    );
   }
 }

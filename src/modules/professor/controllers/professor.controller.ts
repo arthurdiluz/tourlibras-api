@@ -2,7 +2,6 @@ import {
   Controller,
   Body,
   NotFoundException,
-  InternalServerErrorException,
   UseGuards,
   Get,
   Query,
@@ -26,73 +25,46 @@ export class ProfessorController {
   @UseGuards(JwtAccessTokenGuard)
   @Get()
   async find(@Query() query: FindProfessorDto) {
-    try {
-      return await this.professorService.find(query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
+    return await this.professorService.find(query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
   async findById(@Param('id') id: number) {
-    try {
-      const professor = await this.professorService.findById(id);
+    const professor = await this.professorService.findById(id);
 
-      if (!professor) {
-        throw new NotFoundException(`Professor with ID "${id}" not found`);
-      }
-
-      return professor;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!professor) {
+      throw new NotFoundException(`Professor with ID "${id}" not found`);
     }
+
+    return professor;
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/leaderboard')
   async leaderboard(@Param('id') id: number, @Query() query: LeaderboardDto) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new BadRequestException(
-          `Professor with ID #${id} does not exists`,
-        );
-      }
-
-      return await this.professorService.leaderboard(id, query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exists`);
     }
+
+    return await this.professorService.leaderboard(id, query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Patch(':id')
   async update(@Param('id') id: number, @Body() body: UpdateProfessorDto) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new NotFoundException(`Professor with ID "${id}" not found`);
-      }
-
-      return await this.professorService.update(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new NotFoundException(`Professor with ID "${id}" not found`);
     }
+
+    return await this.professorService.update(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id') id: number) {
-    try {
-      return await this.professorService.delete(id);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
+    return await this.professorService.delete(id);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -101,11 +73,6 @@ export class ProfessorController {
     @Param('id') id: number,
     @Param('studentId') studentId: number,
   ) {
-    try {
-      return await this.professorService.removeStudent(id, studentId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
+    return await this.professorService.removeStudent(id, studentId);
   }
 }

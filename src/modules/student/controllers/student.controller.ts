@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
@@ -29,29 +28,19 @@ export class StudentController {
   @UseGuards(JwtAccessTokenGuard)
   @Get()
   async find(@Query() query: FindStudentDto) {
-    try {
-      return await this.studentService.find(query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
+    return await this.studentService.find(query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
   async findById(@Param('id') id: number) {
-    try {
-      const student = await this.studentService.findById(id);
+    const student = await this.studentService.findById(id);
 
-      if (!student) {
-        throw new NotFoundException(`Student with ID "${id}" not found`);
-      }
-
-      return student;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!student) {
+      throw new NotFoundException(`Student with ID "${id}" not found`);
     }
+
+    return student;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -60,36 +49,26 @@ export class StudentController {
     @Param('id') id: number,
     @Body() { professorId, ...body }: UpdateStudentDto,
   ) {
-    try {
-      if (!(await this.studentService.findById(id))) {
-        throw new NotFoundException(`Student with ID "${id}" not found`);
-      }
-
-      if (professorId) {
-        if (!(await this.professorService.findById(professorId))) {
-          throw new NotFoundException(
-            `Professor with ID "${professorId}" not found`,
-          );
-        }
-      }
-
-      return await this.studentService.update(id, { professorId, ...body });
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(id))) {
+      throw new NotFoundException(`Student with ID "${id}" not found`);
     }
+
+    if (professorId) {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
+      }
+    }
+
+    return await this.studentService.update(id, { professorId, ...body });
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id') id: number) {
-    try {
-      return await this.studentService.delete(id);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
-    }
+    return await this.studentService.delete(id);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -98,22 +77,17 @@ export class StudentController {
     @Param('id') id: number,
     @Param('professorId') professorId: number,
   ) {
-    try {
-      if (!(await this.studentService.findById(id))) {
-        throw new NotFoundException(`Student with ID "${id}" not found`);
-      }
-
-      if (!(await this.professorService.findById(professorId))) {
-        throw new NotFoundException(
-          `Professor with ID "${professorId}" not found`,
-        );
-      }
-
-      return await this.studentService.joinProfessor(id, professorId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(id))) {
+      throw new NotFoundException(`Student with ID "${id}" not found`);
     }
+
+    if (!(await this.professorService.findById(professorId))) {
+      throw new NotFoundException(
+        `Professor with ID "${professorId}" not found`,
+      );
+    }
+
+    return await this.studentService.joinProfessor(id, professorId);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -122,21 +96,16 @@ export class StudentController {
     @Param('id') id: number,
     @Param('professorId') professorId: number,
   ) {
-    try {
-      if (!(await this.studentService.findById(id))) {
-        throw new NotFoundException(`Student with ID "${id}" not found`);
-      }
-
-      if (!(await this.professorService.findById(professorId))) {
-        throw new NotFoundException(
-          `Professor with ID "${professorId}" not found`,
-        );
-      }
-
-      return await this.studentService.leaveProfessor(id, professorId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(id))) {
+      throw new NotFoundException(`Student with ID "${id}" not found`);
     }
+
+    if (!(await this.professorService.findById(professorId))) {
+      throw new NotFoundException(
+        `Professor with ID "${professorId}" not found`,
+      );
+    }
+
+    return await this.studentService.leaveProfessor(id, professorId);
   }
 }

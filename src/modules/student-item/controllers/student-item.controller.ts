@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   Controller,
-  InternalServerErrorException,
   Param,
   Post,
   UseGuards,
@@ -25,21 +24,16 @@ export class StudentItemController {
     @Param('studentId') studentId: number,
     @Param('itemId') itemId: number,
   ) {
-    try {
-      if (!(await this.studentService.findById(studentId))) {
-        throw new BadRequestException(
-          `Student with ID #${studentId} does not exist`,
-        );
-      }
-
-      if (!(await this.itemService.findById(itemId))) {
-        throw new BadRequestException(`Item with ID #${itemId} does not exist`);
-      }
-
-      return await this.studentItemService.linkItemToStudent(studentId, itemId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(studentId))) {
+      throw new BadRequestException(
+        `Student with ID #${studentId} does not exist`,
+      );
     }
+
+    if (!(await this.itemService.findById(itemId))) {
+      throw new BadRequestException(`Item with ID #${itemId} does not exist`);
+    }
+
+    return await this.studentItemService.linkItemToStudent(studentId, itemId);
   }
 }

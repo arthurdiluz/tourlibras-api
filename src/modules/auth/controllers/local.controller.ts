@@ -4,7 +4,6 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  InternalServerErrorException,
   Post,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -27,33 +26,23 @@ export class LocalAuthController {
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signUp(@Body() body: JwtSignUpDto): Promise<Omit<User, 'password'>> {
-    try {
-      const { email } = body;
+    const { email } = body;
 
-      if ((await this.userService.findByEmail(email)) !== null) {
-        throw new ConflictException(`Email "${email}" already exists`);
-      }
-
-      return await this.authService.signUp(body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if ((await this.userService.findByEmail(email)) !== null) {
+      throw new ConflictException(`Email "${email}" already exists`);
     }
+
+    return await this.authService.signUp(body);
   }
 
   @Public()
   @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signIn(@Body() { email, password }: JwtSignInDto): Promise<IJwtToken> {
-    try {
-      if (!(await this.userService.isValidCredentials({ email, password }))) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-
-      return await this.authService.signIn({ email, password });
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.userService.isValidCredentials({ email, password }))) {
+      throw new UnauthorizedException('Invalid credentials');
     }
+
+    return await this.authService.signIn({ email, password });
   }
 }
