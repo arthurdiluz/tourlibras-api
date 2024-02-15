@@ -10,13 +10,13 @@ export class UpdateProfessorMedalDto {
 
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(63)
+  @MaxLength(127)
   @IsOptional()
   description: string;
 
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(15)
+  @MaxLength(255)
   @IsOptional()
   media: string;
 }

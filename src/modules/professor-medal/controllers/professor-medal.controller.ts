@@ -9,7 +9,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProfessorMedalService } from '../services/professor-medal.service';
 import { JwtAccessTokenGuard } from 'src/common/decorators/guards/jwt/jwt-access-token.guard';
@@ -17,6 +19,7 @@ import { CreateProfessorMedalDto } from '../dtos/create-professor-medal.dto';
 import { ProfessorService } from 'src/modules/professor/services/professor.service';
 import { FindProfessorMedalDto } from '../dtos/find-professor-medal.dto';
 import { UpdateProfessorMedalDto } from '../dtos/update-professor-medal.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('professor')
 export class ProfessorMedalController {
@@ -101,5 +104,33 @@ export class ProfessorMedalController {
     }
 
     return await this.professorMedalService.delete(id);
+  }
+
+  @UseGuards(JwtAccessTokenGuard)
+  @Post(':professorId/medal/:medalId/media')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadIcon(
+    @Param('professorId') professorId: number,
+    @Param('medalId') medalId: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    try {
+      const professor = await this.professorService.findById(professorId);
+
+      if (!professor) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
+      }
+
+      return await this.professorMedalService.uploadMedia(
+        medalId,
+        file,
+        `professors/${professorId}/medals/${medalId}/media/`,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 }

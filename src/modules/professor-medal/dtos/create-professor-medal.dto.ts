@@ -10,7 +10,7 @@ export class CreateProfessorMedalDto {
 
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(63)
+  @MaxLength(127)
   @IsNotEmpty()
   description: string;
 
