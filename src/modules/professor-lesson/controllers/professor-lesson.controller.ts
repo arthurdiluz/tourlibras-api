@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
@@ -37,68 +36,47 @@ export class ProfessorLessonController {
     @Param('id') id: number,
     @Body() body: CreateProfessorLessonDto,
   ) {
-    try {
-      const { medalId } = body;
+    const { medalId } = body;
 
-      if (!(await this.professorService.findById(id))) {
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exists`);
+    }
+
+    if (medalId) {
+      if (!(await this.medalService.findById(medalId))) {
         throw new BadRequestException(
-          `Professor with ID #${id} does not exists`,
+          `Medal with ID #${medalId} does not exists`,
         );
       }
-
-      if (medalId) {
-        if (!(await this.medalService.findById(medalId))) {
-          throw new BadRequestException(
-            `Medal with ID #${medalId} does not exists`,
-          );
-        }
-      }
-
-      return await this.professorLessonService.create(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
     }
+
+    return await this.professorLessonService.create(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/lesson')
   async find(@Param('id') id: number, @Query() query: FindProfessorLessonDto) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new BadRequestException(
-          `Professor with ID #${id} does not exists`,
-        );
-      }
-
-      return await this.professorLessonService.find(id, query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exists`);
     }
+
+    return await this.professorLessonService.find(id, query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/lesson/:lessonId')
   async findById(@Param('id') id: number, @Param('lessonId') lessonId: number) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new BadRequestException(
-          `Professor with ID #${id} does not exists`,
-        );
-      }
-
-      const lesson = await this.professorLessonService.findById(lessonId);
-
-      if (!lesson) {
-        throw new NotFoundException(`Lesson with ID #${id} not found`);
-      }
-
-      return lesson;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exists`);
     }
+
+    const lesson = await this.professorLessonService.findById(lessonId);
+
+    if (!lesson) {
+      throw new NotFoundException(`Lesson with ID #${id} not found`);
+    }
+
+    return lesson;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -110,49 +88,35 @@ export class ProfessorLessonController {
   ) {
     const { medalId } = body;
 
-    try {
-      if (!(await this.professorService.findById(id))) {
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exists`);
+    }
+
+    if (medalId) {
+      if (!(await this.medalService.findById(medalId))) {
         throw new BadRequestException(
-          `Professor with ID #${id} does not exists`,
+          `Medal with ID #${medalId} does not exists`,
         );
       }
-
-      if (medalId) {
-        if (!(await this.medalService.findById(medalId))) {
-          throw new BadRequestException(
-            `Medal with ID #${medalId} does not exists`,
-          );
-        }
-      }
-
-      return await this.professorLessonService.update(lessonId, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
     }
+
+    return await this.professorLessonService.update(lessonId, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Delete(':id/lesson/:lessonId')
   async delete(@Param('id') id: number, @Param('lessonId') lessonId: number) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new BadRequestException(
-          `Professor with ID #${id} does not exists`,
-        );
-      }
-
-      if (!(await this.professorLessonService.findById(lessonId))) {
-        throw new BadRequestException(
-          `Lesson with ID #${lessonId} does not exists`,
-        );
-      }
-
-      return await this.professorLessonService.delete(lessonId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exists`);
     }
+
+    if (!(await this.professorLessonService.findById(lessonId))) {
+      throw new BadRequestException(
+        `Lesson with ID #${lessonId} does not exists`,
+      );
+    }
+
+    return await this.professorLessonService.delete(lessonId);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -163,23 +127,18 @@ export class ProfessorLessonController {
     @Param('lessonId') lessonId: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    try {
-      const professor = await this.professorLessonService.findById(professorId);
+    const professor = await this.professorLessonService.findById(professorId);
 
-      if (!professor) {
-        throw new NotFoundException(
-          `Professor with ID "${professorId}" not found`,
-        );
-      }
-
-      return await this.professorLessonService.uploadIcon(
-        lessonId,
-        file,
-        `professors/${professorId}/lessons/${lessonId}/icon/`,
+    if (!professor) {
+      throw new NotFoundException(
+        `Professor with ID "${professorId}" not found`,
       );
-    } catch (error) {
-      console.error(error);
-      throw error;
     }
+
+    return await this.professorLessonService.uploadIcon(
+      lessonId,
+      file,
+      `professors/${professorId}/lessons/${lessonId}/icon/`,
+    );
   }
 }

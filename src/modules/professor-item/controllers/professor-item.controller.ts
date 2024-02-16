@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
@@ -28,35 +27,21 @@ export class ProfessorItemController {
   @UseGuards(JwtAccessTokenGuard)
   @Post(':id/item')
   async create(@Param('id') id: number, @Body() body: CreateProfessorItemDto) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new BadRequestException(
-          `Professor with ID #${id} does not exist`,
-        );
-      }
-
-      return await this.professorItemService.create(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exist`);
     }
+
+    return await this.professorItemService.create(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/item')
   async find(@Param('id') id: number, @Body() query: FindProfessorItemDto) {
-    try {
-      if (!(await this.professorService.findById(id))) {
-        throw new BadRequestException(
-          `Professor with ID #${id} does not exist`,
-        );
-      }
-
-      return await this.professorItemService.find(id, query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(id))) {
+      throw new BadRequestException(`Professor with ID #${id} does not exist`);
     }
+
+    return await this.professorItemService.find(id, query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -65,24 +50,19 @@ export class ProfessorItemController {
     @Param('professorId') professorId: number,
     @Param('id') id: number,
   ) {
-    try {
-      if (!(await this.professorService.findById(professorId))) {
-        throw new BadRequestException(
-          `Professor with ID #${professorId} does not exist`,
-        );
-      }
-
-      const item = await this.professorItemService.findById(id);
-
-      if (!item) {
-        throw new NotFoundException(`Item with ID #${id} not found`);
-      }
-
-      return item;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(professorId))) {
+      throw new BadRequestException(
+        `Professor with ID #${professorId} does not exist`,
+      );
     }
+
+    const item = await this.professorItemService.findById(id);
+
+    if (!item) {
+      throw new NotFoundException(`Item with ID #${id} not found`);
+    }
+
+    return item;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -92,22 +72,17 @@ export class ProfessorItemController {
     @Param('id') id: number,
     @Body() body: UpdateProfessorItemDto,
   ) {
-    try {
-      if (!(await this.professorService.findById(professorId))) {
-        throw new BadRequestException(
-          `Professor with ID #${professorId} does not exist`,
-        );
-      }
-
-      if (!(await this.professorItemService.findById(id))) {
-        throw new BadRequestException(`Item with ID #${id} does not exist`);
-      }
-
-      return await this.professorItemService.update(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(professorId))) {
+      throw new BadRequestException(
+        `Professor with ID #${professorId} does not exist`,
+      );
     }
+
+    if (!(await this.professorItemService.findById(id))) {
+      throw new BadRequestException(`Item with ID #${id} does not exist`);
+    }
+
+    return await this.professorItemService.update(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -116,21 +91,16 @@ export class ProfessorItemController {
     @Param('professorId') professorId: number,
     @Param('id') id: number,
   ) {
-    try {
-      if (!(await this.professorService.findById(professorId))) {
-        throw new BadRequestException(
-          `Professor with ID #${professorId} does not exist`,
-        );
-      }
-
-      if (!(await this.professorItemService.findById(id))) {
-        throw new BadRequestException(`Item with ID #${id} does not exist`);
-      }
-
-      return await this.professorItemService.delete(id);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.professorService.findById(professorId))) {
+      throw new BadRequestException(
+        `Professor with ID #${professorId} does not exist`,
+      );
     }
+
+    if (!(await this.professorItemService.findById(id))) {
+      throw new BadRequestException(`Item with ID #${id} does not exist`);
+    }
+
+    return await this.professorItemService.delete(id);
   }
 }

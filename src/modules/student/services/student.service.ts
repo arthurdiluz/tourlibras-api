@@ -20,7 +20,7 @@ export class StudentService {
     },
     Professor: true,
     Lessons: true,
-    Medals: true,
+    Medals: { include: { Medal: true } },
     Items: true,
   };
 

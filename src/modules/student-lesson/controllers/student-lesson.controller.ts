@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
@@ -35,24 +34,19 @@ export class StudentLessonController {
     @Param('lessonId') lessonId: number,
     @Body() body: CreateStudentLessonDto,
   ) {
-    try {
-      if (!(await this.studentService.findById(studentId))) {
-        throw new BadRequestException(
-          `Student with ID #${studentId} does not exists`,
-        );
-      }
-
-      if (!(await this.lessonService.findById(lessonId))) {
-        throw new BadRequestException(
-          `Lesson with ID #${lessonId} does not exists`,
-        );
-      }
-
-      return await this.studentLessonService.create(studentId, lessonId, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(studentId))) {
+      throw new BadRequestException(
+        `Student with ID #${studentId} does not exists`,
+      );
     }
+
+    if (!(await this.lessonService.findById(lessonId))) {
+      throw new BadRequestException(
+        `Lesson with ID #${lessonId} does not exists`,
+      );
+    }
+
+    return await this.studentLessonService.create(studentId, lessonId, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -62,24 +56,19 @@ export class StudentLessonController {
     @Param('lessonId') lessonId: number,
     @Query() query: FindStudentLessonDto,
   ) {
-    try {
-      if (!(await this.studentService.findById(studentId))) {
-        throw new BadRequestException(
-          `Student with ID #${studentId} does not exists`,
-        );
-      }
-
-      if (!(await this.lessonService.findById(lessonId))) {
-        throw new BadRequestException(
-          `Lesson with ID #${lessonId} does not exists`,
-        );
-      }
-
-      return await this.studentLessonService.find(studentId, lessonId, query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(studentId))) {
+      throw new BadRequestException(
+        `Student with ID #${studentId} does not exists`,
+      );
     }
+
+    if (!(await this.lessonService.findById(lessonId))) {
+      throw new BadRequestException(
+        `Lesson with ID #${lessonId} does not exists`,
+      );
+    }
+
+    return await this.studentLessonService.find(studentId, lessonId, query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -89,30 +78,25 @@ export class StudentLessonController {
     @Param('lessonId') lessonId: number,
     @Param('id') id: number,
   ) {
-    try {
-      if (!(await this.studentService.findById(studentId))) {
-        throw new BadRequestException(
-          `Student with ID #${studentId} does not exists`,
-        );
-      }
-
-      if (!(await this.lessonService.findById(lessonId))) {
-        throw new BadRequestException(
-          `Lesson with ID #${lessonId} does not exists`,
-        );
-      }
-
-      const studentOnLesson = await this.studentLessonService.findById(id);
-
-      if (!studentOnLesson) {
-        throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
-      }
-
-      return studentOnLesson;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.studentService.findById(studentId))) {
+      throw new BadRequestException(
+        `Student with ID #${studentId} does not exists`,
+      );
     }
+
+    if (!(await this.lessonService.findById(lessonId))) {
+      throw new BadRequestException(
+        `Lesson with ID #${lessonId} does not exists`,
+      );
+    }
+
+    const studentOnLesson = await this.studentLessonService.findById(id);
+
+    if (!studentOnLesson) {
+      throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
+    }
+
+    return studentOnLesson;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -122,33 +106,28 @@ export class StudentLessonController {
     @Param('lessonId') lessonId: number,
     @Body() body: UpdateStudentLessonDto,
   ) {
-    try {
-      if (!(await this.studentService.findById(studentId))) {
-        throw new BadRequestException(
-          `Student with ID #${studentId} does not exists`,
-        );
-      }
-
-      if (!(await this.lessonService.findById(lessonId))) {
-        throw new BadRequestException(
-          `Lesson with ID #${lessonId} does not exists`,
-        );
-      }
-
-      const id = await this.studentLessonService.findIdByRelation(
-        studentId,
-        lessonId,
+    if (!(await this.studentService.findById(studentId))) {
+      throw new BadRequestException(
+        `Student with ID #${studentId} does not exists`,
       );
-
-      if (!(await this.studentLessonService.findById(id))) {
-        throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
-      }
-
-      return await this.studentLessonService.update(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
     }
+
+    if (!(await this.lessonService.findById(lessonId))) {
+      throw new BadRequestException(
+        `Lesson with ID #${lessonId} does not exists`,
+      );
+    }
+
+    const id = await this.studentLessonService.findIdByRelation(
+      studentId,
+      lessonId,
+    );
+
+    if (!(await this.studentLessonService.findById(id))) {
+      throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
+    }
+
+    return await this.studentLessonService.update(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -157,32 +136,27 @@ export class StudentLessonController {
     @Param('studentId') studentId: number,
     @Param('lessonId') lessonId: number,
   ) {
-    try {
-      if (!(await this.studentService.findById(studentId))) {
-        throw new BadRequestException(
-          `Student with ID #${studentId} does not exists`,
-        );
-      }
-
-      if (!(await this.lessonService.findById(lessonId))) {
-        throw new BadRequestException(
-          `Lesson with ID #${lessonId} does not exists`,
-        );
-      }
-
-      const id = await this.studentLessonService.findIdByRelation(
-        studentId,
-        lessonId,
+    if (!(await this.studentService.findById(studentId))) {
+      throw new BadRequestException(
+        `Student with ID #${studentId} does not exists`,
       );
-
-      if (!(await this.studentLessonService.findById(id))) {
-        throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
-      }
-
-      return await this.studentLessonService.delete(id);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
     }
+
+    if (!(await this.lessonService.findById(lessonId))) {
+      throw new BadRequestException(
+        `Lesson with ID #${lessonId} does not exists`,
+      );
+    }
+
+    const id = await this.studentLessonService.findIdByRelation(
+      studentId,
+      lessonId,
+    );
+
+    if (!(await this.studentLessonService.findById(id))) {
+      throw new NotFoundException(`StudentOnLesson with ID #${id} not found`);
+    }
+
+    return await this.studentLessonService.delete(id);
   }
 }

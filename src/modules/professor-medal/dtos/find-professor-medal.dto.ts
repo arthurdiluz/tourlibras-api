@@ -15,7 +15,7 @@ export class FindProfessorMedalDto {
 
   @Transform(({ value }) => String(value).trim())
   @IsString()
-  @MaxLength(63)
+  @MaxLength(127)
   @IsOptional()
   description?: string;
 }

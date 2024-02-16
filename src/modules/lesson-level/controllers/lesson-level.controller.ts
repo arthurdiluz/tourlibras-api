@@ -4,7 +4,6 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   Patch,
@@ -29,52 +28,37 @@ export class LessonLevelController {
   @UseGuards(JwtAccessTokenGuard)
   @Post(':id/level')
   async create(@Param('id') id: number, @Body() body: CreateLessonLevelDto) {
-    try {
-      if (!(await this.lessonService.findById(id))) {
-        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
-      }
-
-      return await this.lessonLevelService.create(id, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.lessonService.findById(id))) {
+      throw new BadRequestException(`Lesson with ID #${id} does not exists`);
     }
+
+    return await this.lessonLevelService.create(id, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/level')
   async find(@Param('id') id: number, @Query() query: FindLessonLevelDto) {
-    try {
-      if (!(await this.lessonService.findById(id))) {
-        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
-      }
-
-      return await this.lessonLevelService.find(id, query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.lessonService.findById(id))) {
+      throw new BadRequestException(`Lesson with ID #${id} does not exists`);
     }
+
+    return await this.lessonLevelService.find(id, query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id/level/:levelId')
   async findById(@Param('id') id: number, @Param('levelId') levelId: number) {
-    try {
-      if (!(await this.lessonService.findById(id))) {
-        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
-      }
-
-      const level = await this.lessonLevelService.findById(levelId);
-
-      if (!level) {
-        throw new NotFoundException(`Level with ID #${level} not found`);
-      }
-
-      return level;
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.lessonService.findById(id))) {
+      throw new BadRequestException(`Lesson with ID #${id} does not exists`);
     }
+
+    const level = await this.lessonLevelService.findById(levelId);
+
+    if (!level) {
+      throw new NotFoundException(`Level with ID #${level} not found`);
+    }
+
+    return level;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -84,38 +68,28 @@ export class LessonLevelController {
     @Param('levelId') levelId: number,
     @Body() body: UpdateLessonLevelDto,
   ) {
-    try {
-      if (!(await this.lessonService.findById(id))) {
-        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
-      }
-
-      if (!(await this.lessonLevelService.findById(levelId))) {
-        throw new BadRequestException(`Level with ID #${id} does not exists`);
-      }
-
-      return await this.lessonLevelService.update(levelId, body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.lessonService.findById(id))) {
+      throw new BadRequestException(`Lesson with ID #${id} does not exists`);
     }
+
+    if (!(await this.lessonLevelService.findById(levelId))) {
+      throw new BadRequestException(`Level with ID #${id} does not exists`);
+    }
+
+    return await this.lessonLevelService.update(levelId, body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Delete(':id/level/:levelId')
   async delete(@Param('id') id: number, @Param('levelId') levelId: number) {
-    try {
-      if (!(await this.lessonService.findById(id))) {
-        throw new BadRequestException(`Lesson with ID #${id} does not exists`);
-      }
-
-      if (!(await this.lessonLevelService.findById(levelId))) {
-        throw new BadRequestException(`Level with ID #${id} does not exists`);
-      }
-
-      return await this.lessonLevelService.delete(levelId);
-    } catch (error: unknown) {
-      console.error(error);
-      throw new InternalServerErrorException(error, { cause: error as Error });
+    if (!(await this.lessonService.findById(id))) {
+      throw new BadRequestException(`Lesson with ID #${id} does not exists`);
     }
+
+    if (!(await this.lessonLevelService.findById(levelId))) {
+      throw new BadRequestException(`Level with ID #${id} does not exists`);
+    }
+
+    return await this.lessonLevelService.delete(levelId);
   }
 }

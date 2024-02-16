@@ -37,78 +37,53 @@ export class UserController {
   @Public()
   @Post()
   async create(@Body() body: CreateUserDto) {
-    try {
-      const { email } = body;
+    const { email } = body;
 
-      if ((await this.userService.findByEmail(email)) !== null) {
-        throw new ConflictException(`Email "${email}" already exists`);
-      }
-
-      return await this.userService.create(body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw error;
+    if ((await this.userService.findByEmail(email)) !== null) {
+      throw new ConflictException(`Email "${email}" already exists`);
     }
+
+    return await this.userService.create(body);
   }
 
   @Public()
   @Post('professor')
   async createProfessor(@Body() body: CreateProfessorDto) {
-    try {
-      return await this.userService.createProfessor(body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw error;
-    }
+    return await this.userService.createProfessor(body);
   }
 
   @Public()
   @Post('student')
   async creatStudent(@Body() body: CreateStudentDto) {
-    try {
-      const { professorId } = body;
+    const { professorId } = body;
 
-      if (professorId) {
-        if (!(await this.professorService.findById(professorId))) {
-          throw new NotFoundException(
-            `Professor with ID "${professorId}" not found`,
-          );
-        }
+    if (professorId) {
+      if (!(await this.professorService.findById(professorId))) {
+        throw new NotFoundException(
+          `Professor with ID "${professorId}" not found`,
+        );
       }
-
-      return await this.userService.createStudent(body);
-    } catch (error: unknown) {
-      console.error(error);
-      throw error;
     }
+
+    return await this.userService.createStudent(body);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get()
   async find(@Query() query: FindUserDto) {
-    try {
-      return await this.userService.find(query);
-    } catch (error: unknown) {
-      console.error(error);
-      throw error;
-    }
+    return await this.userService.find(query);
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @Get(':id')
   async findById(@Param('id') id: number) {
-    try {
-      const user = await this.userService.findById(id);
+    const user = await this.userService.findById(id);
 
-      if (!user) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
-      }
-
-      return user;
-    } catch (error: unknown) {
-      console.error(error);
-      throw error;
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
     }
+
+    return user;
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -117,53 +92,40 @@ export class UserController {
     @Param('id') id: number,
     @Body() { email, ...body }: UpdateUserDto,
   ) {
-    try {
-      const user = await this.userService.findById(id);
+    const user = await this.userService.findById(id);
 
-      if (!user) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
+    }
+
+    if (email) {
+      if (email === user.email) {
+        throw new BadRequestException(`Your email is already "${email}"`);
       }
 
-      if (email) {
-        if (email === user.email) {
-          throw new BadRequestException(`Your email is already "${email}"`);
-        }
-
-        if (
-          (await this.userService.findByEmail(email)) &&
-          email !== user.email
-        ) {
-          throw new ConflictException(`Email "${email}" already exists`);
-        }
-      }
-
-      if (email && (await this.userService.findByEmail(email))) {
+      if ((await this.userService.findByEmail(email)) && email !== user.email) {
         throw new ConflictException(`Email "${email}" already exists`);
       }
-
-      return await this.userService.update(id, { email, ...body });
-    } catch (error) {
-      console.error(error);
-      throw error;
     }
+
+    if (email && (await this.userService.findByEmail(email))) {
+      throw new ConflictException(`Email "${email}" already exists`);
+    }
+
+    return await this.userService.update(id, { email, ...body });
   }
 
   @UseGuards(JwtAccessTokenGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async delete(@Param('id') id: number) {
-    try {
-      const user = await this.userService.delete(id);
+    const user = await this.userService.delete(id);
 
-      if (!user) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
-      }
-
-      return await this.userService.delete(id);
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
     }
+
+    return await this.userService.delete(id);
   }
 
   @UseGuards(JwtAccessTokenGuard)
@@ -173,21 +135,16 @@ export class UserController {
     @Param('id') id: number,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    try {
-      const user = await this.userService.findById(id);
+    const user = await this.userService.findById(id);
 
-      if (!user) {
-        throw new NotFoundException(`User with ID "${id}" not found`);
-      }
-
-      return await this.userService.uploadProfilePicutre(
-        id,
-        file,
-        `users/${id}/profile-picture`,
-      );
-    } catch (error) {
-      console.error(error);
-      throw error;
+    if (!user) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
     }
+
+    return await this.userService.uploadProfilePicutre(
+      id,
+      file,
+      `users/${id}/profile-picture`,
+    );
   }
 }
