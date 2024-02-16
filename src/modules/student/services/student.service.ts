@@ -115,6 +115,47 @@ export class StudentService {
   }
 
   async leaveProfessor(studentId: number, professorId: number) {
+    const student = await this.studentRepository.findUnique({
+      where: { id: studentId },
+      include: { Medals: true, Items: true, Lessons: true },
+    });
+
+    const medals: Prisma.ProfessorMedalOnStudentMaxAggregateOutputType[] =
+      student['Medals'];
+    const items: Prisma.ItemOnStudentMaxAggregateOutputType[] =
+      student['Items'];
+    const lessons: Prisma.StudentOnLessonMaxAggregateOutputType[] =
+      student['Lessons'];
+
+    await this.studentRepository.update({
+      where: { id: studentId },
+      data: {
+        money: 0,
+        experience: 0,
+        Medals: {
+          deleteMany: medals.map(({ id, studentId, medalId }) => ({
+            id,
+            studentId,
+            medalId,
+          })),
+        },
+        Items: {
+          deleteMany: items.map(({ id, studentId, itemId }) => ({
+            id,
+            studentId,
+            itemId,
+          })),
+        },
+        Lessons: {
+          deleteMany: lessons.map(({ id, studentId, lessonId }) => ({
+            id,
+            studentId,
+            lessonId,
+          })),
+        },
+      },
+    });
+
     return this.studentRepository.unlinkProfessor(studentId, professorId);
   }
 }

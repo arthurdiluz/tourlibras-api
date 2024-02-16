@@ -113,8 +113,6 @@ export class ProfessorService {
       );
     }
 
-    await this.professorRepository.unlinkStudent(studentId);
-
-    return this.findById(professorId);
+    return await this.studentService.leaveProfessor(studentId, professorId);
   }
 }

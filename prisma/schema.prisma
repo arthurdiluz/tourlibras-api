@@ -34,8 +34,8 @@ model Student {
   userId      Int   @unique
   professorId Int?
 
-  User      User                      @relation(fields: [userId], references: [id])
-  Professor Professor?                @relation(fields: [professorId], references: [id])
+  User      User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Professor Professor?                @relation(fields: [professorId], references: [id], onDelete: Cascade)
   Lessons   StudentOnLesson[]
   Items     ItemOnStudent[]
   Medals    ProfessorMedalOnStudent[]
@@ -49,7 +49,7 @@ model Professor {
   grammar GRAMMAR?
   userId  Int      @unique
 
-  User     User              @relation(fields: [userId], references: [id])
+  User     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   Students Student[]
   Lessons  ProfessorLesson[]
   Items    ProfessorItem[]
@@ -67,7 +67,7 @@ model ProfessorItem {
   media       String? @db.VarChar(255)
   professorId Int
 
-  Professor Professor       @relation(fields: [professorId], references: [id])
+  Professor Professor       @relation(fields: [professorId], references: [id], onDelete: Cascade)
   Students  ItemOnStudent[]
 }
 
@@ -81,7 +81,7 @@ model ProfessorMedal {
   media       String? @db.VarChar(255)
   professorId Int
 
-  Professor Professor                 @relation(fields: [professorId], references: [id])
+  Professor Professor                 @relation(fields: [professorId], references: [id], onDelete: Cascade)
   Students  ProfessorMedalOnStudent[]
   Lessons   ProfessorLesson[]
 }
@@ -96,10 +96,10 @@ model ProfessorLesson {
   professorId Int
   medalId     Int?
 
-  Professor Professor         @relation(fields: [professorId], references: [id])
+  Professor Professor         @relation(fields: [professorId], references: [id], onDelete: Cascade)
   Students  StudentOnLesson[]
   Levels    LessonLevel[]
-  Medal     ProfessorMedal?   @relation(fields: [medalId], references: [id])
+  Medal     ProfessorMedal?   @relation(fields: [medalId], references: [id], onDelete: Cascade)
 }
 
 model LessonLevel {
@@ -112,7 +112,7 @@ model LessonLevel {
   earnedMoney Float @db.Real
   lessonId    Int
 
-  Lesson               ProfessorLesson       @relation(fields: [lessonId], references: [id])
+  Lesson               ProfessorLesson       @relation(fields: [lessonId], references: [id], onDelete: Cascade)
   LessonLevelExercises LessonLevelExercise[]
   LessonLevelDone      LessonLevelDone[]
 }
@@ -126,7 +126,7 @@ model LessonLevelExercise {
   statement String @db.VarChar(31)
   levelId   Int
 
-  Level        LessonLevel                      @relation(fields: [levelId], references: [id])
+  Level        LessonLevel                      @relation(fields: [levelId], references: [id], onDelete: Cascade)
   Alternatives LessonLevelExerciseAlternative[]
 }
 
@@ -151,8 +151,8 @@ model LessonLevelDone {
   studentId        Int
   levelId          Int
 
-  Student StudentOnLesson @relation(fields: [studentId], references: [id])
-  Level   LessonLevel     @relation(fields: [levelId], references: [id])
+  Student StudentOnLesson @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  Level   LessonLevel     @relation(fields: [levelId], references: [id], onDelete: Cascade)
 }
 
 model ItemOnStudent {
@@ -163,8 +163,8 @@ model ItemOnStudent {
   itemId    Int
   studentId Int
 
-  Item    ProfessorItem @relation(fields: [itemId], references: [id])
-  Student Student       @relation(fields: [studentId], references: [id])
+  Item    ProfessorItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  Student Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model ProfessorMedalOnStudent {
@@ -176,8 +176,8 @@ model ProfessorMedalOnStudent {
   medalId   Int
   studentId Int
 
-  Medal   ProfessorMedal @relation(fields: [medalId], references: [id])
-  Student Student        @relation(fields: [studentId], references: [id])
+  Medal   ProfessorMedal @relation(fields: [medalId], references: [id], onDelete: Cascade)
+  Student Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([medalId, studentId])
 }
@@ -195,8 +195,8 @@ model StudentOnLesson {
   lessonId  Int
 
   DoneLevels LessonLevelDone[]
-  Student    Student           @relation(fields: [studentId], references: [id])
-  Lesson     ProfessorLesson   @relation(fields: [lessonId], references: [id])
+  Student    Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  Lesson     ProfessorLesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, lessonId])
 }
