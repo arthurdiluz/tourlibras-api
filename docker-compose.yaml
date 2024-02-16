@@ -25,7 +25,5 @@ services:
       - '80:${APP_PORT}'
     # depends_on:
     #   - database
-    # networks:
-    #   - tourlibras-network
 volumes:
   tourlibras_data:
