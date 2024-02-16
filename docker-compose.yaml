@@ -1,19 +1,20 @@
 version: '3.8'
 services:
-  database:
-    container_name: tourlibras-db
-    image: 'postgres:16'
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
-    volumes:
-      - tourlibras_data:/var/lib/postgresql/data
-    # networks:
-    #   - tourlibras-network
+  # database:
+  #   container_name: tourlibras-db
+  #   image: 'postgres:16'
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+  #   volumes:
+  #     - tourlibras_data:/var/lib/postgresql/data
+  #   # networks:
+  #   #   - tourlibras-network
   api:
     container_name: tourlibras-api
+    restart: always
     env_file:
       - .env
     build:
@@ -24,7 +25,6 @@ services:
     ports:
       - '${APP_PORT}:${APP_PORT}'
       - '80:${APP_PORT}'
-      - '443:${APP_PORT}'
     # depends_on:
     #   - database
     # networks:
