@@ -22,9 +22,13 @@ export class ProfessorMedalService {
     });
   }
 
-  async find({ name, description, ...query }: FindProfessorMedalDto) {
+  async find(
+    { name, description, ...query }: FindProfessorMedalDto,
+    professorId: number,
+  ) {
     return this.professorMedalRepository.findMany({
       where: {
+        Professor: { id: professorId },
         name: { contains: name, mode: 'insensitive' },
         description: { contains: description, mode: 'insensitive' },
         ...query,

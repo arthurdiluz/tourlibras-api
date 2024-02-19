@@ -45,7 +45,7 @@ export class ProfessorMedalController {
       throw new BadRequestException(`Professor with ID #${id} does not exists`);
     }
 
-    return await this.professorMedalService.find(query);
+    return await this.professorMedalService.find(query, id);
   }
 
   @UseGuards(JwtAccessTokenGuard)
